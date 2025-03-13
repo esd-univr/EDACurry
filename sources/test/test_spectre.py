@@ -113,8 +113,8 @@ def compare(filepath1: str, filepath2: str):
             previous_type = handle_print(line, line_number, line_type, previous_type)
 
 
-if not os.path.exists("eldo_result"):
-    os.mkdir("eldo_result")
+if not os.path.exists("spectre_result"):
+    os.mkdir("spectre_result")
 
 if len(sys.argv) == 1:
     print("You must provide either input files or folders.")
@@ -125,52 +125,18 @@ if len(sys.argv) == 1:
 for i in range(1, len(sys.argv)):
     argument = sys.argv[i]
 
-    if os.path.isdir(argument):
-        # Iterate the files inside the directory.
-        for filename in os.listdir(argument):
-            # Get just the name.
-            name, _ = os.path.splitext(filename)
-            # Set the input path.
-            inp = os.path.join(argument, filename)
-            out_xml = os.path.join("eldo_result/", "{}.xml".format(name))
-            out_json = os.path.join("eldo_result/", "{}.json".format(name))
-            out_eldo = os.path.join("eldo_result/", "{}.cir".format(name))
-            # Get the content.
-            print("Parsing `{}`".format(inp))
-            root = edacurry.parse_eldo(inp)
-            # Write to XML.
-            xml_content = edacurry.write_xml(root)
-            # If required generate the output file.
-            print("Writing `{}`".format(out_xml))
-            with open(out_xml, "w") as outf:
-                outf.write(xml_content)
-            # Write to JSON.
-            json_content = edacurry.write_json(root)
-            # If required generate the output file.
-            print("Writing `{}`".format(out_json))
-            with open(out_json, "w") as outf:
-                outf.write(json_content)
-            # Write to ELDO.
-            eldo_content = edacurry.write_eldo(root)
-            # If required generate the output file.
-            print("Writing `{}`".format(out_eldo))
-            with open(out_eldo, "w") as outf:
-                outf.write(eldo_content)
-            # Compare the two files.
-            compare(inp, out_eldo)
-
-    elif os.path.isfile(argument):
+    if os.path.isfile(argument):
         # Get the basename.
         basename = os.path.basename(argument)
         # Get just the name.
         name, _ = os.path.splitext(basename)
         # Generate output names.
-        out_xml = os.path.join("eldo_result/", "{}.xml".format(name))
-        out_json = os.path.join("eldo_result/", "{}.json".format(name))
-        out_eldo = os.path.join("eldo_result/", "{}.cir".format(name))
+        out_xml = os.path.join("spectre_result/", "{}.xml".format(name))
+        out_json = os.path.join("spectre_result/", "{}.json".format(name))
+        out_spectre = os.path.join("spectre_result/", "{}.scs".format(name))
         # Get the content.
         print("Parsing `{}`".format(argument))
-        root = edacurry.parse_eldo(argument)
+        root = edacurry.parse_spectre(argument)
         # Write to XML.
         xml_content = edacurry.write_xml(root)
         # If required generate the output file.
@@ -183,13 +149,13 @@ for i in range(1, len(sys.argv)):
         print("Writing `{}`".format(out_json))
         with open(out_json, "w") as outf:
             outf.write(json_content)
-        # Write to ELDO.
+        # Write to eldo.
         eldo_content = edacurry.write_eldo(root)
         # If required generate the output file.
-        print("Writing `{}`".format(out_eldo))
-        with open(out_eldo, "w") as outf:
+        print("Writing `{}`".format(out_spectre))
+        with open(out_spectre, "w") as outf:
             outf.write(eldo_content)
         # Compare the two files.
-        compare(argument, out_eldo)
+        compare(argument, out_spectre)
     else:
         print("The argument `{}` is not valid!".format(argument))

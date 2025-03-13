@@ -1007,12 +1007,6 @@ Any ELDOFrontend::visitSave_when(ELDOParser::Save_whenContext *ctx)
                 _factory.identifier("when"),
                 _factory.identifier(ctx->ID()->toString()),
                 param_assign, true));
-    } else if (ctx->END()) {
-        this->add_to_parent(
-            _factory.parameter(
-                _factory.identifier("when"),
-                _factory.identifier(ctx->END()->toString()),
-                param_assign, true));
     }
     return visitChildren(ctx);
 }
@@ -1034,6 +1028,7 @@ Any ELDOFrontend::visitCall_tcl(ELDOParser::Call_tclContext *ctx)
 
 Any ELDOFrontend::visitCall_tcl_when(ELDOParser::Call_tcl_whenContext *ctx)
 {
+    //check: WHEN EQUAL (START | START_OF_RUN)
     return visitChildren(ctx);
 }
 
