@@ -85,7 +85,6 @@ logger.addHandler(ch)
 # =============================================================================
 # Import the EDACurry library.
 
-
 class Changes(Enum):
     NONE = 0
     EXTRA = 1
