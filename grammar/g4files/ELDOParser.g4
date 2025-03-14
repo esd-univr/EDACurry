@@ -613,7 +613,7 @@ save
 save_file
     : (ID EQUAL)? filepath;
 save_when
-    : ID | END | parameter;
+    : ID | parameter;
 
 // ------------------------------------
 // Simulator Configuration
@@ -641,7 +641,7 @@ nodeset
 call_tcl
     : CALL_TCL ID? call_tcl_when? parameter_list? expression? ID? end_of_line;
 call_tcl_when
-    : WHEN EQUAL ( START | START_OF_RUN | END_OF_RUN | END );
+    : WHEN EQUAL ID;
 
 // ------------------------------------
 // Use Tcl File
@@ -1446,7 +1446,7 @@ node_list_item
 node_mapping
     : node EQUAL node;
 node
-    : (ID | NUMBER) (DOT node)?;
+    : (ID | NUMBER ) (DOT node)?;
 
 // ============================================================================
 parameter_list

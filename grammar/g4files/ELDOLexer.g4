@@ -162,10 +162,10 @@ INTERP       : [iI][nN][tT][eE][rR][pP];
 MOD          : [mM][oO][dD];
 MODEL        : [mM][oO][dD][eE][lL];
 WHEN         : [wW][hH][eE][nN];
-START        : [sS][tT][aA][rR][tT] ;
-START_OF_RUN : [sS][tT][aA][rR][tT]UNDERSCORE[oO][fF]UNDERSCORE[rR][uU][nN];
-END_OF_RUN   : [eE][nN][dD]UNDERSCORE[oO][fF]UNDERSCORE[rR][uU][nN];
-END          : [eE][nN][dD];
+//START        : [sS][tT][aA][rR][tT];
+//START_OF_RUN : [sS][tT][aA][rR][tT]UNDERSCORE[oO][fF]UNDERSCORE[rR][uU][nN];
+//END_OF_RUN   : [eE][nN][dD]UNDERSCORE[oO][fF]UNDERSCORE[rR][uU][nN];
+//END          : [eE][nN][dD];
 FIND         : [fF][iI][nN][dD];
 PP           : [pP][pP];
 TRIG         : [tT][rR][iI][gG];
@@ -204,6 +204,7 @@ CATVECT      : [cC][aA][tT][vV][eE][cC][tT];
 //TRANS       : [tT][rR][aA][nN][sS];
 //OPAMP       : [oO][pP][aA][mM][pP];
 //POLY        : [pP][oO][lL][yY];
+
 
 // ----------------------------------------------------------------------------
 // LIST STARTING KEYWORDS

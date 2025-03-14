@@ -374,7 +374,7 @@ PYBIND11_MODULE(edacurry, m)
     m.def("parse_xml", edacurry::frontend::parse_xml);
     
     m.def("write_eldo", edacurry::backend::write_eldo);
-    // m.def("write_spectre", edacurry::backend::write_spectre);
+    //m.def("write_spectre", edacurry::backend::write_spectre);
     m.def("write_json", edacurry::backend::write_json);
     m.def("write_xml", edacurry::backend::write_xml);
 
