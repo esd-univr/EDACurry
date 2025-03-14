@@ -13,10 +13,25 @@ import requests  # Per scaricare il file
 import tarfile
 import zipfile   # Per decomprimere i file
 import tempfile  # Per creare una directory temporanea
+import requests
 
 # URL file ZIP
 ZIP_URL = "https://sagroups.ieee.org/2427/wp-content/uploads/sites/302/2019/03/analog_benchmark2017_v2.2.tar_.gz"
 ZIP_URL2 = "https://github.com/AMS-Net/ams-net.github.io/raw/main/amsnet_1.0-20240412T024532Z-001.zip"
+
+headers = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+}
+
+response = requests.get(ZIP_URL, headers=headers)
+
+if response.status_code == 200:
+    with open("file.tar.gz", "wb") as f:
+        f.write(response.content)
+    print("Download completato!")
+else:
+    print("Errore:", response.status_code)
+
 
 # Download and unzip the ZIP file
 def download_and_extract(zip_url, extract_to):
