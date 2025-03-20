@@ -21,7 +21,7 @@ doi: "10.1109/FDL53530.2021.9568379"
 date-released: 2021-10-26
 url: "https://github.com/sydelity-net/EDACurry/"
 preferred-citation:
-  type: inproceedings
+  type: conference-paper
   title: "A Common Manipulation Framework for Transistor-Level Languages"
   abstract: "There are plentiful successors of SPICE language for describing transistor-level designs. For most of them, the semantic matches those of SPICE, and only the syntax is changed. Others instead provide more default models or analysis tools. Consequently, a commercial tool is usually required for simulating, analyzing, and especially manipulating these languages. This article proposes a framework that relies on the shared semantic for reading, writing, or manipulating transistor-level designs. The ultimate goal of the framework is, reading an input design written in a specific syntax and then allowing to write the same design in another syntax. First, the input description is parsed by a language-specific front-end which turns it into an in-memory abstract syntax tree that follows the common semantic. Then, the in-memory description can be subject to different user-defined manipulations built on top of a series of API or visitor/listener classes. Finally, the description goes through the desired back-end, transforming the in-memory description into the target transistor-level language. As a use-case for the proposed framework, we chose the process of analog fault injection. This activity requires adding, removing, or replacing nodes, components, or even entire sub-circuits. Therefore, the framework is completely written in C++, and its APIs are also interfaced with python. The entire framework is open-source and available on GitHub."
   authors:
