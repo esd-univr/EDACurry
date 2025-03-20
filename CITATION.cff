@@ -22,9 +22,5 @@ version: 0.1
 doi: "10.1109/FDL53530.2021.9568379"
 date-released: "2021-10-26"
 url: "https://github.com/sydelity-net/EDACurry/"
-conference:
-  name: Forum on Specification & Design Languages (FDL)
-  location: Antibes, France
-  date: "2021-09-08/2021-09-10"
-  publisher: IEEE
+
 
