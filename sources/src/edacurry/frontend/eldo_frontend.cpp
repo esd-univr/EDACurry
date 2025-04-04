@@ -1485,7 +1485,7 @@ Any ELDOFrontend::visitBjt(ELDOParser::BjtContext *ctx)
 {
     auto component = utility::to_check<structure::Component>(this->back());
     component->setName(ctx->BJT()->toString());
-    component->setMaster(ctx->ID()->toString());
+    //component->setMaster(ctx->ID()->toString());
     return visitChildren(ctx);
 }
 
