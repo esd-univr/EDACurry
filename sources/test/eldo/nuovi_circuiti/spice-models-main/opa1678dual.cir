@@ -1,7 +1,0 @@
-* A dual opamp ngspice model
-* file name: OPA1678dual.lib
-.subckt OPA1678dual 1 2 3 4 5 6 7 8
-.include OPA1678.LIB
-XA 3 2 8 4 1 OPA1678
-XB 5 6 8 4 7 OPA1678
-.ends

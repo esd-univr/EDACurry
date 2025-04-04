@@ -548,7 +548,7 @@ global
 //      .MODEL LIB FILENAME MNAME [LIBTYPE]
 //
 model
-	: MODEL_DEF model_name model_master? NONOISE? parameter_list? end_of_line
+	: MODEL_DEF model_name model_master NONOISE? parameter_list? end_of_line
 	| MODEL_DEF model_lib filepath model_name model_lib_type? end_of_line;
 model_lib
     : ID;
@@ -1032,7 +1032,8 @@ junction_diode : JUNCTION_DIODE node node;
 //
 //      [NS] MNAME [FMIN=VAL] [FMAX=VAL] [NBF=VAL] [STATISTICAL=0|1]
 // ============================================================================
-bjt : BJT node node node;
+bjt : BJT node node node node? ID
+    | BJT node node node node? node? ID;
 
 // ============================================================================
 // JFET - Junction Field Effect Transistor - J**

@@ -1,4 +1,0 @@
-*
-.SUBCKT Cvar 1 2  PARAMS: Ct=100p SET=0.5
-Cv 1 2 {Ct*SET}
-.ENDS
