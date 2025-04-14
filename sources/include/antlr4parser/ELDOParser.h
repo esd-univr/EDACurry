@@ -1539,8 +1539,8 @@ public:
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *MODEL_DEF();
     Model_nameContext *model_name();
-    Model_masterContext *model_master();
     End_of_lineContext *end_of_line();
+    Model_masterContext *model_master();
     antlr4::tree::TerminalNode *NONOISE();
     Parameter_listContext *parameter_list();
     Model_libContext *model_lib();
@@ -2881,7 +2881,6 @@ public:
     antlr4::tree::TerminalNode *BJT();
     std::vector<NodeContext *> node();
     NodeContext* node(size_t i);
-    antlr4::tree::TerminalNode *ID();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
