@@ -34,6 +34,13 @@ Generates the C++ parser (automatically copies the source files to the source fo
 ## How to parse a specific netlist?
 
 For a SPECTRE netlist with the JAVA parser:
+Set the ${CLASSPATH} variable to the path of the antlr-4.7.1-complete.jar file.
+
+```
+	$ export CLASSPATH=antlr-4.7.1-complete.jar
+```
+
+Then run the following command:
 
 ```
 	$ java -cp ${CLASSPATH}:parser_java/ org.antlr.v4.gui.TestRig SPECTRE netlist <path-to-file>
@@ -50,6 +57,7 @@ Command options:
 ```
 	$ -tokens		// shows all recognized tokens.
 	$ -gui			// shows the Abstract Syntax Tree (AST) of parserized netlist.
+	$ -tree			// shows the Abstract Syntax Tree (AST) of parserized netlist.
 ```
 
 ### Cleaning project compiled files
