@@ -17,7 +17,7 @@
 
 Library tested on Ubuntu 20.04.2 LTS with Python 3.8.
 
-From the terminal install the following packets:
+From the terminal install the following packages:
 
 ```
 sudo apt-get install antlr4 libantlr4-runtime4.8 libantlr4-runtime-dev
@@ -46,19 +46,20 @@ from `build` folder import the library into Python. Make sure the `build` is
 included in the search path.
 
 ```
+    $ export PYTHONPATH=<path_to_the_edacurry_project>/EDACurry/sources/build:$PYTHONPATH
+```
+
+```
     $ python
-    >>> import sys
-    >>> sys.path.insert(0, '<path-to-build-folder>')
     >>> import edacurry
 ```
 
 ### Library usage example
+## The following example shows how to parse an Eldo netlist
 
 ```
     $ cd test
     $ python
-    >>> import sys
-    >>> sys.path.insert(0, '<path-to-build-folder>')
     >>> import edacurry
-    >>> edacurry.parse("eldo/components.cir")
+    >>> edacurry.parse_eldo("<path-to-file>")
 ```
