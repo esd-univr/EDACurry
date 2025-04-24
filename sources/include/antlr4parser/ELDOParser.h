@@ -2716,6 +2716,7 @@ public:
     antlr4::tree::TerminalNode *RESISTOR();
     std::vector<NodeContext *> node();
     NodeContext* node(size_t i);
+    antlr4::tree::TerminalNode *ID();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -2733,6 +2734,7 @@ public:
     antlr4::tree::TerminalNode *CAPACITOR();
     std::vector<NodeContext *> node();
     NodeContext* node(size_t i);
+    antlr4::tree::TerminalNode *ID();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;

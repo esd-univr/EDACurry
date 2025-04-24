@@ -177,6 +177,7 @@ pybind11_add_module(
     ${PROJECT_SOURCE_DIR}/src/edacurry/backend/xml_backend.cpp
     ${PROJECT_SOURCE_DIR}/src/edacurry/backend/json_backend.cpp
     ${PROJECT_SOURCE_DIR}/src/edacurry/backend/eldo_backend.cpp
+    ${PROJECT_SOURCE_DIR}/src/edacurry/backend/spectre_backend.cpp
     ${PROJECT_SOURCE_DIR}/src/edacurry/features/named_object.cpp
     ${PROJECT_SOURCE_DIR}/src/edacurry/features/visitable_object.cpp
     ${PROJECT_SOURCE_DIR}/src/antlr4parser/ELDOLexer.cpp
@@ -279,6 +280,7 @@ if(DOXYGEN_FOUND)
     doxygen_add_docs(
         ${PROJECT_NAME}_documentation
         ${PROJECT_SOURCE_DIR}/include/backend/eldo_backend.hpp
+        ${PROJECT_SOURCE_DIR}/include/backend/spectre_backend.hpp
         ${PROJECT_SOURCE_DIR}/include/backend/indented_stream.hpp
         ${PROJECT_SOURCE_DIR}/include/backend/json_backend.hpp
         ${PROJECT_SOURCE_DIR}/include/backend/xml_backend.hpp
