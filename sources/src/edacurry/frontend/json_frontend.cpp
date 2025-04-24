@@ -217,6 +217,9 @@ struct TypeName<edacurry::structure::Object> {
 
 } // namespace edacurry
 
+namespace json
+{
+
 const json::jnode_t &operator>>(const json::jnode_t &lhs, std::shared_ptr<edacurry::structure::Object> &rhs)
 {
     if (try_to_read<edacurry::structure::Object, edacurry::structure::Analysis>(lhs, rhs)) {
@@ -686,6 +689,8 @@ const json::jnode_t &operator>>(const json::jnode_t &lhs, std::shared_ptr<edacur
     }
     return lhs;
 }
+
+} // namespace json
 
 namespace edacurry::frontend
 {

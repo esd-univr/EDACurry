@@ -7,6 +7,8 @@
 #include "edacurry/structure/component.hpp"
 #include "edacurry/utility/logging.hpp"
 #include "edacurry/utility/utility.hpp"
+#include "edacurry/utility/visitor_utilities.hpp"
+#include "edacurry/classes.hpp"
 
 namespace edacurry::structure
 {
@@ -33,6 +35,35 @@ std::string Component::getMaster() const
 bool Component::matchMaster(const std::string &master) const
 {
     return _master == master;
+}
+
+std::shared_ptr<Parameter> Component::findParameter(const std::string &name) const
+{
+    return edacurry::find_parameter(std::const_pointer_cast<Object>(shared_from_this()), name, false);
+}
+
+std::shared_ptr<Parameter> Component::setParameter(
+    const std::string &name,
+    const std::shared_ptr<Value> &right,
+    ParameterType type,
+    bool hide_name)
+{
+    // Search for an existing parameter with the same left-hand name.
+    for (const auto &param : parameters) {
+        auto left = std::dynamic_pointer_cast<Identifier>(param->getLeft());
+        if (left && left->getName() == name) {
+            param->setRight(right);
+            param->setType(type);
+            param->setHideName(hide_name);
+            return param;
+        }
+    }
+    // Create the left-hand side identifier.
+    auto left = std::make_shared<Identifier>(name);
+    // Create the new parameter.
+    auto param = std::make_shared<Parameter>(left, right, type, hide_name);
+    parameters.push_back(param);
+    return param;
 }
 
 std::string Component::toString() const
