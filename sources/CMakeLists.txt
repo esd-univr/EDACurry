@@ -170,6 +170,7 @@ pybind11_add_module(
     ${PROJECT_SOURCE_DIR}/src/edacurry/structure/string.cpp
     ${PROJECT_SOURCE_DIR}/src/edacurry/utility/logging.cpp
     ${PROJECT_SOURCE_DIR}/src/edacurry/utility/utility.cpp
+    ${PROJECT_SOURCE_DIR}/src/edacurry/utility/visitor_utilities.cpp
     ${PROJECT_SOURCE_DIR}/src/edacurry/frontend/eldo_frontend.cpp
     ${PROJECT_SOURCE_DIR}/src/edacurry/frontend/json_frontend.cpp
     ${PROJECT_SOURCE_DIR}/src/edacurry/frontend/xml_frontend.cpp
