@@ -1,13 +1,9 @@
 import edacurry
 import sys
 
-if len(sys.argv) != 2:
-    print(f"Usage: {sys.argv[0]} <eldo_file>")
-    sys.exit(1)
-
-eldo_file = sys.argv[1]
-root = edacurry.parse_eldo(eldo_file)
-# Step 1: Find and rename OPAMP1 → OPAMP1_WP
+# Parse the ELDO file.
+root = edacurry.parse_eldo("eldo/circ_base/opamp.cir")
+# Step 1: Find and rename OPAMP1 -> OPAMP1_WP
 original = edacurry.find_subckt(root, "OPAMP1")
 original.name = "OPAMP1_WP"
 # Step 2: Create wrapper subckt OPAMP1 with same ports.

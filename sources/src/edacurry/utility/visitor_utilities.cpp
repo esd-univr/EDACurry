@@ -8,23 +8,27 @@
 namespace edacurry
 {
 
-FindComponentVisitor::FindComponentVisitor(const std::string &target, bool descend)
-    : _target(target), _descend(descend), _result(nullptr)
+FindComponentVisitor::FindComponentVisitor(const HitFunction &hit_function, bool descend, bool terminate_on_hit)
+    : _hit_function(hit_function), _descend(descend), _terminate_on_hit(terminate_on_hit), _result({})
 {
 }
 
 int FindComponentVisitor::visitComponent(const std::shared_ptr<structure::Component> &e)
 {
-    if (e->getName() == _target)
-        _result = e;
+    if (_hit_function(e)) {
+        _result.push_back(e);
+        if (_terminate_on_hit) {
+            return 1;
+        }
+    }
     return 0;
 }
 
 int FindComponentVisitor::visitSubckt(const std::shared_ptr<structure::Subckt> &e)
 {
     if (!_descend)
-        return 0;                       // Stop descent
-    return BaseVisitor::visitSubckt(e); // Default recursion
+        return 0;
+    return BaseVisitor::visitSubckt(e);
 }
 
 int FindComponentVisitor::visitModel(const std::shared_ptr<structure::Model> &e)
@@ -41,22 +45,23 @@ int FindComponentVisitor::visitLibraryDef(const std::shared_ptr<structure::Libra
     return BaseVisitor::visitLibraryDef(e);
 }
 
-std::shared_ptr<structure::Component> FindComponentVisitor::getResult() const
+std::vector<std::shared_ptr<structure::Component>> FindComponentVisitor::getResult() const
 {
     return _result;
 }
 
-FindParameterVisitor::FindParameterVisitor(const std::string &target, bool descend)
-    : _target(target), _descend(descend), _result(nullptr)
+FindParameterVisitor::FindParameterVisitor(const HitFunction &hit_function, bool descend, bool terminate_on_hit)
+    : _hit_function(hit_function), _descend(descend), _terminate_on_hit(terminate_on_hit), _result({})
 {
 }
 
 int FindParameterVisitor::visitParameter(const std::shared_ptr<structure::Parameter> &e)
 {
-    auto id = std::dynamic_pointer_cast<structure::Identifier>(e->getLeft());
-    if (id && id->getName() == _target) {
-        _result = e;
-        return 1; // Found, stop traversal
+    if (_hit_function(e)) {
+        _result.push_back(e);
+        if (_terminate_on_hit) {
+            return 1;
+        }
     }
     return 0;
 }
@@ -64,8 +69,8 @@ int FindParameterVisitor::visitParameter(const std::shared_ptr<structure::Parame
 int FindParameterVisitor::visitSubckt(const std::shared_ptr<structure::Subckt> &e)
 {
     if (!_descend)
-        return 0;                       // Stop descent
-    return BaseVisitor::visitSubckt(e); // Default recursion
+        return 0;
+    return BaseVisitor::visitSubckt(e);
 }
 
 int FindParameterVisitor::visitModel(const std::shared_ptr<structure::Model> &e)
@@ -82,28 +87,44 @@ int FindParameterVisitor::visitLibraryDef(const std::shared_ptr<structure::Libra
     return BaseVisitor::visitLibraryDef(e);
 }
 
-std::shared_ptr<structure::Parameter> FindParameterVisitor::getResult() const
+std::vector<std::shared_ptr<structure::Parameter>> FindParameterVisitor::getResult() const
 {
     return _result;
 }
 
-FindSubcktVisitor::FindSubcktVisitor(const std::string &target, bool descend)
-    : _target(target), _descend(descend), _result(nullptr)
+FindSubcktVisitor::FindSubcktVisitor(const HitFunction &hit_function, bool descend, bool terminate_on_hit)
+    : _hit_function(hit_function), _descend(descend), _terminate_on_hit(terminate_on_hit), _result({})
 {
 }
 
 int FindSubcktVisitor::visitSubckt(const std::shared_ptr<structure::Subckt> &e)
 {
-    if (e->getName() == _target) {
-        _result = e;
-        return 1;
+    if (_hit_function(e)) {
+        _result.push_back(e);
+        if (_terminate_on_hit) {
+            return 1;
+        }
     }
-    if (_descend)
-        return BaseVisitor::visitSubckt(e);
-    return 0;
+    if (!_descend)
+        return 0;
+    return BaseVisitor::visitSubckt(e);
 }
 
-std::shared_ptr<structure::Subckt> FindSubcktVisitor::getResult() const
+int FindSubcktVisitor::visitModel(const std::shared_ptr<structure::Model> &e)
+{
+    if (!_descend)
+        return 0;
+    return BaseVisitor::visitModel(e);
+}
+
+int FindSubcktVisitor::visitLibraryDef(const std::shared_ptr<structure::LibraryDef> &e)
+{
+    if (!_descend)
+        return 0;
+    return BaseVisitor::visitLibraryDef(e);
+}
+
+std::vector<std::shared_ptr<structure::Subckt>> FindSubcktVisitor::getResult() const
 {
     return _result;
 }
@@ -132,8 +153,37 @@ std::shared_ptr<edacurry::structure::Component> find_component(
     const std::string &name,
     bool descend)
 {
-    edacurry::FindComponentVisitor visitor(name, descend);
+    // Create a hit function that checks if the component's name matches the given name.
+    auto hit_function = [name](const std::shared_ptr<edacurry::structure::Component> &c) {
+        return c->getName() == name;
+    };
+    // Create the visitor.
+    edacurry::FindComponentVisitor visitor(hit_function, descend, true);
+    // Visit the root object.
     root->accept(&visitor);
+    // Get the result.
+    auto result = visitor.getResult();
+    // If the result is empty, return nullptr.
+    if (result.empty()) {
+        return nullptr;
+    }
+    return result.front();
+}
+
+std::vector<std::shared_ptr<edacurry::structure::Component>> find_components_by_master(
+    const std::shared_ptr<edacurry::structure::Object> &root,
+    const std::string &name,
+    bool descend)
+{
+    // Create a hit function that checks if the component's master name matches the given name.
+    auto hit_function = [name](const std::shared_ptr<edacurry::structure::Component> &c) {
+        return c->getMaster() == name;
+    };
+    // Create the visitor.
+    edacurry::FindComponentVisitor visitor(hit_function, descend, false);
+    // Visit the root object.
+    root->accept(&visitor);
+    // Return the result.
     return visitor.getResult();
 }
 
@@ -142,9 +192,28 @@ std::shared_ptr<edacurry::structure::Parameter> find_parameter(
     const std::string &name,
     bool descend)
 {
-    edacurry::FindParameterVisitor visitor(name, descend);
+    // Create a hit function that checks if the parameter's name matches the given name.
+    auto hit_function = [name](const std::shared_ptr<edacurry::structure::Parameter> &p) {
+        // Cast the left hand side to an identifier.
+        auto lhs = std::dynamic_pointer_cast<edacurry::structure::Identifier>(p->getLeft());
+        // If the left hand side is not an identifier, return false.
+        if (!lhs) {
+            return false;
+        }
+        // Check if the identifier's name matches the given name.
+        return lhs->getName() == name;
+    };
+    // Create the visitor.
+    edacurry::FindParameterVisitor visitor(hit_function, descend, true);
+    // Visit the root object.
     root->accept(&visitor);
-    return visitor.getResult();
+    // Get the result.
+    auto result = visitor.getResult();
+    // If the result is empty, return nullptr.
+    if (result.empty()) {
+        return nullptr;
+    }
+    return result.front();
 }
 
 std::shared_ptr<structure::Subckt> find_subckt(
@@ -152,9 +221,21 @@ std::shared_ptr<structure::Subckt> find_subckt(
     const std::string &name,
     bool descend)
 {
-    edacurry::FindSubcktVisitor visitor(name, descend);
+    // Create a hit function that checks if the subcircuit's name matches the given name.
+    auto hit_function = [name](const std::shared_ptr<structure::Subckt> &s) {
+        return s->getName() == name;
+    };
+    // Create the visitor.
+    edacurry::FindSubcktVisitor visitor(hit_function, descend, true);
+    // Visit the root object.
     root->accept(&visitor);
-    return visitor.getResult();
+    // Get the result.
+    auto result = visitor.getResult();
+    // If the result is empty, return nullptr.
+    if (result.empty()) {
+        return nullptr;
+    }
+    return result.front();
 }
 
 void rename_node(
