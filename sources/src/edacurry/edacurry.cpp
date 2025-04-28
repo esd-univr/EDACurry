@@ -382,7 +382,9 @@ PYBIND11_MODULE(edacurry, m)
 
     // ========================================================================
 
-    m.def("find_component", &edacurry::find_component, py::arg("root"), py::arg("name"),
+    m.def("find_component", &edacurry::find_component,
+          py::arg("root"),
+          py::arg("name"),
           py::arg("descend") = true,
           "Finds a component with the given name starting from a structure object.\n"
           "Args:\n"
@@ -392,7 +394,22 @@ PYBIND11_MODULE(edacurry, m)
           "Returns:\n"
           "  Component or None.");
 
-    m.def("find_parameter", &edacurry::find_parameter, py::arg("root"), py::arg("name"), py::arg("descend") = false,
+    m.def("find_components_by_master", &edacurry::find_components_by_master,
+          py::arg("root"),
+          py::arg("name"),
+          py::arg("descend") = true,
+          "Finds all components with the given master name starting from a structure object.\n"
+          "Args:\n"
+          "  root (Object): The object to search (e.g., circuit, subckt).\n"
+          "  name (str): The master name to search for.\n"
+          "  descend (bool): Whether to search in subcircuits and models.\n"
+          "Returns:\n"
+          "  List of Components.");
+
+    m.def("find_parameter", &edacurry::find_parameter,
+          py::arg("root"),
+          py::arg("name"),
+          py::arg("descend") = false,
           "Finds a parameter with the given name starting from a structure object.\n"
           "Args:\n"
           "  root (Object): The object to search (e.g., circuit, subckt).\n"
