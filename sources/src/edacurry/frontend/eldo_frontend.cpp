@@ -1404,6 +1404,9 @@ Any ELDOFrontend::visitResistor(ELDOParser::ResistorContext *ctx)
 {
     auto component = utility::to_check<structure::Component>(this->back());
     component->setName(ctx->RESISTOR()->toString());
+    if (ctx->ID()) {
+        component->setMaster(ctx->ID()->toString());
+    }
     return visitChildren(ctx);
 }
 
@@ -1411,6 +1414,9 @@ Any ELDOFrontend::visitCapacitor(ELDOParser::CapacitorContext *ctx)
 {
     auto component = utility::to_check<structure::Component>(this->back());
     component->setName(ctx->CAPACITOR()->toString());
+    if (ctx->ID()) {
+        component->setMaster(ctx->ID()->toString());
+    }
     return visitChildren(ctx);
 }
 

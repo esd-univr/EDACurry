@@ -42,6 +42,23 @@ public:
     /// @return <tt>True</tt> if names are equals.
     bool matchMaster(const std::string &master) const;
 
+    /// @brief Searches for a parameter by name.
+    /// @param name The name of the parameter (left-hand side).
+    /// @return A shared pointer to the matching parameter, or nullptr if not found.
+    std::shared_ptr<Parameter> findParameter(const std::string &name) const;
+
+    /// @brief Adds or updates a parameter by name.
+    /// @param name The name of the parameter (left-hand side).
+    /// @param right The right-hand value of the parameter.
+    /// @param type The type of the parameter.
+    /// @param hide_name Whether to hide the name during code generation.
+    /// @return The pointer to the parameter (created or updated).
+    std::shared_ptr<Parameter> setParameter(
+        const std::string &name,
+        const std::shared_ptr<Value> &right,
+        ParameterType type = ParameterType::param_assign,
+        bool hide_name     = false);
+
     /// @brief Provides a string representation of the object for **debugging** purposes.
     /// @return the string representation.
     std::string toString() const override;

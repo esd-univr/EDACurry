@@ -5,3 +5,6 @@ sources/test/eldo/analog_benchmark2017_v2.2
 sources/test/eldo/analog.com
 sources/test/eldo/nuovi_circuiti
 *.tar.gz
+.vscode
+*.dot
+

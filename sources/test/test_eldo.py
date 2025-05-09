@@ -125,6 +125,7 @@ if len(sys.argv) == 1:
 for i in range(1, len(sys.argv)):
     argument = sys.argv[i]
 
+    # If the argument is a directory.
     if os.path.isdir(argument):
         # Iterate the files inside the directory.
         for filename in os.listdir(argument):
@@ -135,6 +136,7 @@ for i in range(1, len(sys.argv)):
             out_xml = os.path.join("eldo_result/", "{}.xml".format(name))
             out_json = os.path.join("eldo_result/", "{}.json".format(name))
             out_eldo = os.path.join("eldo_result/", "{}.cir".format(name))
+            out_spectre = os.path.join("eldo_result/", "{}.scs".format(name))
             # Get the content.
             print("Parsing `{}`".format(inp))
             root = edacurry.parse_eldo(inp)
@@ -150,6 +152,14 @@ for i in range(1, len(sys.argv)):
             print("Writing `{}`".format(out_json))
             with open(out_json, "w") as outf:
                 outf.write(json_content)
+
+            # Write to Spectre.
+            spectre_content = edacurry.write_spectre(root)
+            # If required generate the output file.
+            print("Writing `{}`".format(out_spectre))
+            with open(out_spectre, "w") as outf:
+                outf.write(spectre_content)
+
             # Write to ELDO.
             eldo_content = edacurry.write_eldo(root)
             # If required generate the output file.
@@ -159,6 +169,7 @@ for i in range(1, len(sys.argv)):
             # Compare the two files.
             compare(inp, out_eldo)
 
+    # If the argument is a file.
     elif os.path.isfile(argument):
         # Get the basename.
         basename = os.path.basename(argument)
@@ -168,6 +179,7 @@ for i in range(1, len(sys.argv)):
         out_xml = os.path.join("eldo_result/", "{}.xml".format(name))
         out_json = os.path.join("eldo_result/", "{}.json".format(name))
         out_eldo = os.path.join("eldo_result/", "{}.cir".format(name))
+        out_spectre = os.path.join("eldo_result/", "{}.scs".format(name))
         # Get the content.
         print("Parsing `{}`".format(argument))
         root = edacurry.parse_eldo(argument)
@@ -183,6 +195,14 @@ for i in range(1, len(sys.argv)):
         print("Writing `{}`".format(out_json))
         with open(out_json, "w") as outf:
             outf.write(json_content)
+
+        # Write to Spectre.
+        spectre_content = edacurry.write_spectre(root)
+        # If required generate the output file.
+        print("Writing `{}`".format(out_spectre))
+        with open(out_spectre, "w") as outf:
+            outf.write(spectre_content)
+
         # Write to ELDO.
         eldo_content = edacurry.write_eldo(root)
         # If required generate the output file.

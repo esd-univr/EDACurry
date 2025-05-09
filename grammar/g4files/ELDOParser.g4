@@ -927,7 +927,7 @@ interp_type
 //    + [L=VAL] [W=VAL] [M=VAL] [T[EMP]=VAL] [DTEMP=VAL] [SCALE=VAL]
 //    + [STATISTICAL=0|1]
 // ============================================================================
-resistor : RESISTOR node node;
+resistor : RESISTOR node node ID?;
 
 // ============================================================================
 // CAPACITOR
@@ -946,7 +946,7 @@ resistor : RESISTOR node node;
 //    + [TC1=T1] [TC2=T2] [TC3=T3] [CTYPE=VAL]
 //    + [STATISTICAL=0|1]
 // ============================================================================
-capacitor : CAPACITOR node node;
+capacitor : CAPACITOR node node ID?;
 
 // ============================================================================
 // INDUCTOR

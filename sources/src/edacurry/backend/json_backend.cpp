@@ -29,6 +29,9 @@ static inline bool try_to_write(json::jnode_t &lhs, const std::shared_ptr<Base> 
     return false;
 }
 
+namespace json
+{
+
 json::jnode_t &operator<<(json::jnode_t &lhs, const std::shared_ptr<edacurry::structure::Object> &rhs)
 {
     if (try_to_write<edacurry::structure::Object, edacurry::structure::Analysis>(lhs, rhs)) {
@@ -406,6 +409,8 @@ json::jnode_t &operator<<(json::jnode_t &lhs, const std::shared_ptr<edacurry::st
     lhs["second"] << rhs->getSecond();
     return lhs;
 }
+
+} // namespace json
 
 namespace edacurry::backend
 {

@@ -7,6 +7,7 @@
 #include "edacurry/backend/eldo_backend.hpp"
 #include "edacurry/backend/xml_backend.hpp"
 #include "edacurry/backend/json_backend.hpp"
+#include "edacurry/backend/spectre_backend.hpp"
 
 #include "edacurry/frontend/eldo_frontend.hpp"
 #include "edacurry/frontend/json_frontend.hpp"
@@ -23,6 +24,7 @@
 
 #include "edacurry/utility/logging.hpp"
 #include "edacurry/utility/utility.hpp"
+#include "edacurry/utility/visitor_utilities.hpp"
 
 #include "edacurry/factory.hpp"
 #include "edacurry/enums.hpp"
@@ -372,11 +374,71 @@ PYBIND11_MODULE(edacurry, m)
     m.def("parse_spectre", edacurry::frontend::parse_spectre);
     m.def("parse_json", edacurry::frontend::parse_json);
     m.def("parse_xml", edacurry::frontend::parse_xml);
-    
+
     m.def("write_eldo", edacurry::backend::write_eldo);
-    //m.def("write_spectre", edacurry::backend::write_spectre);
+    m.def("write_spectre", edacurry::backend::write_spectre);
     m.def("write_json", edacurry::backend::write_json);
     m.def("write_xml", edacurry::backend::write_xml);
+
+    // ========================================================================
+
+    m.def("find_component", &edacurry::find_component,
+          py::arg("root"),
+          py::arg("name"),
+          py::arg("descend") = true,
+          "Finds a component with the given name starting from a structure object.\n"
+          "Args:\n"
+          "  root (Object): The object to search (e.g., circuit, subckt).\n"
+          "  name (str): The component name to search for.\n"
+          "  descend (bool): Whether to search in subcircuits and models.\n"
+          "Returns:\n"
+          "  Component or None.");
+
+    m.def("find_components_by_master", &edacurry::find_components_by_master,
+          py::arg("root"),
+          py::arg("name"),
+          py::arg("descend") = true,
+          "Finds all components with the given master name starting from a structure object.\n"
+          "Args:\n"
+          "  root (Object): The object to search (e.g., circuit, subckt).\n"
+          "  name (str): The master name to search for.\n"
+          "  descend (bool): Whether to search in subcircuits and models.\n"
+          "Returns:\n"
+          "  List of Components.");
+
+    m.def("find_parameter", &edacurry::find_parameter,
+          py::arg("root"),
+          py::arg("name"),
+          py::arg("descend") = false,
+          "Finds a parameter with the given name starting from a structure object.\n"
+          "Args:\n"
+          "  root (Object): The object to search (e.g., circuit, subckt).\n"
+          "  name (str): The parameter name to search for.\n"
+          "  descend (bool): Whether to search in subcircuits and models.\n"
+          "Returns:\n"
+          "  Parameter or None.");
+
+    m.def("find_subckt", &edacurry::find_subckt,
+          py::arg("root"),
+          py::arg("name"),
+          py::arg("descend") = true,
+          "Finds a subcircuit with the given name.\n"
+          "Args:\n"
+          "  root (Object): The top-level object to search from.\n"
+          "  name (str): The subcircuit name.\n"
+          "  descend (bool, optional): Whether to recurse into nested structures.\n"
+          "Returns:\n"
+          "  Subckt or None.");
+
+    m.def("rename_node", &edacurry::rename_node,
+          py::arg("scope"),
+          py::arg("old_name"),
+          py::arg("new_name"),
+          "Rename a node in the given scope.\n"
+          "Args:\n"
+          "  scope (Object): The circuit or subcircuit to search.\n"
+          "  old_name (str): The original node name.\n"
+          "  new_name (str): The new node name.");
 
     // ========================================================================
     py::enum_<NetlistType>(m, "NetlistType", "All the supported languages.")
@@ -684,6 +746,30 @@ PYBIND11_MODULE(edacurry, m)
         .def_readonly("parameters", &Component::parameters)
         .def_property("master", &Component::getMaster, &Component::setMaster, "The component's master.")
         .def("matchMaster", &Component::matchMaster, py::arg("master"), "Checks whether given master is equals to this object master.")
+        .def(
+            "find_parameter",
+            &Component::findParameter,
+            py::arg("name"),
+            "Finds a parameter with the given name starting from this component.\n"
+            "Args:\n"
+            "  name (str): The parameter name to search for.\n"
+            "Returns:\n"
+            "  Parameter or None.\n")
+        .def(
+            "set_parameter",
+            &Component::setParameter,
+            py::arg("name"),
+            py::arg("right"),
+            py::arg("type")      = ParameterType::param_assign,
+            py::arg("hide_name") = false,
+            "Sets a parameter, creating it if it does not exist.\n"
+            "Args:\n"
+            "  name (str): Left-hand side identifier.\n"
+            "  right (Value): Right-hand side expression/value.\n"
+            "  type (ParameterType, optional): The parameter type. Defaults to param_assign.\n"
+            "  hide_name (bool, optional): Whether to hide the name in code generation.\n"
+            "Returns:\n"
+            "  Parameter: The created or updated parameter.")
         .def("__str__", &Component::toString)
         .def("__repr__", &Component::toString);
 

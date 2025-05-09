@@ -1,5 +1,0 @@
-simulator lang=spectre
-global 0
-V1 (net1 0) vsource dc=1.8
-R1 (net1 net2) resistor r=10k
-
