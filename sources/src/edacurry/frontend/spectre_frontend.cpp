@@ -1,677 +1,563 @@
-/// @file spectre_frontend.cpp
-/// @author Enrico Fraccaroli (enrico.fraccaroli@gmail.com)
-/// @copyright Copyright (c) 2021 sydelity.net (info@sydelity.com)
-/// Distributed under the MIT License (MIT) (See accompanying LICENSE file or
-///  copy at http://opensource.org/licenses/MIT)
-
 #include "edacurry/frontend/spectre_frontend.hpp"
 #include "edacurry/utility/logging.hpp"
 #include "edacurry/utility/utility.hpp"
 #include "edacurry/classes.hpp"
+#include "edacurry/enums.hpp"
+#include <cctype>
+#include <algorithm>
+#include <string>
+#include <vector>
+#include <fstream>
+#include <map>
+#include <unistd.h>
 
 #include "antlr4parser/SPECTREParser.h"
 #include "antlr4parser/SPECTRELexer.h"
 
-namespace edacurry::frontend
+using antlrcpp::Any;
+using namespace std;
+
+namespace edacurry::frontend {
+
+/// @brief Strips quotes from the beginning and end of a string.
+std::string strip_quotes(const std::string &s)
 {
+    if (s.length() >= 2) {
+        if ((s.front() == '"' && s.back() == '"') || (s.front() == '\'' && s.back() == '\''))
+            return s.substr(1, s.length() - 2);
+    }
+    return s;
+}
+
+/// @brief Converts a filepath context to a string.
+std::string to_string(SPECTREParser::FilepathContext *ctx)
+{
+    if (ctx == nullptr) return "";
+    return strip_quotes(ctx->getText());
+}
+
+/// @brief Parses a terminal node representing a number with an optional SI unit suffix.
+std::shared_ptr<structure::Value> to_number(antlr4::tree::TerminalNode *ctx, Factory &factory)
+{
+    if (!ctx) return nullptr;
+    std::string s = ctx->getText();
+    if (s.empty()) return nullptr;
+
+    std::string num_str = s;
+    double multiplier = 1.0;
+    char last_char = num_str.back();
+
+    if (isalpha(last_char)) {
+        switch (std::toupper(last_char)) {
+            case 'T': multiplier = 1e12;  num_str.pop_back(); break;
+            case 'G': multiplier = 1e9;   num_str.pop_back(); break;
+            case 'M': multiplier = 1e6;   num_str.pop_back(); break;
+            case 'K': multiplier = 1e3;   num_str.pop_back(); break;
+            case 'm': multiplier = 1e-3;  num_str.pop_back(); break;
+            case 'U': multiplier = 1e-6;  num_str.pop_back(); break;
+            case 'N': multiplier = 1e-9;  num_str.pop_back(); break;
+            case 'P': multiplier = 1e-12; num_str.pop_back(); break;
+            case 'F': multiplier = 1e-15; num_str.pop_back(); break;
+        }
+        if (s.length() > 3 && utility::to_lower(s.substr(s.length() - 3)) == "meg") {
+            multiplier = 1e6;
+            num_str = s.substr(0, s.length() - 3);
+        }
+    }
+
+    if (num_str.empty()) return nullptr;
+
+    try {
+        size_t processed_chars = 0;
+        double value = std::stod(num_str, &processed_chars);
+        if (processed_chars != num_str.length()) return nullptr;
+        return factory.number<double>(value * multiplier);
+    } catch (...) {
+        return nullptr;
+    }
+}
+
+/// @brief Converts an operator string to its corresponding Operator enum.
+Operator to_operator_internal(const std::string &op_str)
+{
+    static const std::map<std::string, Operator> op_map = {
+        { "+", Operator::op_plus }, { "-", Operator::op_minus },
+        { "*", Operator::op_mult }, { "/", Operator::op_div },
+        { "%", Operator::op_mod }, { "==", Operator::op_eq },
+        { "!=", Operator::op_neq }, { "<", Operator::op_lt },
+        { "<=", Operator::op_le }, { ">", Operator::op_gt },
+        { ">=", Operator::op_ge }, { "&&", Operator::op_and },
+        { "||", Operator::op_or }, { "!", Operator::op_not },
+        { "&", Operator::op_band }, { "|", Operator::op_bor },
+        { "^", Operator::op_xor }, { "<<", Operator::op_bsl }, 
+        { ">>", Operator::op_bsr }
+    };
+    auto it = op_map.find(op_str);
+    if (it != op_map.end()) {
+        return it->second;
+    }
+    std::string lower_op = utility::to_lower(op_str);
+    if (lower_op == "and") return Operator::op_and;
+    if (lower_op == "or") return Operator::op_or;
+    if (lower_op == "not") return Operator::op_not;
+    throw std::runtime_error("Unknown operator: " + op_str);
+}
+
+/// @brief Converts a binary operator context to an Operator enum.
+Operator to_operator(SPECTREParser::Expression_operatorContext *ctx)
+{
+    return to_operator_internal(ctx->getText());
+}
+
+/// @brief Converts a unary operator context to an Operator enum.
+Operator to_operator(SPECTREParser::Expression_unaryContext *ctx)
+{
+    return to_operator_internal(ctx->children[0]->getText());
+}
 
 SPECTREFrontend::SPECTREFrontend(antlr4::CommonTokenStream &_tokens)
-    : tokens(_tokens),
-      _stack(),
-      _root(),
-      _factory()
-{
-}
+    : tokens(_tokens), _stack(), _root(), _factory() {}
 
-antlrcpp::Any SPECTREFrontend::visitNetlist(SPECTREParser::NetlistContext *ctx)
-{
-    return visitChildren(ctx);
+/// === Top-level netlist and hierarchy ===
+Any SPECTREFrontend::visitNetlist(SPECTREParser::NetlistContext *ctx) {
+    auto circuit = _factory.circuit("spectre_top", "");
+    _root = circuit;
+    this->push(circuit);
+    visitChildren(ctx);
+    this->pop();
+    return circuit;
 }
 
-antlrcpp::Any SPECTREFrontend::visitNetlist_title(SPECTREParser::Netlist_titleContext *ctx)
-{
-    return visitChildren(ctx);
+Any SPECTREFrontend::visitNetlist_title(SPECTREParser::Netlist_titleContext *ctx) {
+    if (auto circuit = utility::to<structure::Circuit>(back()))
+        circuit->setTitle(ctx->getText());
+    return Any();
 }
 
-antlrcpp::Any SPECTREFrontend::visitNetlist_entity(SPECTREParser::Netlist_entityContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitNetlist_entity(SPECTREParser::Netlist_entityContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitInclude(SPECTREParser::IncludeContext *ctx)
-{
-    return visitChildren(ctx);
-}
+/// === Include ===
+Any SPECTREFrontend::visitInclude(SPECTREParser::IncludeContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitStandard_include(SPECTREParser::Standard_includeContext *ctx)
-{
-    return visitChildren(ctx);
+Any SPECTREFrontend::visitStandard_include(SPECTREParser::Standard_includeContext *ctx) {
+    return this->advance_visit(ctx, _factory.include(IncludeType::inc_standard, to_string(ctx->filepath())));
 }
-
-antlrcpp::Any SPECTREFrontend::visitCpp_include(SPECTREParser::Cpp_includeContext *ctx)
-{
-    return visitChildren(ctx);
+Any SPECTREFrontend::visitCpp_include(SPECTREParser::Cpp_includeContext *ctx) {
+    return this->advance_visit(ctx, _factory.include(IncludeType::inc_cpp, to_string(ctx->filepath())));
 }
 
-antlrcpp::Any SPECTREFrontend::visitAhdl_include(SPECTREParser::Ahdl_includeContext *ctx)
-{
-    return visitChildren(ctx);
+Any SPECTREFrontend::visitAhdl_include(SPECTREParser::Ahdl_includeContext *ctx) {
+    return this->advance_visit(ctx, _factory.include(IncludeType::inc_ahdl, to_string(ctx->filepath())));
 }
 
-antlrcpp::Any SPECTREFrontend::visitLang(SPECTREParser::LangContext *ctx)
-{
-    return visitChildren(ctx);
+/// === Language ===
+Any SPECTREFrontend::visitLang(SPECTREParser::LangContext *ctx) {
+    if (!ctx->ID()) {
+        // Gracefully skip or handle "simulator lang=..." if the grammar didn't match
+        return visitChildren(ctx);
+    }
+    // Otherwise proceed as before
+    return this->advance_visit(ctx, _factory.control(ctx->ID()->getText(), ControlType::ctrl_none));
 }
 
-antlrcpp::Any SPECTREFrontend::visitLibrary(SPECTREParser::LibraryContext *ctx)
-{
-    return visitChildren(ctx);
+/// === Library ===
+Any SPECTREFrontend::visitLibrary(SPECTREParser::LibraryContext *ctx) {
+    std::string name = ctx->library_header()->ID()->getText();
+    return this->advance_visit(ctx, _factory.library(name, ""));
 }
 
-antlrcpp::Any SPECTREFrontend::visitLibrary_header(SPECTREParser::Library_headerContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitLibrary_header(SPECTREParser::Library_headerContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitLibrary_content(SPECTREParser::Library_contentContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitLibrary_content(SPECTREParser::Library_contentContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitLibrary_footer(SPECTREParser::Library_footerContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitLibrary_footer(SPECTREParser::Library_footerContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitSection(SPECTREParser::SectionContext *ctx)
-{
-    return visitChildren(ctx);
+/// === Subcircuit ===
+Any SPECTREFrontend::visitSubckt(SPECTREParser::SubcktContext *ctx) {
+    std::string name = ctx->subckt_header()->ID()->getText();
+    return this->advance_visit(ctx, _factory.circuit(name, "subckt"));
 }
 
-antlrcpp::Any SPECTREFrontend::visitSection_header(SPECTREParser::Section_headerContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitSubckt_header(SPECTREParser::Subckt_headerContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitSection_content(SPECTREParser::Section_contentContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitSubckt_content(SPECTREParser::Subckt_contentContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitSection_footer(SPECTREParser::Section_footerContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitSubckt_footer(SPECTREParser::Subckt_footerContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitAnalogmodel(SPECTREParser::AnalogmodelContext *ctx)
+/// === Model ===
+Any SPECTREFrontend::visitModel(SPECTREParser::ModelContext *ctx)
 {
-    return visitChildren(ctx);
-}
+    // model name master [param=val …]
+    auto name       = ctx->model_name()->getText();
+    auto masterText = ctx->model_master()->getText();
+    // Call the 4-arg model(name, master, library, library_type)
+    auto modelNode  = _factory.model(name, masterText, /*lib=*/"", /*libtype=*/"");
 
-antlrcpp::Any SPECTREFrontend::visitSubckt(SPECTREParser::SubcktContext *ctx)
-{
-    return visitChildren(ctx);
-}
+    // Insert into AST and descend
+    add_to_parent(modelNode);
+    push(modelNode);
 
-antlrcpp::Any SPECTREFrontend::visitSubckt_header(SPECTREParser::Subckt_headerContext *ctx)
-{
-    return visitChildren(ctx);
-}
+    // Only visit the parameter_assign children
+    for (auto paCtx : ctx->parameter_assign()) {
+        visit(paCtx);
+    }
 
-antlrcpp::Any SPECTREFrontend::visitSubckt_content(SPECTREParser::Subckt_contentContext *ctx)
-{
-    return visitChildren(ctx);
+    pop();
+    return modelNode;
 }
 
-antlrcpp::Any SPECTREFrontend::visitSubckt_footer(SPECTREParser::Subckt_footerContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitModel_name(SPECTREParser::Model_nameContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitIf_statement(SPECTREParser::If_statementContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitModel_master(SPECTREParser::Model_masterContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitIf_alternative(SPECTREParser::If_alternativeContext *ctx)
-{
+/// === Analysis ===
+Any SPECTREFrontend::visitAnalysis(SPECTREParser::AnalysisContext *ctx) {
     return visitChildren(ctx);
 }
 
-antlrcpp::Any SPECTREFrontend::visitIf_body(SPECTREParser::If_bodyContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitAnalysis_type(SPECTREParser::Analysis_typeContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitAnalysis(SPECTREParser::AnalysisContext *ctx)
-{
-    return visitChildren(ctx);
+/// === Component ===
+Any SPECTREFrontend::visitComponent(SPECTREParser::ComponentContext* ctx) {
+    std::string id = ctx->component_id()->getText();
+    std::string master;
+    if (ctx->component_master()) {
+        master = ctx->component_master()->getText();
+    } else {
+        switch (std::toupper(id.front())) {
+            case 'R': master = "resistor";  break;
+            case 'C': master = "capacitor"; break;
+            case 'L': master = "inductor";  break;
+            case 'V': master = "vsource";   break;
+            case 'I': master = "isource";   break;
+            case 'D': master = "diode";     break;
+            case 'Q': master = "bjt";       break;
+            case 'M': master = "mos";       break;
+            default:  master = "device";    break;
+        }
+    }
+    return this->advance_visit(ctx, _factory.component(id, master));
 }
 
-antlrcpp::Any SPECTREFrontend::visitAc(SPECTREParser::AcContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitComponent_id(SPECTREParser::Component_idContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitAcmatch(SPECTREParser::AcmatchContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitComponent_master(SPECTREParser::Component_masterContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitDc(SPECTREParser::DcContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitComponent_type(SPECTREParser::Component_typeContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitDcmatch(SPECTREParser::DcmatchContext *ctx)
-{
-    return visitChildren(ctx);
+Any SPECTREFrontend::visitComponent_value(SPECTREParser::Component_valueContext *ctx) {
+    auto value = visit(ctx->expression()).as<std::shared_ptr<structure::Value>>();
+    this->add_to_parent(value);
+    return value;
 }
 
-antlrcpp::Any SPECTREFrontend::visitEnvlp(SPECTREParser::EnvlpContext *ctx)
-{
-    return visitChildren(ctx);
+Any SPECTREFrontend::visitComponent_value_list(SPECTREParser::Component_value_listContext *ctx) {
+    auto value_list = _factory.valueList(DelimiterType::dlm_none);
+    this->add_to_parent(value_list);
+    this->push(value_list);
+    for (auto expr_ctx : ctx->expression()) {
+        visit(expr_ctx);
+    }
+    this->pop();
+    return value_list;
 }
 
-antlrcpp::Any SPECTREFrontend::visitSp(SPECTREParser::SpContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitComponent_analysis(SPECTREParser::Component_analysisContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitStb(SPECTREParser::StbContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitComponent_attribute(SPECTREParser::Component_attributeContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitSweep(SPECTREParser::SweepContext *ctx)
-{
-    return visitChildren(ctx);
+/// === Parameter, Option, Global, Nodes, etc. ===
+Any SPECTREFrontend::visitParameter_assign(SPECTREParser::Parameter_assignContext *ctx) {
+    // 1) Build the LHS identifier
+    auto idVal = _factory.identifier(ctx->parameter_id()->getText());
+    // 2) Create and attach the empty Parameter
+    auto param = _factory.parameter(idVal, nullptr, param_assign, false);
+    add_to_parent(param);
+    // 3) Push it so all child Values go under this Parameter
+    push(param);
+    // 4) Evaluate RHS
+    std::shared_ptr<structure::Value> val;
+    if (ctx->expression()) {
+        val = visit(ctx->expression()).as<std::shared_ptr<structure::Value>>();
+    } else {
+        auto txt = ctx->filepath()->getText();
+        val = _factory.string(strip_quotes(txt));
+        add_to_parent(val);
+    }
+    // 5) Pop back to the Model (or Analysis, etc.)
+    pop();
+    // 6) Set the right‐hand side
+    param->setRight(val);
+    return param;
 }
 
-antlrcpp::Any SPECTREFrontend::visitSweep_header(SPECTREParser::Sweep_headerContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitParameter_access(SPECTREParser::Parameter_accessContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitSweep_content(SPECTREParser::Sweep_contentContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitParameter_id(SPECTREParser::Parameter_idContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitSweep_footer(SPECTREParser::Sweep_footerContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitParameter_list(SPECTREParser::Parameter_listContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitTdr(SPECTREParser::TdrContext *ctx)
+Any SPECTREFrontend::visitParameter_list_item(SPECTREParser::Parameter_list_itemContext *ctx)
 {
     return visitChildren(ctx);
 }
 
-antlrcpp::Any SPECTREFrontend::visitTran(SPECTREParser::TranContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitOption(SPECTREParser::OptionContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitXf(SPECTREParser::XfContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitGlobal(SPECTREParser::GlobalContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitPac(SPECTREParser::PacContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitGlobal_declarations(SPECTREParser::Global_declarationsContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitPdisto(SPECTREParser::PdistoContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitNodeset(SPECTREParser::NodesetContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitPnoise(SPECTREParser::PnoiseContext *ctx)
-{
-    return visitChildren(ctx);
+Any SPECTREFrontend::visitNode(SPECTREParser::NodeContext *ctx) {
+    return this->advance_visit(ctx, _factory.node(ctx->getText()));
 }
 
-antlrcpp::Any SPECTREFrontend::visitPsp(SPECTREParser::PspContext *ctx)
-{
-    return visitChildren(ctx);
+Any SPECTREFrontend::visitNode_branch(SPECTREParser::Node_branchContext *ctx) {
+    return this->advance_visit(ctx, _factory.node(ctx->getText()));
 }
 
-antlrcpp::Any SPECTREFrontend::visitPss(SPECTREParser::PssContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitNode_list(SPECTREParser::Node_listContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitPxf(SPECTREParser::PxfContext *ctx)
-{
-    return visitChildren(ctx);
+Any SPECTREFrontend::visitNode_list_item(SPECTREParser::Node_list_itemContext *ctx) {
+    auto node = _factory.node(ctx->getText());
+    this->add_to_parent(node);
+    return node;
 }
 
-antlrcpp::Any SPECTREFrontend::visitPz(SPECTREParser::PzContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitNode_mapping(SPECTREParser::Node_mappingContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitQpac(SPECTREParser::QpacContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitNode_pair(SPECTREParser::Node_pairContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitQpnoise(SPECTREParser::QpnoiseContext *ctx)
-{
-    return visitChildren(ctx);
-}
+/// === Filepaths, expressions, numbers, etc. ===
+Any SPECTREFrontend::visitFilepath(SPECTREParser::FilepathContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitQpsp(SPECTREParser::QpspContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitFilepath_element(SPECTREParser::Filepath_elementContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitQpss(SPECTREParser::QpssContext *ctx)
-{
+Any SPECTREFrontend::visitExpression(SPECTREParser::ExpressionContext *ctx) {
+    // Binary expression: expression operator expression
+    if (ctx->expression().size() == 2) {
+        auto op = to_operator(ctx->expression_operator());
+        auto expr = _factory.expression(op, nullptr, nullptr);
+        this->add_to_parent(expr);
+        this->push(expr);
+        visit(ctx->expression(0));
+        visit(ctx->expression(1));
+        this->pop();
+        return expr;
+    }
+    // For Unary, Function, Atom, Scope, etc.
     return visitChildren(ctx);
 }
 
-antlrcpp::Any SPECTREFrontend::visitQpxf(SPECTREParser::QpxfContext *ctx)
-{
-    return visitChildren(ctx);
+Any SPECTREFrontend::visitExpression_atom(SPECTREParser::Expression_atomContext *ctx) {
+    if (ctx->NUMBER()) {
+        auto num_val = to_number(ctx->NUMBER(), _factory);
+        if (!num_val) 
+            return Any();
+        this->add_to_parent(num_val);
+        return num_val;
+    }
+    if (ctx->ID()) {
+        auto id = _factory.identifier(ctx->ID()->getText());
+        this->add_to_parent(id);
+        return id;
+    }
+    if (ctx->STRING()) {
+        auto str = _factory.string(strip_quotes(ctx->STRING()->getText()));
+        this->add_to_parent(str);
+        return str;
+    }
+    return Any();
 }
 
-antlrcpp::Any SPECTREFrontend::visitSens(SPECTREParser::SensContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitExpression_pair(SPECTREParser::Expression_pairContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitSens_output_variables_list(SPECTREParser::Sens_output_variables_listContext *ctx)
-{
-    return visitChildren(ctx);
+Any SPECTREFrontend::visitExpression_function_call(SPECTREParser::Expression_function_callContext *ctx) {
+    auto func_call = _factory.functionCall(ctx->ID()->getText());
+    this->add_to_parent(func_call);
+    this->push(func_call);
+    for(auto expr_ctx : ctx->expression()) {
+        visit(expr_ctx);
+    }
+    this->pop();
+    return func_call;
 }
 
-antlrcpp::Any SPECTREFrontend::visitSens_design_parameters_list(SPECTREParser::Sens_design_parameters_listContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitExpression_operator(SPECTREParser::Expression_operatorContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitSens_analyses_list(SPECTREParser::Sens_analyses_listContext *ctx)
-{
+Any SPECTREFrontend::visitExpression_scope(SPECTREParser::Expression_scopeContext *ctx) {
+    if (ctx->expression().size() == 1) {
+        return visit(ctx->expression(0));
+    }
     return visitChildren(ctx);
 }
 
-antlrcpp::Any SPECTREFrontend::visitMontecarlo(SPECTREParser::MontecarloContext *ctx)
-{
-    return visitChildren(ctx);
+Any SPECTREFrontend::visitExpression_unary(SPECTREParser::Expression_unaryContext *ctx) {
+    auto op = to_operator(ctx);
+    auto expr = _factory.expressionUnary(op, nullptr);
+    this->add_to_parent(expr);
+    this->push(expr);
+    visit(ctx->expression());
+    this->pop();
+    return expr;
 }
 
-antlrcpp::Any SPECTREFrontend::visitMontecarlo_header(SPECTREParser::Montecarlo_headerContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitTime_point(SPECTREParser::Time_pointContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitMontecarlo_content(SPECTREParser::Montecarlo_contentContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitTime_pair(SPECTREParser::Time_pairContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitMontecarlo_export(SPECTREParser::Montecarlo_exportContext *ctx)
-{
-    return visitChildren(ctx);
-}
+/// === Control, sweep, analysis types, statistics, etc. ===
+Any SPECTREFrontend::visitAc(SPECTREParser::AcContext *ctx) { return this->advance_visit(ctx, _factory.analysis("ac")); }
 
-antlrcpp::Any SPECTREFrontend::visitMontecarlo_footer(SPECTREParser::Montecarlo_footerContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitAcmatch(SPECTREParser::AcmatchContext *ctx) { return this->advance_visit(ctx, _factory.analysis("acmatch")); }
 
-antlrcpp::Any SPECTREFrontend::visitNoise(SPECTREParser::NoiseContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitAlter(SPECTREParser::AlterContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitChecklimit(SPECTREParser::ChecklimitContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitAltergroup(SPECTREParser::AltergroupContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitGlobal(SPECTREParser::GlobalContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitAltergroup_content(SPECTREParser::Altergroup_contentContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitModel(SPECTREParser::ModelContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitAltergroup_footer(SPECTREParser::Altergroup_footerContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitModel_name(SPECTREParser::Model_nameContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitAltergroup_header(SPECTREParser::Altergroup_headerContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitModel_master(SPECTREParser::Model_masterContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitAnalogmodel(SPECTREParser::AnalogmodelContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitControl(SPECTREParser::ControlContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitAssert_statement(SPECTREParser::Assert_statementContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitAlter(SPECTREParser::AlterContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitCheck_statement(SPECTREParser::Check_statementContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitAltergroup(SPECTREParser::AltergroupContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitChecklimit(SPECTREParser::ChecklimitContext *ctx) { return this->advance_visit(ctx, _factory.analysis("checklimit")); }
 
-antlrcpp::Any SPECTREFrontend::visitAltergroup_header(SPECTREParser::Altergroup_headerContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitControl(SPECTREParser::ControlContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitAltergroup_content(SPECTREParser::Altergroup_contentContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitCorrelate(SPECTREParser::CorrelateContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitAltergroup_footer(SPECTREParser::Altergroup_footerContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitDc(SPECTREParser::DcContext *ctx) { return this->advance_visit(ctx, _factory.analysis("dc")); }
 
-antlrcpp::Any SPECTREFrontend::visitAssert_statement(SPECTREParser::Assert_statementContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitDcmatch(SPECTREParser::DcmatchContext *ctx) { return this->advance_visit(ctx, _factory.analysis("dcmatch")); }
 
-antlrcpp::Any SPECTREFrontend::visitCheck_statement(SPECTREParser::Check_statementContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitEnvlp(SPECTREParser::EnvlpContext *ctx) { return this->advance_visit(ctx, _factory.analysis("envlp")); }
 
-antlrcpp::Any SPECTREFrontend::visitSave(SPECTREParser::SaveContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitIc(SPECTREParser::IcContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitOption(SPECTREParser::OptionContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitIf_alternative(SPECTREParser::If_alternativeContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitSet(SPECTREParser::SetContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitIf_body(SPECTREParser::If_bodyContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitShell(SPECTREParser::ShellContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitIf_statement(SPECTREParser::If_statementContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitInfo(SPECTREParser::InfoContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitInfo(SPECTREParser::InfoContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitNodeset(SPECTREParser::NodesetContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitKeyword(SPECTREParser::KeywordContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitIc(SPECTREParser::IcContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitMismatch(SPECTREParser::MismatchContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitStatistics(SPECTREParser::StatisticsContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitMontecarlo(SPECTREParser::MontecarloContext *ctx) { return this->advance_visit(ctx, _factory.analysis("montecarlo")); }
 
-antlrcpp::Any SPECTREFrontend::visitStatistics_header(SPECTREParser::Statistics_headerContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitMontecarlo_content(SPECTREParser::Montecarlo_contentContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitStatistics_content(SPECTREParser::Statistics_contentContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitMontecarlo_export(SPECTREParser::Montecarlo_exportContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitStatistics_footer(SPECTREParser::Statistics_footerContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitMontecarlo_footer(SPECTREParser::Montecarlo_footerContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitProcess(SPECTREParser::ProcessContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitMontecarlo_header(SPECTREParser::Montecarlo_headerContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitMismatch(SPECTREParser::MismatchContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitNoise(SPECTREParser::NoiseContext *ctx) { return this->advance_visit(ctx, _factory.analysis("noise")); }
 
-antlrcpp::Any SPECTREFrontend::visitCorrelate(SPECTREParser::CorrelateContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitPac(SPECTREParser::PacContext *ctx) { return this->advance_visit(ctx, _factory.analysis("pac")); }
 
-antlrcpp::Any SPECTREFrontend::visitTruncate(SPECTREParser::TruncateContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitPdisto(SPECTREParser::PdistoContext *ctx) { return this->advance_visit(ctx, _factory.analysis("pdisto")); }
 
-antlrcpp::Any SPECTREFrontend::visitVary(SPECTREParser::VaryContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitPnoise(SPECTREParser::PnoiseContext *ctx) { return this->advance_visit(ctx, _factory.analysis("pnoise")); }
 
-antlrcpp::Any SPECTREFrontend::visitReliability(SPECTREParser::ReliabilityContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitProcess(SPECTREParser::ProcessContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitReliability_header(SPECTREParser::Reliability_headerContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitPsp(SPECTREParser::PspContext *ctx) { return this->advance_visit(ctx, _factory.analysis("psp")); }
 
-antlrcpp::Any SPECTREFrontend::visitReliability_content(SPECTREParser::Reliability_contentContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitPss(SPECTREParser::PssContext *ctx) { return this->advance_visit(ctx, _factory.analysis("pss")); }
 
-antlrcpp::Any SPECTREFrontend::visitReliability_footer(SPECTREParser::Reliability_footerContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitPxf(SPECTREParser::PxfContext *ctx) { return this->advance_visit(ctx, _factory.analysis("pxf")); }
 
-antlrcpp::Any SPECTREFrontend::visitReliability_control(SPECTREParser::Reliability_controlContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitPz(SPECTREParser::PzContext *ctx) { return this->advance_visit(ctx, _factory.analysis("pz")); }
 
-antlrcpp::Any SPECTREFrontend::visitGlobal_declarations(SPECTREParser::Global_declarationsContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitQpac(SPECTREParser::QpacContext *ctx) { return this->advance_visit(ctx, _factory.analysis("qpac")); }
 
-antlrcpp::Any SPECTREFrontend::visitComponent(SPECTREParser::ComponentContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitQpnoise(SPECTREParser::QpnoiseContext *ctx) { return this->advance_visit(ctx, _factory.analysis("qpnoise")); }
 
-antlrcpp::Any SPECTREFrontend::visitComponent_id(SPECTREParser::Component_idContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitQpsp(SPECTREParser::QpspContext *ctx) { return this->advance_visit(ctx, _factory.analysis("qpsp")); }
 
-antlrcpp::Any SPECTREFrontend::visitComponent_master(SPECTREParser::Component_masterContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitQpss(SPECTREParser::QpssContext *ctx) { return this->advance_visit(ctx, _factory.analysis("qpss")); }
 
-antlrcpp::Any SPECTREFrontend::visitComponent_attribute(SPECTREParser::Component_attributeContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitQpxf(SPECTREParser::QpxfContext *ctx) { return this->advance_visit(ctx, _factory.analysis("qpxf")); }
 
-antlrcpp::Any SPECTREFrontend::visitComponent_value(SPECTREParser::Component_valueContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitReliability(SPECTREParser::ReliabilityContext *ctx) { return this->advance_visit(ctx, _factory.analysis("reliability")); }
 
-antlrcpp::Any SPECTREFrontend::visitComponent_value_list(SPECTREParser::Component_value_listContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitReliability_content(SPECTREParser::Reliability_contentContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitComponent_analysis(SPECTREParser::Component_analysisContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitReliability_control(SPECTREParser::Reliability_controlContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitNode_list(SPECTREParser::Node_listContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitReliability_footer(SPECTREParser::Reliability_footerContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitNode_list_item(SPECTREParser::Node_list_itemContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitReliability_header(SPECTREParser::Reliability_headerContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitNode_mapping(SPECTREParser::Node_mappingContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitSave(SPECTREParser::SaveContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitNode_pair(SPECTREParser::Node_pairContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitSection(SPECTREParser::SectionContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitNode_branch(SPECTREParser::Node_branchContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitSection_content(SPECTREParser::Section_contentContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitNode(SPECTREParser::NodeContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitSection_footer(SPECTREParser::Section_footerContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitExpression(SPECTREParser::ExpressionContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitSection_header(SPECTREParser::Section_headerContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitExpression_unary(SPECTREParser::Expression_unaryContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitSens(SPECTREParser::SensContext *ctx) { return this->advance_visit(ctx, _factory.analysis("sens")); }
 
-antlrcpp::Any SPECTREFrontend::visitExpression_function_call(SPECTREParser::Expression_function_callContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitSens_analyses_list(SPECTREParser::Sens_analyses_listContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitExpression_pair(SPECTREParser::Expression_pairContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitSens_design_parameters_list(SPECTREParser::Sens_design_parameters_listContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitExpression_scope(SPECTREParser::Expression_scopeContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitSens_output_variables_list(SPECTREParser::Sens_output_variables_listContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitExpression_operator(SPECTREParser::Expression_operatorContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitSet(SPECTREParser::SetContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitExpression_atom(SPECTREParser::Expression_atomContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitShell(SPECTREParser::ShellContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitParameter_list(SPECTREParser::Parameter_listContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitSp(SPECTREParser::SpContext *ctx) { return this->advance_visit(ctx, _factory.analysis("sp")); }
 
-antlrcpp::Any SPECTREFrontend::visitParameter_list_item(SPECTREParser::Parameter_list_itemContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitStatistics(SPECTREParser::StatisticsContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitParameter_assign(SPECTREParser::Parameter_assignContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitStatistics_content(SPECTREParser::Statistics_contentContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitParameter_id(SPECTREParser::Parameter_idContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitStatistics_footer(SPECTREParser::Statistics_footerContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitParameter_access(SPECTREParser::Parameter_accessContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitStatistics_header(SPECTREParser::Statistics_headerContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitValue_access(SPECTREParser::Value_accessContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitStb(SPECTREParser::StbContext *ctx) { return this->advance_visit(ctx, _factory.analysis("stb")); }
 
-antlrcpp::Any SPECTREFrontend::visitValue_access_assign(SPECTREParser::Value_access_assignContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitSweep(SPECTREParser::SweepContext *ctx) { return this->advance_visit(ctx, _factory.analysis("sweep")); }
 
-antlrcpp::Any SPECTREFrontend::visitTime_pair(SPECTREParser::Time_pairContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitSweep_content(SPECTREParser::Sweep_contentContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitTime_point(SPECTREParser::Time_pointContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitSweep_footer(SPECTREParser::Sweep_footerContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitFilepath(SPECTREParser::FilepathContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitSweep_header(SPECTREParser::Sweep_headerContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitFilepath_element(SPECTREParser::Filepath_elementContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitTdr(SPECTREParser::TdrContext *ctx) { return this->advance_visit(ctx, _factory.analysis("tdr")); }
 
-antlrcpp::Any SPECTREFrontend::visitKeyword(SPECTREParser::KeywordContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitTran(SPECTREParser::TranContext *ctx) { return this->advance_visit(ctx, _factory.analysis("tran")); }
 
-antlrcpp::Any SPECTREFrontend::visitAnalysis_type(SPECTREParser::Analysis_typeContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitTruncate(SPECTREParser::TruncateContext *ctx) { return visitChildren(ctx); }
 
-antlrcpp::Any SPECTREFrontend::visitComponent_type(SPECTREParser::Component_typeContext *ctx)
-{
-    return visitChildren(ctx);
-}
+Any SPECTREFrontend::visitValue_access(SPECTREParser::Value_accessContext *ctx) { return visitChildren(ctx); }
+
+Any SPECTREFrontend::visitValue_access_assign(SPECTREParser::Value_access_assignContext *ctx) { return visitChildren(ctx); }
+
+Any SPECTREFrontend::visitVary(SPECTREParser::VaryContext *ctx) { return visitChildren(ctx); }
+
+Any SPECTREFrontend::visitXf(SPECTREParser::XfContext *ctx) { return this->advance_visit(ctx, _factory.analysis("xf")); }
 
 // ============================================================================
 std::shared_ptr<structure::Object> SPECTREFrontend::back() const
@@ -700,221 +586,107 @@ std::shared_ptr<structure::Object> SPECTREFrontend::pop()
 void SPECTREFrontend::add_to_parent(const std::shared_ptr<structure::Object> &node)
 {
     auto parent = this->back();
-    // If there is no parent, it means that this node is the root of the tree.
     if (parent == nullptr) {
         _root = node;
         return;
     }
-
-    auto analysis = utility::to<structure::Analysis>(parent);
-    if (analysis) {
-        auto analysis_parameter = utility::to<structure::Parameter>(node);
-        if (analysis_parameter) {
-            analysis->parameters.push_back(analysis_parameter);
+    if (auto analysis = utility::to<structure::Analysis>(parent)) {
+        if (auto param = utility::to<structure::Parameter>(node)) {
+            analysis->parameters.push_back(param);
+        } else if (auto value = utility::to<structure::Value>(node)) {
+            analysis->parameters.push_back(_factory.parameter(nullptr, value, param_assign, false));
         } else {
-            auto analysis_value = utility::to<structure::Value>(node);
-            if (analysis_value) {
-                analysis->parameters.push_back(
-                    _factory.parameter(nullptr, analysis_value, param_assign, false));
-            } else {
-                _error("Wrong item added to the object..\n"
-                       "(node:%s, parent:%s)",
-                       node->toString().c_str(), parent->toString().c_str());
-            }
+            _error("Wrong item added to Analysis: %s", node->toString().c_str());
         }
-        return;
-    }
-
-    auto circuit = utility::to<structure::Circuit>(parent);
-    if (circuit) {
-        auto circuit_node = utility::to<structure::Node>(node);
-        if (circuit_node) {
+    } else if (auto circuit = utility::to<structure::Circuit>(parent)) {
+        if (auto circuit_node = utility::to<structure::Node>(node)) {
             circuit->nodes.push_back(circuit_node);
+        } else if (auto param = utility::to<structure::Parameter>(node)) {
+            circuit->parameters.push_back(param);
         } else {
-            auto circuit_parameter = utility::to<structure::Parameter>(node);
-            if (circuit_parameter) {
-                circuit->parameters.push_back(circuit_parameter);
-            } else {
-                circuit->content.push_back(node);
-            }
+            circuit->content.push_back(node);
         }
-        return;
-    }
-
-    auto component = utility::to<structure::Component>(parent);
-    if (component) {
-        auto component_node = utility::to<structure::Node>(node);
-        if (component_node) {
-            component->nodes.push_back(component_node);
+    } else if (auto component = utility::to<structure::Component>(parent)) {
+        if (auto comp_node = utility::to<structure::Node>(node)) {
+            component->nodes.push_back(comp_node);
+        } else if (auto param = utility::to<structure::Parameter>(node)) {
+            component->parameters.push_back(param);
+        } else if (auto value = utility::to<structure::Value>(node)) {
+            component->parameters.push_back(_factory.parameter(nullptr, value, param_assign, false));
         } else {
-            auto component_parameter = utility::to<structure::Parameter>(node);
-            if (component_parameter) {
-                component->parameters.push_back(component_parameter);
-            } else {
-                auto component_value = utility::to<structure::Value>(node);
-                if (component_value) {
-                    component->parameters.push_back(
-                        _factory.parameter(nullptr, component_value, param_assign, false));
-                } else {
-                    _error("Wrong item added to the object..\n"
-                           "(node:%s, parent:%s)",
-                           node->toString().c_str(),
-                           parent->toString().c_str());
-                }
-            }
+            _error("Wrong item added to Component: %s", node->toString().c_str());
         }
-        return;
-    }
-
-    auto control_scope = utility::to<structure::ControlScope>(parent);
-    if (control_scope) {
-        auto control_scope_node = utility::to<structure::Node>(node);
-        if (control_scope_node) {
-            control_scope->nodes.push_back(control_scope_node);
+    } else if (auto control_scope = utility::to<structure::ControlScope>(parent)) {
+        if (auto cs_node = utility::to<structure::Node>(node)) {
+            control_scope->nodes.push_back(cs_node);
+        } else if (auto param = utility::to<structure::Parameter>(node)) {
+            control_scope->parameters.push_back(param);
         } else {
-            auto control_parameter = utility::to<structure::Parameter>(node);
-            if (control_parameter) {
-                control_scope->parameters.push_back(control_parameter);
-            } else {
-                control_scope->content.push_back(node);
-            }
+            control_scope->content.push_back(node);
         }
-        return;
-    }
-
-    auto control = utility::to<structure::Control>(parent);
-    if (control) {
-        auto control_parameter = utility::to<structure::Parameter>(node);
-        if (control_parameter)
-            control->parameters.push_back(control_parameter);
-        else {
-            _error("The parent is not meant to hold the given node..\n"
-                   "(node:%s, parent:%s)",
-                   node->toString().c_str(), parent->toString().c_str());
+    } else if (auto control = utility::to<structure::Control>(parent)) {
+        if (auto param = utility::to<structure::Parameter>(node)) {
+            control->parameters.push_back(param);
+        } else {
+            _error("Wrong item added to Control: %s", node->toString().c_str());
         }
-        return;
-    }
-
-    auto value_list = utility::to<structure::ValueList>(parent);
-    if (value_list) {
-        value_list->values.push_back(utility::to<structure::Value>(node));
-        return;
-    }
-
-    auto value_pair = utility::to<structure::ValuePair>(parent);
-    if (value_pair) {
+    } else if (auto value_list = utility::to<structure::ValueList>(parent)) {
+        value_list->values.push_back(utility::to_check<structure::Value>(node));
+    } else if (auto value_pair = utility::to<structure::ValuePair>(parent)) {
         if (!value_pair->getFirst())
             value_pair->setFirst(utility::to<structure::Value>(node));
         else if (!value_pair->getSecond())
             value_pair->setSecond(utility::to<structure::Value>(node));
         else
-            _error("The parent has no space for the node..\n"
-                   "(node:%s, parent:%s)",
-                   node->toString().c_str(), parent->toString().c_str());
-        return;
-    }
-
-    auto expression_unary = utility::to<structure::ExpressionUnary>(parent);
-    if (expression_unary) {
-        if (!expression_unary->getValue())
-            expression_unary->setValue(utility::to<structure::Value>(node));
+            _error("ValuePair parent has no space for node: %s", node->toString().c_str());
+    } else if (auto expr_unary = utility::to<structure::ExpressionUnary>(parent)) {
+        if (!expr_unary->getValue())
+            expr_unary->setValue(utility::to<structure::Value>(node));
         else
-            _error("The parent has no space for the node..\n"
-                   "(node:%s, parent:%s)",
-                   node->toString().c_str(), parent->toString().c_str());
-        return;
-    }
-
-    auto expression = utility::to<structure::Expression>(parent);
-    if (expression) {
+            _error("ExpressionUnary parent has no space for node: %s", node->toString().c_str());
+    } else if (auto expression = utility::to<structure::Expression>(parent)) {
         if (!expression->getFirst())
             expression->setFirst(utility::to<structure::Value>(node));
         else if (!expression->getSecond())
             expression->setSecond(utility::to<structure::Value>(node));
         else
-            _error("The parent has no space for the node..\n"
-                   "(node:%s, parent:%s)",
-                   node->toString().c_str(), parent->toString().c_str());
-        return;
-    }
-
-    auto function_call = utility::to<structure::FunctionCall>(parent);
-    if (function_call) {
-        auto function_call_parameter = utility::to<structure::Parameter>(node);
-        if (function_call_parameter) {
-            function_call->parameters.push_back(function_call_parameter);
+            _error("Expression parent has no space for node: %s", node->toString().c_str());
+    } else if (auto func_call = utility::to<structure::FunctionCall>(parent)) {
+        if (auto param = utility::to<structure::Parameter>(node)) {
+            func_call->parameters.push_back(param);
+        } else if (auto value = utility::to<structure::Value>(node)) {
+            func_call->parameters.push_back(_factory.parameter(nullptr, value, param_assign, false));
         } else {
-            auto function_call_value = utility::to<structure::Value>(node);
-            if (function_call_value) {
-                function_call->parameters.push_back(
-                    _factory.parameter(nullptr, function_call_value, param_assign, false));
-            } else {
-                _error("Wrong item added to the object..\n"
-                       "(node:%s, parent:%s)",
-                       node->toString().c_str(), parent->toString().c_str());
-            }
+            _error("Wrong item added to FunctionCall: %s", node->toString().c_str());
         }
-        return;
-    }
-
-    auto include = utility::to<structure::Include>(parent);
-    if (include) {
-        auto include_parameter = utility::to<structure::Parameter>(node);
-        if (include_parameter)
-            include->parameters.push_back(include_parameter);
+    } else if (auto include = utility::to<structure::Include>(parent)) {
+        if (auto param = utility::to<structure::Parameter>(node))
+            include->parameters.push_back(param);
         else
-            _error("The parent is not meant to hold the given node..\n"
-                   "(node:%s, parent:%s)",
-                   node->toString().c_str(), parent->toString().c_str());
-        return;
-    }
-
-    auto library_def = utility::to<structure::LibraryDef>(parent);
-    if (library_def) {
+            _error("Wrong item added to Include: %s", node->toString().c_str());
+    } else if (auto library_def = utility::to<structure::LibraryDef>(parent)) {
         library_def->content.push_back(node);
-        return;
-    }
-
-    auto model = utility::to<structure::Model>(parent);
-    if (model) {
-        auto model_parameter = utility::to<structure::Parameter>(node);
-        if (model_parameter) {
-            model->parameters.push_back(model_parameter);
+    } else if (auto model = utility::to<structure::Model>(parent)) {
+        if (auto param = utility::to<structure::Parameter>(node)) {
+            model->parameters.push_back(param);
         } else {
-            _error("Wrong item added to the object..\n"
-                   "(node:%s, parent:%s)",
-                   node->toString().c_str(), parent->toString().c_str());
+            _error("Wrong item added to Model: %s", node->toString().c_str());
         }
-        return;
-    }
-
-    auto parameter = utility::to<structure::Parameter>(parent);
-    if (parameter) {
+    } else if (auto parameter = utility::to<structure::Parameter>(parent)) {
         if (!parameter->getLeft())
             parameter->setLeft(utility::to<structure::Value>(node));
         else if (!parameter->getRight())
             parameter->setRight(utility::to<structure::Value>(node));
         else
-            _error("The parent has no space for the node..\n"
-                   "(node:%s, parent:%s)",
-                   node->toString().c_str(), parent->toString().c_str());
-        return;
-    }
-
-    auto subckt = utility::to<structure::Subckt>(parent);
-    if (subckt) {
-        auto subckt_node = utility::to<structure::Node>(node);
-        if (subckt_node) {
+            _error("Parameter parent has no space for node: %s", node->toString().c_str());
+    } else if (auto subckt = utility::to<structure::Subckt>(parent)) {
+        if (auto subckt_node = utility::to<structure::Node>(node)) {
             subckt->nodes.push_back(subckt_node);
+        } else if (auto param = utility::to<structure::Parameter>(node)) {
+            subckt->parameters.push_back(param);
         } else {
-            auto subckt_parameter = utility::to<structure::Parameter>(node);
-            if (subckt_parameter) {
-                subckt->parameters.push_back(subckt_parameter);
-            } else {
-                subckt->content.push_back(node);
-            }
+            subckt->content.push_back(node);
         }
-        return;
     }
 }
 
@@ -928,19 +700,19 @@ antlrcpp::Any SPECTREFrontend::advance_visit(antlr4::ParserRuleContext *ctx, con
 }
 
 std::shared_ptr<edacurry::structure::Object> parse_spectre(const std::string &path)
-{
+{    
     std::ifstream fileStream(path);
+    if (!fileStream.is_open()) {
+        std::cerr << "ERROR: Cannot open file " << path << std::endl;
+        return nullptr;
+    }
     antlr4::ANTLRInputStream input(fileStream);
     edacurry::SPECTRELexer lexer(&input);
     antlr4::CommonTokenStream tokens(&lexer);
     tokens.fill();
-    // Create the parser.
     edacurry::SPECTREParser parser(&tokens);
-    // Create the frontend.
     edacurry::frontend::SPECTREFrontend frontend(tokens);
-    // Parse the circuit.
     parser.netlist()->accept(&frontend);
-    // Return the object.
     return frontend.getRoot();
 }
 

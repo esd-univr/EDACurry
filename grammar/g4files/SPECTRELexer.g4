@@ -1,38 +1,35 @@
 // ----------------------------------------------------------------------------
-// Author : Enrico Fraccaroli
-// Date   : 04/02/2018
-// Reference: references/Spectre_tutorial.pdf
+// Author : Enrico Fraccaroli, Nicola Dall'Ora
 // ----------------------------------------------------------------------------
 lexer grammar SPECTRELexer;
 
 channels { COMMENTS }
 
-fragment BOL : {getCharPositionInLine() == 0}? [ \t]*;
-
-// ----------------------------------------------------------------------------
-// COMMENT
-// ----------------------------------------------------------------------------
-COMMENT : ( STAR | SLASH SLASH) .*? NL -> channel(COMMENTS);
+// ---------------------------------------------------------------------------
+// Comments (kept on COMMENTS channel)
+// ---------------------------------------------------------------------------
+BLOCK_COMMENT  : '/*' .*? '*/'          -> channel(COMMENTS);
+LINE_COMMENT   : '//' ~[\r\n]*          -> channel(COMMENTS);
 
 // ----------------------------------------------------------------------------
 // BEGIN OF LINE KEYWORDS
 // ----------------------------------------------------------------------------
-GLOBAL            : BOL[gG][lL][oO][bB][aA][lL]; // Global Nodes
-INCLUDE           : BOL[iI][nN][cC][lL][uU][dD][eE]; // Include File
-CPP_INCLUDE       : BOL[#] INCLUDE; // Include CPP File
-AHDL_INCLUDE      : BOL[aA][hH][dD][lL]'_'[iI][nN][cC][lL][uU][dD][eE]; // Verilog-A Usage and Language Summary (veriloga)
-LIBRARY           : BOL[lL][iI][bB][rR][aA][rR][yY]; // Library
-LIBRARY_END       : BOL[eE][nN][dD][lL][iI][bB][rR][aA][rR][yY]; // End library
-SECTION           : BOL[sS][eE][cC][tT][iI][oO][nN]; // Section
-SECTION_END       : BOL[eE][nN][dD][sS][eE][cC][tT][iI][oO][nN]; // End section
-SUBCKT            : BOL[sS][uU][bB][cC][kK][tT]; // Subckt begin
-INLINE_SUBCKT     : BOL[iI][nN][lL][iI][nN][eE]' '[sS][uU][bB][cC][kK][tT]; // Inline Subckt begin
-SUBCKT_END        : BOL[eE][nN][dD][sS]; // Subckt end
-SIMULATOR         : BOL[sS][iI][mM][uU][lL][aA][tT][oO][rR]; // Simulator language
-GLOBAL_PARAMETERS : BOL[pP][aA][rR][aA][mM][eE][tT][eE][rR][sS]; // Netlist Parameters
-MODEL	            : BOL[mM][oO][dD][eE][lL];
-EXPORT            : BOL[eE][xX][pP][oO][rR][tT];
-SAVE              : BOL[sS][aA][vV][eE]; // Output Selections
+GLOBAL            : [gG][lL][oO][bB][aA][lL]; // Global Nodes
+INCLUDE           : [iI][nN][cC][lL][uU][dD][eE]; // Include File
+CPP_INCLUDE       : [#] INCLUDE; // Include CPP File
+AHDL_INCLUDE      : [aA][hH][dD][lL]'_'[iI][nN][cC][lL][uU][dD][eE]; // Verilog-A Usage and Language Summary (veriloga)
+LIBRARY           : [lL][iI][bB][rR][aA][rR][yY]; // Library
+LIBRARY_END       : [eE][nN][dD][lL][iI][bB][rR][aA][rR][yY]; // End library
+SECTION           : [sS][eE][cC][tT][iI][oO][nN]; // Section
+SECTION_END       : [eE][nN][dD][sS][eE][cC][tT][iI][oO][nN]; // End section
+SUBCKT            : [sS][uU][bB][cC][kK][tT]; // Subckt begin
+INLINE_SUBCKT     : [iI][nN][lL][iI][nN][eE]' '[sS][uU][bB][cC][kK][tT]; // Inline Subckt begin
+SUBCKT_END        : [eE][nN][dD][sS]; // Subckt end
+SIMULATOR         : [sS][iI][mM][uU][lL][aA][tT][oO][rR]; // Simulator language
+GLOBAL_PARAMETERS : [pP][aA][rR][aA][mM][eE][tT][eE][rR][sS]; // Netlist Parameters
+MODEL	            : [mM][oO][dD][eE][lL];
+EXPORT            : [eE][xX][pP][oO][rR][tT];
+SAVE              : [sS][aA][vV][eE]; // Output Selections
 
 // ----------------------------------------------------------------------------
 // CONTROL COMMANDS
@@ -43,8 +40,8 @@ OPTIONS    : [oO][pP][tT][iI][oO][nN][sS]; // Immediate Set Options
 SET        : [sS][eE][tT]; // Deferred Set Options
 SHELL      : [sS][hH][eE][lL][lL]; // Shell Command
 INFO       : [iI][nN][fF][oO]; // Circuit Information
-NODESET    : [nN][oO][dD][eE][sS][eE][tT]; // Node Sets
-IC         : [iI][cC];
+NODESET :  [nN][oO][dD][eE][sS][eE][tT]; // Node Sets
+IC :  [iI][cC];
 ASSERT     : [aA][sS][sS][eE][rR][tT];
 CHECK      : [cC][hH][eE][cC][kK];
 
@@ -65,20 +62,6 @@ ELSE        : [eE][lL][sS][eE]; // The Structural if-statement
 PARAMETERS  : [pP][aA][rR][aA][mM][eE][tT][eE][rR][sS]; // Netlist Parameters
 ANALOGMODEL : [aA][nN][aA][lL][oO][gG][mM][oO][dD][eE][lL]; // Using analogmodel for Model Passing
 CHECKPOINT  : [cC][hH][eE][cC][kK][pP][oO][iI][nN][tT]; // Checkpoint - Restart
-//PARAM       : [pP][aA][rR][aA][mM];
-//PARAMS      : [pP][aA][rR][aA][mM][sS];
-//OPTION      : [oO][pP][tT][iI][oO][nN];
-//EXTRACT     : [eE][xX][tT][rR][aA][cC][tT];
-//DEFWAVE     : [dD][eE][fF][wW][aA][vV][eE];
-//LIB         : [lL][iI][bB];
-//END         : [eE][nN][dD];
-//FFILE       : [fF][fF][iI][lL][eE];
-//PLOT        : [pP][lL][oO][tT];
-//OP   	      : [oO][pP];
-//PROBE	      : [pP][rR][oO][bB][eE];
-//VERILOG	    : [vV][eE][rR][iI][lL][oO][gG];
-//REAL        : [rR][eE][aA][lL]  ;
-//RETURN      : [rR][eE][tT][uU][rR][nN]; // Spectre Netlist Keywords
 
 // ----------------------------------------------------------------------------
 // LANGUAGES
@@ -89,7 +72,7 @@ SPICE   : [sS][pP][iI][cC][eE];
 // ----------------------------------------------------------------------------
 // STATISTICS BLOCKS
 // ----------------------------------------------------------------------------
-STATISTICS   : [sS][tT][aA][tT][iI][sS][tT][iI][cC][sS]; // Statistics block label
+STATISTICS :  [sS][tT][aA][tT][iI][sS][tT][iI][cC][sS]; // Statistics block label
 PROCESS      : [pP][rR][oO][cC][eE][sS][sS];
 CORRELATE    : [cC][oO][rR][rR][eE][lL][aA][tT][eE];
 TRUNCATE     : [tT][rR][uU][nN][cC][aA][tT][eE];
@@ -127,7 +110,7 @@ QPNOISE      : [qQ][pP][nN][oO][iI][sS][eE]; // Quasi-Periodic Noise Analysis
 QPSP         : [qQ][pP][sS][pP]; // Quasi-Periodic S-Parameter Analysis
 QPSS         : [qQ][pP][sS][sS]; // Quasi-Periodic Steady State Analysis
 QPXF         : [qQ][pP][xX][fF]; // Quasi-Periodic Transfer Function Analysis
-SENS         : [sS][eE][nN][sS]; // Sensitivity Analyses 
+SENS :  [sS][eE][nN][sS]; // Sensitivity Analyses
 MONTECARLO   : [mM][oO][nN][tT][eE][cC][aA][rR][lL][oO]; // Monte Carlo Analysis
 NOISE        : [nN][oO][iI][sS][eE]; // Noise Analysis
 CHECKLIMIT   : [cC][hH][eE][cC][kK][lL][iI][mM][iI][tT]; // Checklimit Analysis
@@ -176,29 +159,29 @@ ISOURCE  : [iI][sS][oO][uU][rR][cC][eE];         // Independent Current Source (
 JFET     : [jJ][fF][eE][tT];                     // Junction Field Effect Transistor (jfet)
 JUNCAP   : [jJ][uU][nN][cC][aA][pP];             // Junction Capacitor (juncap)
 MISNAN   : [mM][iI][sS][nN][aA][nN];             // MISN Field Effect Transistor (misnan)
-MOS0     : [mM][oO][sS]'0';                      // MOS Level-0 Transistor (mos0)
-MOS1     : [mM][oO][sS]'1';                      // MOS Level-1 Transistor (mos1)
-MOS1000  : [mM][oO][sS]'1000';                   // Compact MOS-Transistor Distortion Model (mos1000)
-MOS1100  : [mM][oO][sS]'1100';                   // Compact MOS-Transistor Distortion Model (mos1100)
-MOS11010 : [mM][oO][sS]'11010';                  // Compact MOS-Transistor Distortion Model (mos11010)
-MOS11011 : [mM][oO][sS]'11011';                  // Compact MOS-Transistor Distortion Model (mos11011)
-MOS15    : [mM][oO][sS]'15';                     // MOS Level-15 Transistor (mos15)
 
 // ----------------------------------------------------------------------------
-// Component Statements Part III
+// Component Statements Part III - REORDERED: Longest matches first
 // ----------------------------------------------------------------------------
-MOS2            : [mM][oO][sS]'2';                                             // MOS Level-2 Transistor (mos2)
-MOS3            : [mM][oO][sS]'3';                                             // MOS Level-3 Transistor (mos3)
-MOS30           : [mM][oO][sS]'30';                                            // Long Channel JFET/MOSFET Model (mos30)
+MOS11011        : [mM][oO][sS]'11011';                                         // Compact MOS-Transistor Distortion Model (mos11011)
+MOS11010        : [mM][oO][sS]'11010';                                         // Compact MOS-Transistor Distortion Model (mos11010)
 MOS3002         : [mM][oO][sS]'3002';                                          // Long Channel JFET/MOSFET Model (mos3002)
 MOS3100         : [mM][oO][sS]'3100';                                          // Long Channel JFET/MOSFET Model (mos3100)
-MOS40           : [mM][oO][sS]'40';                                            // Silicon On Isolator JFET Model (mos40)
+MOS1000         : [mM][oO][sS]'1000';                                          // Compact MOS-Transistor Distortion Model (mos1000)
+MOS1100         : [mM][oO][sS]'1100';                                          // Compact MOS-Transistor Distortion Model (mos1100)
+MUTUAL_INDUCTOR : [mM][uU][tT][uU][aA][lL]'_'[iI][nN][dD][uU][cC][tT][oO][rR]; // Mutual Inductor (mutual_inductor)
+MSLINE          : [mM][sS][lL][iI][nN][eE];                                    // Microstrip Line (msline)
+MTLINE          : [mM][tT][lL][iI][nN][eE];                                    // Multi-Conductor Transmission Line (mtline)
 MOS705          : [mM][oO][sS]'705';                                           // Compact MOS-Transistor Model (mos705)
 MOS902          : [mM][oO][sS]'902';                                           // Compact MOS-Transistor Model (mos902)
 MOS903          : [mM][oO][sS]'903';                                           // Compact MOS-Transistor Model (mos903)
-MSLINE          : [mM][sS][lL][iI][nN][eE];                                    // Microstrip Line (msline)
-MTLINE          : [mM][tT][lL][iI][nN][eE];                                    // Multi-Conductor Transmission Line (mtline)
-MUTUAL_INDUCTOR : [mM][uU][tT][uU][aA][lL]'_'[iI][nN][dD][uU][cC][tT][oO][rR]; // Mutual Inductor (mutual_inductor)
+MOS30           : [mM][oO][sS]'30';                                            // Long Channel JFET/MOSFET Model (mos30)
+MOS40           : [mM][oO][sS]'40';                                            // Silicon On Isolator JFET Model (mos40)
+MOS15           : [mM][oO][sS]'15';                                            // MOS Level-15 Transistor (mos15)
+MOS0            : [mM][oO][sS]'0';                                             // MOS Level-0 Transistor (mos0)
+MOS1            : [mM][oO][sS]'1';                                             // MOS Level-1 Transistor (mos1)
+MOS2            : [mM][oO][sS]'2';                                             // MOS Level-2 Transistor (mos2)
+MOS3            : [mM][oO][sS]'3';                                             // MOS Level-3 Transistor (mos3)
 NODCAP          : [nN][oO][dD][cC][aA][pP];                                    // Node Capacitance (nodcap)
 NODE            : [nN][oO][dD][eE];                                            // Set Node Quantities (node)
 NPORT           : [nN][pP][oO][rR][tT];                                        // Linear N Port (nport)
@@ -289,65 +272,52 @@ TILDE               : '~';
 ARROW               : MINUS GREATER_THAN;
 
 // ----------------------------------------------------------------------------
-// NUMERICAL VALUES
+// NUMERICAL VALUES, IDENTIFIERS, and STRINGS
+// The order of these rules is critical for the lexer.
+// ----------------------------------------------------------------------------
+
+NUMBER
+  : DIGIT+ ('.' DIGIT+)? ([eE][+\-]? DIGIT+)? LETTER? LETTER? LETTER? LETTER?
+  ;
+
+// An identifier must start with a letter or underscore.
+// It cannot match something that has already been matched as a NUMBER.
+ID
+    : (LETTER | '_') (LETTER | DIGIT | '_' | '$' | '`' | '/' | '[' | ']' | '<' | '>' | '!' | '.' | '-' | '+')*
+    ;
+
+STRING
+    : '"' ( '\\' . | ~[\\"] )*? '"'
+    ;
+
+// ----------------------------------------------------------------------------
+// FRAGMENTS (Building blocks for other rules)
 // ----------------------------------------------------------------------------
 fragment DIGIT      : [0-9];
-fragment HEXDIGIT   : '0x' ('0'..'9' | 'a'..'f' | 'A'..'F')+;
-fragment OCTALDIGIT : '0' '0'..'7'+;
-fragment EXP        : ('E' | 'e') ('+' | '-')? INT ;
-fragment INT        : DIGIT+ [Ll]? LETTER?;
-fragment FLOAT      : DIGIT+ '.' DIGIT* EXP? [Ll]? LETTER?
-                    | DIGIT+ EXP? [Ll]? LETTER?
-                    | '.' DIGIT+ EXP? [Ll]? LETTER?;
-fragment HEX        : '0' ('x'|'X') HEXDIGIT+ [Ll]? ;
+fragment DIGITS     : DIGIT+;
+fragment HEX_CHAR   : [0-9a-fA-F];
+fragment EXP        : ('E' | 'e') ('+' | '-')? DIGITS;
+fragment SI_SUFFIX  : ('T'|'t'|'G'|'g'|'M'|'m'|'K'|'k'|'U'|'u'|'N'|'n'|'P'|'p'|'F'|'f');
+fragment LETTER     : [a-zA-Z];
+
+// The following rules are kept for PERCENTAGE and COMPLEX, which may be used elsewhere.
+fragment INT        : DIGITS [Ll]? LETTER?;
+fragment FLOAT      : DIGITS '.' DIGITS? EXP? [Ll]? LETTER?
+                    | DIGITS EXP? [Ll]? LETTER?
+                    | '.' DIGITS EXP? [Ll]? LETTER?;
+fragment HEX        : '0' ('x'|'X') HEX_CHAR+ [Ll]? ;
 PERCENTAGE          : FLOAT '%'  ;
 COMPLEX             : INT 'i' | FLOAT 'i' ;
-NUMBER              : INT | FLOAT | HEX;
-
-// ----------------------------------------------------------------------------
-// STRINGS
-// ----------------------------------------------------------------------------
-fragment LETTER : [a-zA-Z];
-fragment ESCAPE : '\\'
-                ( [abtnfrv]
-                | '"'
-                | '\''
-                | 'u' HEXDIGIT HEXDIGIT HEXDIGIT HEXDIGIT
-                | 'u' '{' HEXDIGIT HEXDIGIT HEXDIGIT HEXDIGIT '}'
-                | [0-3] [0-7] [0-7]
-                | [0-7] [0-7]
-                | [0-7]
-                | HEXDIGIT HEXDIGIT );
-ID
-    : ( LETTER
-      | EXCLAMATION_MARK
-      | AT_SIGN
-      | POUND_SIGN
-      | DIGIT
-      | UNDERSCORE
-      | DOLLAR
-      | DOT)
-      ( LETTER
-      | EXCLAMATION_MARK
-      | AT_SIGN
-      | POUND_SIGN
-      | DIGIT
-      | UNDERSCORE
-      | COLON
-      | DOT
-      | LESS_THAN
-      | GREATER_THAN
-      | BACKSLASH LESS_THAN
-      | BACKSLASH GREATER_THAN
-      | DOLLAR
-      | PERCENT
-      | ARROW )*;
-
-STRING : '"' ( ESCAPE | ~[\\"] )*? '"' ;
 
 // ----------------------------------------------------------------------------
 // WHITESPACES and NEWLINES
 // ----------------------------------------------------------------------------
-NL  : '\r'?'\n';
-WS  : [ \t]+ -> skip;
-CNL : (BACKSLASH NL | (NL (WS)? PLUS)) -> skip;
+WS : [ \t]+ -> channel(HIDDEN) ;
+NL : [\r\n]+ ;
+CNL
+  : (BACKSLASH NL
+    | (NL (WS)? PLUS)
+    | '*' ~[\r\n]*      // Existing comment style
+    | '//' ~[\r\n]*     // Also allow // comment style
+    )
+    -> skip;

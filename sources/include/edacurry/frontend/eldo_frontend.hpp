@@ -1,8 +1,8 @@
 /// @file   eldo_frontend.hpp
-/// @author Enrico Fraccaroli (enrico.fraccaroli@gmail.com)
+/// @author Enrico Fraccaroli (enrico.fraccaroli@gmail.com), Nicola Dall'Ora (nicola.dallora@outlook.com)
 /// @copyright Copyright (c) 2021 sydelity.net (info@sydelity.com)
 /// Distributed under the MIT License (MIT) (See accompanying LICENSE file or
-///  copy at http://opensource.org/licenses/MIT)
+/// copy at http://opensource.org/licenses/MIT)
 
 #pragma once
 
@@ -378,32 +378,44 @@ public:
     }
 
 private:
-    /// The
+    /// @brief The stack of objects.
+    /// @return std::vector<std::shared_ptr<structure::Object> >
     std::vector<std::shared_ptr<structure::Object> > _stack;
-    ///
+
+    /// @brief The root object of the netlist.
     std::shared_ptr<structure::Object> _root;
-    /// Factory item.
+
+    /// @brief The factory used to create objects.
     Factory _factory;
 
-    /// @brief
+    /// @brief Returns the current object on the top of the stack.
     /// @return structure::Object*
     std::shared_ptr<structure::Object> back() const;
 
-    /// @brief
+    /// @brief Pushes the node to the stack.
     /// @param node
+    /// @return void
     void push(const std::shared_ptr<structure::Object> &node);
 
-    /// @brief
+    /// @brief Pops the node from the stack.
     /// @return structure::Object*
     std::shared_ptr<structure::Object> pop();
 
-    /// @brief
+    /// @brief Adds the node to the parent object.
     /// @param node
+    /// @return void
     void add_to_parent(const std::shared_ptr<structure::Object> &node);
 
+    /// @brief Advances the visit to the next node.
+    /// @param ctx the parser rule context.
+    /// @param node the current node.
+    /// @return antlrcpp::Any
     antlrcpp::Any advance_visit(antlr4::ParserRuleContext *ctx, const std::shared_ptr<structure::Object> &node);
 };
 
+/// @brief Parses the ELDO file at the given path and returns the root object.
+/// @param path the path to the ELDO file.
+/// @return a shared pointer to the root object of the parsed netlist.
 std::shared_ptr<edacurry::structure::Object> parse_eldo(const std::string &path);
 
 } // namespace edacurry::frontend

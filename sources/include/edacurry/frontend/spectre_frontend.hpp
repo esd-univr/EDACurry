@@ -11,9 +11,36 @@
 #include "edacurry/factory.hpp"
 
 #include <antlr4parser/SPECTREParserBaseVisitor.h>
+  
 
 namespace edacurry::frontend
 {
+
+/// @brief Converts a filepath context to a string.
+/// @param ctx The filepath context.
+/// @return The converted string.
+std::string to_string(SPECTREParser::FilepathContext *ctx);
+
+/// @brief Parses a terminal node representing a number with an optional SI unit suffix.
+/// @param ctx The terminal node context.
+/// @param factory The factory to use for creating the value.
+/// @return A shared pointer to the created value.
+std::shared_ptr<structure::Value> to_number(antlr4::tree::TerminalNode *ctx,   Factory &factory);
+
+/// @brief Converts a string to an operator.
+/// @param op_str The operator string.
+/// @return The corresponding operator enum value.
+Operator to_operator_internal(const std::string &op_str);
+
+/// @brief Converts an expression operator context to an operator.
+/// @param ctx The expression operator context.
+/// @return The corresponding operator enum value.
+Operator to_operator(SPECTREParser::Expression_operatorContext *ctx);
+
+/// @brief Converts an expression unary context to an operator.
+/// @param ctx The expression unary context.
+/// @return The corresponding operator enum value.
+Operator to_operator(SPECTREParser::Expression_unaryContext *ctx);
 
 class SPECTREFrontend : public SPECTREParserBaseVisitor {
 public:
@@ -289,32 +316,48 @@ public:
     }
 
 private:
-    /// The
+    /// @brief Stack of objects to be visited.
     std::vector<std::shared_ptr<structure::Object> > _stack;
-    ///
+
+    /// @brief The root object of the netlist.
     std::shared_ptr<structure::Object> _root;
-    /// Factory item.
+
+    /// @brief The factory used to create objects.
     Factory _factory;
 
-    /// @brief
+    /// @brief Returns the current object on the top of the stack.
     /// @return structure::Object*
     std::shared_ptr<structure::Object> back() const;
 
-    /// @brief
+    /// @brief Pops the current object from the stack.
     /// @param node
+    /// @return structure::Object*
     void push(const std::shared_ptr<structure::Object> &node);
 
-    /// @brief
+    /// @brief Pops the current object from the stack.
     /// @return structure::Object*
     std::shared_ptr<structure::Object> pop();
 
-    /// @brief
+    /// @brief Adds the node to the parent. 
     /// @param node
+    /// @return void
     void add_to_parent(const std::shared_ptr<structure::Object> &node);
 
+    /// @brief Advances the visitor to the next node.
+    /// @param ctx The context of the current rule.
+    /// @param node The node to advance to.
+    /// @return antlrcpp::Any
     antlrcpp::Any advance_visit(antlr4::ParserRuleContext *ctx, const std::shared_ptr<structure::Object> &node);
+
+    /// @brief Infers the master name from the component type character.
+    /// @param c The character representing the component type.
+    /// @return The inferred master name as a string.
+    static std::string infer_master(char c);
 };
 
+/// @brief Parses a SPECTRE file and returns the root object of the netlist.
+/// @param path The path to the SPECTRE file.
+/// @return A shared pointer to the root object of the netlist.
 std::shared_ptr<edacurry::structure::Object> parse_spectre(const std::string &path);
 
 } // namespace edacurry::frontend

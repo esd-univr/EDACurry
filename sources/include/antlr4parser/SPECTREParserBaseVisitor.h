@@ -1,5 +1,5 @@
 
-// Generated from g4files/SPECTREParser.g4 by ANTLR 4.13.2
+// Generated from g4files/SPECTREParser.g4 by ANTLR 4.7.1
 
 #pragma once
 
@@ -17,523 +17,523 @@ namespace edacurry {
 class  SPECTREParserBaseVisitor : public SPECTREParserVisitor {
 public:
 
-  virtual std::any visitNetlist(SPECTREParser::NetlistContext *ctx) override {
+  virtual antlrcpp::Any visitNetlist(SPECTREParser::NetlistContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitNetlist_title(SPECTREParser::Netlist_titleContext *ctx) override {
+  virtual antlrcpp::Any visitNetlist_title(SPECTREParser::Netlist_titleContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitNetlist_entity(SPECTREParser::Netlist_entityContext *ctx) override {
+  virtual antlrcpp::Any visitNetlist_entity(SPECTREParser::Netlist_entityContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitInclude(SPECTREParser::IncludeContext *ctx) override {
+  virtual antlrcpp::Any visitInclude(SPECTREParser::IncludeContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitStandard_include(SPECTREParser::Standard_includeContext *ctx) override {
+  virtual antlrcpp::Any visitStandard_include(SPECTREParser::Standard_includeContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitCpp_include(SPECTREParser::Cpp_includeContext *ctx) override {
+  virtual antlrcpp::Any visitCpp_include(SPECTREParser::Cpp_includeContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitAhdl_include(SPECTREParser::Ahdl_includeContext *ctx) override {
+  virtual antlrcpp::Any visitAhdl_include(SPECTREParser::Ahdl_includeContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitLang(SPECTREParser::LangContext *ctx) override {
+  virtual antlrcpp::Any visitLang(SPECTREParser::LangContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitLibrary(SPECTREParser::LibraryContext *ctx) override {
+  virtual antlrcpp::Any visitLibrary(SPECTREParser::LibraryContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitLibrary_header(SPECTREParser::Library_headerContext *ctx) override {
+  virtual antlrcpp::Any visitLibrary_header(SPECTREParser::Library_headerContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitLibrary_content(SPECTREParser::Library_contentContext *ctx) override {
+  virtual antlrcpp::Any visitLibrary_content(SPECTREParser::Library_contentContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitLibrary_footer(SPECTREParser::Library_footerContext *ctx) override {
+  virtual antlrcpp::Any visitLibrary_footer(SPECTREParser::Library_footerContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitSection(SPECTREParser::SectionContext *ctx) override {
+  virtual antlrcpp::Any visitSection(SPECTREParser::SectionContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitSection_header(SPECTREParser::Section_headerContext *ctx) override {
+  virtual antlrcpp::Any visitSection_header(SPECTREParser::Section_headerContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitSection_content(SPECTREParser::Section_contentContext *ctx) override {
+  virtual antlrcpp::Any visitSection_content(SPECTREParser::Section_contentContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitSection_footer(SPECTREParser::Section_footerContext *ctx) override {
+  virtual antlrcpp::Any visitSection_footer(SPECTREParser::Section_footerContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitAnalogmodel(SPECTREParser::AnalogmodelContext *ctx) override {
+  virtual antlrcpp::Any visitAnalogmodel(SPECTREParser::AnalogmodelContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitSubckt(SPECTREParser::SubcktContext *ctx) override {
+  virtual antlrcpp::Any visitSubckt(SPECTREParser::SubcktContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitSubckt_header(SPECTREParser::Subckt_headerContext *ctx) override {
+  virtual antlrcpp::Any visitSubckt_header(SPECTREParser::Subckt_headerContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitSubckt_content(SPECTREParser::Subckt_contentContext *ctx) override {
+  virtual antlrcpp::Any visitSubckt_content(SPECTREParser::Subckt_contentContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitSubckt_footer(SPECTREParser::Subckt_footerContext *ctx) override {
+  virtual antlrcpp::Any visitSubckt_footer(SPECTREParser::Subckt_footerContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitIf_statement(SPECTREParser::If_statementContext *ctx) override {
+  virtual antlrcpp::Any visitIf_statement(SPECTREParser::If_statementContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitIf_alternative(SPECTREParser::If_alternativeContext *ctx) override {
+  virtual antlrcpp::Any visitIf_alternative(SPECTREParser::If_alternativeContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitIf_body(SPECTREParser::If_bodyContext *ctx) override {
+  virtual antlrcpp::Any visitIf_body(SPECTREParser::If_bodyContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitAnalysis(SPECTREParser::AnalysisContext *ctx) override {
+  virtual antlrcpp::Any visitAnalysis(SPECTREParser::AnalysisContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitAc(SPECTREParser::AcContext *ctx) override {
+  virtual antlrcpp::Any visitAc(SPECTREParser::AcContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitAcmatch(SPECTREParser::AcmatchContext *ctx) override {
+  virtual antlrcpp::Any visitAcmatch(SPECTREParser::AcmatchContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitDc(SPECTREParser::DcContext *ctx) override {
+  virtual antlrcpp::Any visitDc(SPECTREParser::DcContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitDcmatch(SPECTREParser::DcmatchContext *ctx) override {
+  virtual antlrcpp::Any visitDcmatch(SPECTREParser::DcmatchContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitEnvlp(SPECTREParser::EnvlpContext *ctx) override {
+  virtual antlrcpp::Any visitEnvlp(SPECTREParser::EnvlpContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitSp(SPECTREParser::SpContext *ctx) override {
+  virtual antlrcpp::Any visitSp(SPECTREParser::SpContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitStb(SPECTREParser::StbContext *ctx) override {
+  virtual antlrcpp::Any visitStb(SPECTREParser::StbContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitSweep(SPECTREParser::SweepContext *ctx) override {
+  virtual antlrcpp::Any visitSweep(SPECTREParser::SweepContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitSweep_header(SPECTREParser::Sweep_headerContext *ctx) override {
+  virtual antlrcpp::Any visitSweep_header(SPECTREParser::Sweep_headerContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitSweep_content(SPECTREParser::Sweep_contentContext *ctx) override {
+  virtual antlrcpp::Any visitSweep_content(SPECTREParser::Sweep_contentContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitSweep_footer(SPECTREParser::Sweep_footerContext *ctx) override {
+  virtual antlrcpp::Any visitSweep_footer(SPECTREParser::Sweep_footerContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitTdr(SPECTREParser::TdrContext *ctx) override {
+  virtual antlrcpp::Any visitTdr(SPECTREParser::TdrContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitTran(SPECTREParser::TranContext *ctx) override {
+  virtual antlrcpp::Any visitTran(SPECTREParser::TranContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitXf(SPECTREParser::XfContext *ctx) override {
+  virtual antlrcpp::Any visitXf(SPECTREParser::XfContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitPac(SPECTREParser::PacContext *ctx) override {
+  virtual antlrcpp::Any visitPac(SPECTREParser::PacContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitPdisto(SPECTREParser::PdistoContext *ctx) override {
+  virtual antlrcpp::Any visitPdisto(SPECTREParser::PdistoContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitPnoise(SPECTREParser::PnoiseContext *ctx) override {
+  virtual antlrcpp::Any visitPnoise(SPECTREParser::PnoiseContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitPsp(SPECTREParser::PspContext *ctx) override {
+  virtual antlrcpp::Any visitPsp(SPECTREParser::PspContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitPss(SPECTREParser::PssContext *ctx) override {
+  virtual antlrcpp::Any visitPss(SPECTREParser::PssContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitPxf(SPECTREParser::PxfContext *ctx) override {
+  virtual antlrcpp::Any visitPxf(SPECTREParser::PxfContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitPz(SPECTREParser::PzContext *ctx) override {
+  virtual antlrcpp::Any visitPz(SPECTREParser::PzContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitQpac(SPECTREParser::QpacContext *ctx) override {
+  virtual antlrcpp::Any visitQpac(SPECTREParser::QpacContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitQpnoise(SPECTREParser::QpnoiseContext *ctx) override {
+  virtual antlrcpp::Any visitQpnoise(SPECTREParser::QpnoiseContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitQpsp(SPECTREParser::QpspContext *ctx) override {
+  virtual antlrcpp::Any visitQpsp(SPECTREParser::QpspContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitQpss(SPECTREParser::QpssContext *ctx) override {
+  virtual antlrcpp::Any visitQpss(SPECTREParser::QpssContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitQpxf(SPECTREParser::QpxfContext *ctx) override {
+  virtual antlrcpp::Any visitQpxf(SPECTREParser::QpxfContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitSens(SPECTREParser::SensContext *ctx) override {
+  virtual antlrcpp::Any visitSens(SPECTREParser::SensContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitSens_output_variables_list(SPECTREParser::Sens_output_variables_listContext *ctx) override {
+  virtual antlrcpp::Any visitSens_output_variables_list(SPECTREParser::Sens_output_variables_listContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitSens_design_parameters_list(SPECTREParser::Sens_design_parameters_listContext *ctx) override {
+  virtual antlrcpp::Any visitSens_design_parameters_list(SPECTREParser::Sens_design_parameters_listContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitSens_analyses_list(SPECTREParser::Sens_analyses_listContext *ctx) override {
+  virtual antlrcpp::Any visitSens_analyses_list(SPECTREParser::Sens_analyses_listContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitMontecarlo(SPECTREParser::MontecarloContext *ctx) override {
+  virtual antlrcpp::Any visitMontecarlo(SPECTREParser::MontecarloContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitMontecarlo_header(SPECTREParser::Montecarlo_headerContext *ctx) override {
+  virtual antlrcpp::Any visitMontecarlo_header(SPECTREParser::Montecarlo_headerContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitMontecarlo_content(SPECTREParser::Montecarlo_contentContext *ctx) override {
+  virtual antlrcpp::Any visitMontecarlo_content(SPECTREParser::Montecarlo_contentContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitMontecarlo_export(SPECTREParser::Montecarlo_exportContext *ctx) override {
+  virtual antlrcpp::Any visitMontecarlo_export(SPECTREParser::Montecarlo_exportContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitMontecarlo_footer(SPECTREParser::Montecarlo_footerContext *ctx) override {
+  virtual antlrcpp::Any visitMontecarlo_footer(SPECTREParser::Montecarlo_footerContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitNoise(SPECTREParser::NoiseContext *ctx) override {
+  virtual antlrcpp::Any visitNoise(SPECTREParser::NoiseContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitChecklimit(SPECTREParser::ChecklimitContext *ctx) override {
+  virtual antlrcpp::Any visitChecklimit(SPECTREParser::ChecklimitContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitGlobal(SPECTREParser::GlobalContext *ctx) override {
+  virtual antlrcpp::Any visitGlobal(SPECTREParser::GlobalContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitModel(SPECTREParser::ModelContext *ctx) override {
+  virtual antlrcpp::Any visitModel(SPECTREParser::ModelContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitModel_name(SPECTREParser::Model_nameContext *ctx) override {
+  virtual antlrcpp::Any visitModel_name(SPECTREParser::Model_nameContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitModel_master(SPECTREParser::Model_masterContext *ctx) override {
+  virtual antlrcpp::Any visitModel_master(SPECTREParser::Model_masterContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitControl(SPECTREParser::ControlContext *ctx) override {
+  virtual antlrcpp::Any visitControl(SPECTREParser::ControlContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitAlter(SPECTREParser::AlterContext *ctx) override {
+  virtual antlrcpp::Any visitAlter(SPECTREParser::AlterContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitAltergroup(SPECTREParser::AltergroupContext *ctx) override {
+  virtual antlrcpp::Any visitAltergroup(SPECTREParser::AltergroupContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitAltergroup_header(SPECTREParser::Altergroup_headerContext *ctx) override {
+  virtual antlrcpp::Any visitAltergroup_header(SPECTREParser::Altergroup_headerContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitAltergroup_content(SPECTREParser::Altergroup_contentContext *ctx) override {
+  virtual antlrcpp::Any visitAltergroup_content(SPECTREParser::Altergroup_contentContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitAltergroup_footer(SPECTREParser::Altergroup_footerContext *ctx) override {
+  virtual antlrcpp::Any visitAltergroup_footer(SPECTREParser::Altergroup_footerContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitAssert_statement(SPECTREParser::Assert_statementContext *ctx) override {
+  virtual antlrcpp::Any visitAssert_statement(SPECTREParser::Assert_statementContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitCheck_statement(SPECTREParser::Check_statementContext *ctx) override {
+  virtual antlrcpp::Any visitCheck_statement(SPECTREParser::Check_statementContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitSave(SPECTREParser::SaveContext *ctx) override {
+  virtual antlrcpp::Any visitSave(SPECTREParser::SaveContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitOption(SPECTREParser::OptionContext *ctx) override {
+  virtual antlrcpp::Any visitOption(SPECTREParser::OptionContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitSet(SPECTREParser::SetContext *ctx) override {
+  virtual antlrcpp::Any visitSet(SPECTREParser::SetContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitShell(SPECTREParser::ShellContext *ctx) override {
+  virtual antlrcpp::Any visitShell(SPECTREParser::ShellContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitInfo(SPECTREParser::InfoContext *ctx) override {
+  virtual antlrcpp::Any visitInfo(SPECTREParser::InfoContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitNodeset(SPECTREParser::NodesetContext *ctx) override {
+  virtual antlrcpp::Any visitNodeset(SPECTREParser::NodesetContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitIc(SPECTREParser::IcContext *ctx) override {
+  virtual antlrcpp::Any visitIc(SPECTREParser::IcContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitStatistics(SPECTREParser::StatisticsContext *ctx) override {
+  virtual antlrcpp::Any visitStatistics(SPECTREParser::StatisticsContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitStatistics_header(SPECTREParser::Statistics_headerContext *ctx) override {
+  virtual antlrcpp::Any visitStatistics_header(SPECTREParser::Statistics_headerContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitStatistics_content(SPECTREParser::Statistics_contentContext *ctx) override {
+  virtual antlrcpp::Any visitStatistics_content(SPECTREParser::Statistics_contentContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitStatistics_footer(SPECTREParser::Statistics_footerContext *ctx) override {
+  virtual antlrcpp::Any visitStatistics_footer(SPECTREParser::Statistics_footerContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitProcess(SPECTREParser::ProcessContext *ctx) override {
+  virtual antlrcpp::Any visitProcess(SPECTREParser::ProcessContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitMismatch(SPECTREParser::MismatchContext *ctx) override {
+  virtual antlrcpp::Any visitMismatch(SPECTREParser::MismatchContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitCorrelate(SPECTREParser::CorrelateContext *ctx) override {
+  virtual antlrcpp::Any visitCorrelate(SPECTREParser::CorrelateContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitTruncate(SPECTREParser::TruncateContext *ctx) override {
+  virtual antlrcpp::Any visitTruncate(SPECTREParser::TruncateContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitVary(SPECTREParser::VaryContext *ctx) override {
+  virtual antlrcpp::Any visitVary(SPECTREParser::VaryContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitReliability(SPECTREParser::ReliabilityContext *ctx) override {
+  virtual antlrcpp::Any visitReliability(SPECTREParser::ReliabilityContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitReliability_header(SPECTREParser::Reliability_headerContext *ctx) override {
+  virtual antlrcpp::Any visitReliability_header(SPECTREParser::Reliability_headerContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitReliability_content(SPECTREParser::Reliability_contentContext *ctx) override {
+  virtual antlrcpp::Any visitReliability_content(SPECTREParser::Reliability_contentContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitReliability_footer(SPECTREParser::Reliability_footerContext *ctx) override {
+  virtual antlrcpp::Any visitReliability_footer(SPECTREParser::Reliability_footerContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitReliability_control(SPECTREParser::Reliability_controlContext *ctx) override {
+  virtual antlrcpp::Any visitReliability_control(SPECTREParser::Reliability_controlContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitGlobal_declarations(SPECTREParser::Global_declarationsContext *ctx) override {
+  virtual antlrcpp::Any visitGlobal_declarations(SPECTREParser::Global_declarationsContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitComponent(SPECTREParser::ComponentContext *ctx) override {
+  virtual antlrcpp::Any visitComponent(SPECTREParser::ComponentContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitComponent_id(SPECTREParser::Component_idContext *ctx) override {
+  virtual antlrcpp::Any visitComponent_id(SPECTREParser::Component_idContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitComponent_master(SPECTREParser::Component_masterContext *ctx) override {
+  virtual antlrcpp::Any visitComponent_master(SPECTREParser::Component_masterContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitComponent_attribute(SPECTREParser::Component_attributeContext *ctx) override {
+  virtual antlrcpp::Any visitComponent_attribute(SPECTREParser::Component_attributeContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitComponent_value(SPECTREParser::Component_valueContext *ctx) override {
+  virtual antlrcpp::Any visitComponent_value(SPECTREParser::Component_valueContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitComponent_value_list(SPECTREParser::Component_value_listContext *ctx) override {
+  virtual antlrcpp::Any visitComponent_value_list(SPECTREParser::Component_value_listContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitComponent_analysis(SPECTREParser::Component_analysisContext *ctx) override {
+  virtual antlrcpp::Any visitComponent_analysis(SPECTREParser::Component_analysisContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitNode_list(SPECTREParser::Node_listContext *ctx) override {
+  virtual antlrcpp::Any visitNode_list(SPECTREParser::Node_listContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitNode_list_item(SPECTREParser::Node_list_itemContext *ctx) override {
+  virtual antlrcpp::Any visitNode_list_item(SPECTREParser::Node_list_itemContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitNode_mapping(SPECTREParser::Node_mappingContext *ctx) override {
+  virtual antlrcpp::Any visitNode_mapping(SPECTREParser::Node_mappingContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitNode_pair(SPECTREParser::Node_pairContext *ctx) override {
+  virtual antlrcpp::Any visitNode_pair(SPECTREParser::Node_pairContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitNode_branch(SPECTREParser::Node_branchContext *ctx) override {
+  virtual antlrcpp::Any visitNode_branch(SPECTREParser::Node_branchContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitNode(SPECTREParser::NodeContext *ctx) override {
+  virtual antlrcpp::Any visitNode(SPECTREParser::NodeContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitExpression(SPECTREParser::ExpressionContext *ctx) override {
+  virtual antlrcpp::Any visitExpression(SPECTREParser::ExpressionContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitExpression_unary(SPECTREParser::Expression_unaryContext *ctx) override {
+  virtual antlrcpp::Any visitExpression_unary(SPECTREParser::Expression_unaryContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitExpression_function_call(SPECTREParser::Expression_function_callContext *ctx) override {
+  virtual antlrcpp::Any visitExpression_function_call(SPECTREParser::Expression_function_callContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitExpression_pair(SPECTREParser::Expression_pairContext *ctx) override {
+  virtual antlrcpp::Any visitExpression_pair(SPECTREParser::Expression_pairContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitExpression_scope(SPECTREParser::Expression_scopeContext *ctx) override {
+  virtual antlrcpp::Any visitExpression_scope(SPECTREParser::Expression_scopeContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitExpression_operator(SPECTREParser::Expression_operatorContext *ctx) override {
+  virtual antlrcpp::Any visitExpression_operator(SPECTREParser::Expression_operatorContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitExpression_atom(SPECTREParser::Expression_atomContext *ctx) override {
+  virtual antlrcpp::Any visitExpression_atom(SPECTREParser::Expression_atomContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitParameter_list(SPECTREParser::Parameter_listContext *ctx) override {
+  virtual antlrcpp::Any visitParameter_list(SPECTREParser::Parameter_listContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitParameter_list_item(SPECTREParser::Parameter_list_itemContext *ctx) override {
+  virtual antlrcpp::Any visitParameter_list_item(SPECTREParser::Parameter_list_itemContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitParameter_assign(SPECTREParser::Parameter_assignContext *ctx) override {
+  virtual antlrcpp::Any visitParameter_assign(SPECTREParser::Parameter_assignContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitParameter_id(SPECTREParser::Parameter_idContext *ctx) override {
+  virtual antlrcpp::Any visitParameter_id(SPECTREParser::Parameter_idContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitParameter_access(SPECTREParser::Parameter_accessContext *ctx) override {
+  virtual antlrcpp::Any visitParameter_access(SPECTREParser::Parameter_accessContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitValue_access(SPECTREParser::Value_accessContext *ctx) override {
+  virtual antlrcpp::Any visitValue_access(SPECTREParser::Value_accessContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitValue_access_assign(SPECTREParser::Value_access_assignContext *ctx) override {
+  virtual antlrcpp::Any visitValue_access_assign(SPECTREParser::Value_access_assignContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitTime_pair(SPECTREParser::Time_pairContext *ctx) override {
+  virtual antlrcpp::Any visitTime_pair(SPECTREParser::Time_pairContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitTime_point(SPECTREParser::Time_pointContext *ctx) override {
+  virtual antlrcpp::Any visitTime_point(SPECTREParser::Time_pointContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitFilepath(SPECTREParser::FilepathContext *ctx) override {
+  virtual antlrcpp::Any visitFilepath(SPECTREParser::FilepathContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitFilepath_element(SPECTREParser::Filepath_elementContext *ctx) override {
+  virtual antlrcpp::Any visitFilepath_element(SPECTREParser::Filepath_elementContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitKeyword(SPECTREParser::KeywordContext *ctx) override {
+  virtual antlrcpp::Any visitKeyword(SPECTREParser::KeywordContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitAnalysis_type(SPECTREParser::Analysis_typeContext *ctx) override {
+  virtual antlrcpp::Any visitAnalysis_type(SPECTREParser::Analysis_typeContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitComponent_type(SPECTREParser::Component_typeContext *ctx) override {
+  virtual antlrcpp::Any visitComponent_type(SPECTREParser::Component_typeContext *ctx) override {
     return visitChildren(ctx);
   }
 
