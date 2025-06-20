@@ -1,5 +1,6 @@
 .gitignore
 build/
+build_py37/
 sources/test/eldo/amsnet_1.0
 sources/test/eldo/analog_benchmark2017_v2.2
 sources/test/eldo/analog.com

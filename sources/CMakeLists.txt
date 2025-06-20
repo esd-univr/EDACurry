@@ -1,8 +1,6 @@
 # -----------------------------------------------------------------------------
 # @brief  : CmakeFile for building the edacurry library.
 # @author : Enrico Fraccaroli, Nicola Dall'Ora
-# @create : 02/02/2018
-# @update : 20/08/2019
 # -----------------------------------------------------------------------------
 
 # Set the minimum CMake version, the project name and default build type.
