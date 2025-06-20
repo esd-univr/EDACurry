@@ -1,8 +1,25 @@
-# EDACurry - Home of the Unified Mixed-signal Netlist Parser Framework
+# EDACurry: A Multi-Language Framework to Create, Translate, and Manipulate Transistor-Level Netlists
 
-There are plentiful successors of SPICE language for describing transistor-level designs. For most of them, the semantic matches those of SPICE, and only the syntax is changed. Others instead provide more default models or analysis tools.
+The Simulation Program with Integrated Circuit
+Emphasis (SPICE), introduced in 1973, laid the foundation for
+transistor-level netlist representation. Over the decades, numer-
+ous SPICE dialects emerged, each tailored to specific needs but
+sharing core semantics. This article presents EDACurry, an inno-
+vative, open-source framework designed to simplify and automate
+the creation, translation, and manipulation of transistor-level
+netlists across SPICE-based languages such as Eldo and Spectre.
 
-The EDACurry library are based on a shared semantic for reading, writing, or manipulating transistor-level designs. The ultimate goal of the framework is: reading an input design written in a specific syntax and then allowing to write the same design in another syntax. First, the input description is parsed by a language-specific front-end which turns it into an in-memory abstract syntax tree that follows the common semantic. Then, the in-memory description can be subject to different user-defined manipulations built on top of a series of API or visitor/listener classes. Finally, the description goes through the desired back-end, transforming the in-memory description into the target transistor-level language.
+By leveraging a unified internal Abstract Syntax Tree (AST),
+EDACurry bridges syntactical differences while maintaining
+semantic consistency, enabling efficient manipulation workflows.
+The framework supports custom operations, including design
+space exploration, defect model injection, and subcircuit wrap-
+ping, all accessible through Python. Demonstrated applications
+highlight its versatility in analog design workflows, offering
+integration with commercial and open-source simulators. With
+EDACurry, analog designers gain a powerful tool to support
+netlist manipulation tasks, improving productivity and fostering
+innovation in circuit design.
 
 ## Project Structure and Files
 
