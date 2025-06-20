@@ -20,28 +20,58 @@ SpectreBackend::SpectreBackend()
 
 int SpectreBackend::visitCircuit(const std::shared_ptr<structure::Circuit> &e)
 {
-    if (!e->getTitle().empty()) {
-        ss << e->getTitle() << "\n";
-    }
-    if (e->nodes) {
-        ss << ".global";
-        for (auto node : e->nodes) {
-            ss << ' ';
-            node->accept(this);
+    // If the IR labels top-level as "spectre_top", treat that as the global netlist
+    if (e->getName() == "spectre_top") {
+        // If the circuit has a title, print it at top-level
+        if (!e->getTitle().empty()) {
+            ss << e->getTitle() << "\n";
         }
-        ss << '\n';
+
+        // If the circuit has any parameters, emit them as “.param …”
+        if (e->parameters) {
+            ss << ".param";
+            for (auto &param : e->parameters) {
+                ss << ' ';
+                param->accept(this);
+            }
+            ss << '\n';
+        }
+
+        // Visit all child objects (subcircuits, components, analyses, etc.)
+        for (auto &obj : e->content) {
+            obj->accept(this);
+        }
+        return 0;
     }
+
+    // Otherwise, treat this circuit as a Spectre subckt
+    ss << "subckt " << e->getName();
+    for (auto &node : e->nodes) {
+        ss << ' ';
+        node->accept(this);
+    }
+    ss << '\n';
+
+    ss << ind_increase;
+    // If the subckt has parameters, you can emit them
     if (e->parameters) {
-        ss << ".param";
-        for (auto parameter : e->parameters) {
-            ss << ' ';
-            parameter->accept(this);
+        ss << "parameters ";
+        bool first = true;
+        for (auto &param : e->parameters) {
+            if (!first) ss << ' ';
+            param->accept(this);
+            first = false;
         }
         ss << '\n';
     }
-    for (auto it : e->content) {
-        it->accept(this);
+
+    // Subckt internals
+    for (auto &obj : e->content) {
+        obj->accept(this);
     }
+
+    ss << ind_decrease;
+    ss << "ends " << e->getName() << "\n";
     return 0;
 }
 
@@ -199,7 +229,8 @@ int SpectreBackend::visitIdentifier(const std::shared_ptr<structure::Identifier>
 
 int SpectreBackend::visitInclude(const std::shared_ptr<structure::Include> &e)
 {
-    return features::BaseVisitor::visitInclude(e);
+    ss << "include \"" << e->getPath() << "\"\n";
+    return 0;
 }
 
 int SpectreBackend::visitLibraryDef(const std::shared_ptr<structure::LibraryDef> &e)
@@ -214,7 +245,7 @@ int SpectreBackend::visitLibrary(const std::shared_ptr<structure::Library> &e)
 
 int SpectreBackend::visitModel(const std::shared_ptr<structure::Model> &e)
 {
-    ss << ".MODEL " << e->getName() << " " << e->getMaster() << "(";
+    ss << "model " << e->getName() << " " << e->getMaster() << "(";
     for (const auto &parameter : e->parameters) {
         ss << ' ';
         parameter->accept(this);
@@ -304,23 +335,36 @@ int SpectreBackend::visitParameter(const std::shared_ptr<structure::Parameter> &
 
 int SpectreBackend::visitSubckt(const std::shared_ptr<structure::Subckt> &e)
 {
-    ss << ".subckt " << e->getName();
+    // “subckt” with name and node list
+    ss << "subckt " << e->getName();
     for (const auto &node : e->nodes) {
         ss << ' ';
         node->accept(this);
     }
     ss << '\n';
+
     ss << ind_increase;
-    for (const auto &parameter : e->parameters) {
-        ss << ".param ";
-        parameter->accept(this);
+
+    // If the subckt has any parameters, you can emit them
+    if (!e->parameters.empty()) {
+        ss << "parameters ";
+        bool first = true;
+        for (const auto &parameter : e->parameters) {
+            if (!first) ss << ' ';
+            parameter->accept(this);
+            first = false;
+        }
         ss << '\n';
     }
+
+    // Subckt internals
     for (const auto &entry : e->content) {
         entry->accept(this);
     }
+
     ss << ind_decrease;
-    ss << ".ends " << e->getName() << '\n';
+    // “ends subcktName”
+    ss << "ends " << e->getName() << '\n';
     return 0;
 }
 
