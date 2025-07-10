@@ -46,7 +46,7 @@ mark_as_advanced(FORCE
 
 find_package(Python COMPONENTS Interpreter Development)
 find_package(Doxygen)
-find_package(ANTLR4 REQUIRED)
+#find_package(ANTLR4 REQUIRED)
 
 # -----------------------------------------------------------------------------
 # DIPENDENCIES (REPOSITORIES)
@@ -196,8 +196,19 @@ pybind11_add_module(
 # Add a macro inside the C++, so that we can de-activate the python wrapping code.
 target_compile_definitions(${PROJECT_NAME} PRIVATE PYTHON_INTERFACE_ENABLED)
 
-# Add antlr4 lib directories.
-target_link_directories(${PROJECT_NAME} PRIVATE ${ANTLR4_LINK_DIRECTORIES})
+# --- Use local ANTLR4 library and headers ---
+set(ANTLR4_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/libraries/include")
+target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE ${ANTLR4_INCLUDE_DIRS})
+target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/libraries/include/antlr4-runtime)
+set(ANTLR4_LIBRARIES "${PROJECT_SOURCE_DIR}/libraries/libantlr4-runtime.so")
+
+target_link_libraries(${PROJECT_NAME} PRIVATE ${ANTLR4_LIBRARIES})
+
+# --- Set RPATH so the .so finds libraries at runtime ---
+set_target_properties(${PROJECT_NAME} PROPERTIES
+    INSTALL_RPATH "$ORIGIN/libraries"
+    BUILD_WITH_INSTALL_RPATH TRUE
+)
 
 # Include the project headers.
 target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/include)

@@ -1,0 +1,2299 @@
+subckt OPAMP1_variant1 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.0e-07 w=1.3e-06 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=1.8e-07n w=6.8e-07u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=2.0e-07n w=1.8e-06u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=2.2e-07n w=1.2e-06u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=2.9e-07n w=9.5e-07u m=1
+ends OPAMP1_variant1
+
+subckt OPAMP1_variant2 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=9.6e-13p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=2.5e-07n w=1.2e-06u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant2
+
+subckt OPAMP1_variant3 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=2.0e-09 PJ=5.2e-05 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=1.3e-07n w=6.4e-07u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=2.0e-07n w=8.3e-07u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant3
+
+subckt OPAMP1_variant4 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=2.0e-07n w=7.0e-07u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=2.1e-07n w=6.4e-07u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=1.0e-07n w=1.3e-06u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=1.8e-07n w=1.7e-06u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant4
+
+subckt OPAMP1_variant5 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=2.7e-07n w=5.5e-07u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=1.7e-07n w=1.4e-06u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=1.7e-07n w=5.6e-07u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant5
+
+subckt OPAMP1_variant6 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=9.8e-09 PJ=7.2e-05 m=1
+	xi0 (vssa net69) prim_nd AREA=9.4e-09 PJ=2.4e-05 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=1.2e-07n w=1.2e-06u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=1.9e-07n w=8.1e-07u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=2.1e-07n w=7.7e-07u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant6
+
+subckt OPAMP1_variant7 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.4e-09 PJ=9.7e-06 m=1
+	xi0 (vssa net69) prim_nd AREA=7.9e-09 PJ=1.7e-05 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=2.5e-07n w=9.8e-07u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=1.9e-07n w=1.4e-06u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=1.9e-07n w=6.7e-07u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant7
+
+subckt OPAMP1_variant8 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=6.9e-09 PJ=2.3e-05 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=7.1e-13p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=3.0e-07n w=5.3e-07u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant8
+
+subckt OPAMP1_variant9 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=1.0e-08 PJ=9.4e-06 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=2.6e-07n w=1.3e-06u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=2.8e-07n w=8.6e-07u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant9
+
+subckt OPAMP1_variant10 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.4e-07 w=6.7e-07 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=1.2e-07n w=1.7e-06u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=1.8e-07n w=1.4e-06u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=1.6e-07n w=5.7e-07u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=1.5e-07n w=1.4e-06u m=1
+ends OPAMP1_variant10
+
+subckt OPAMP1_variant11 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=2.0e-07n w=1.3e-06u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=2.8e-07n w=1.5e-06u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=2.1e-07n w=1.7e-06u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=2.7e-07n w=2.0e-06u m=1
+ends OPAMP1_variant11
+
+subckt OPAMP1_variant12 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=2.9e-09 PJ=4.7e-05 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=1.3e-07n w=1.2e-06u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant12
+
+subckt OPAMP1_variant13 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=7.2e-13p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=2.3e-07n w=5.3e-07u m=1
+ends OPAMP1_variant13
+
+subckt OPAMP1_variant14 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1.8e-12p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=1.6e-07n w=1.4e-06u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=2.0e-07n w=7.5e-07u m=1
+ends OPAMP1_variant14
+
+subckt OPAMP1_variant15 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=2.9e-07n w=8.1e-07u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=1.6e-07n w=1.1e-06u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant15
+
+subckt OPAMP1_variant16 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=3.2e-09 PJ=4.3e-05 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=2.3e-07n w=1.0e-06u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=1.1e-07n w=1.9e-06u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=2.8e-07n w=1.6e-06u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant16
+
+subckt OPAMP1_variant17 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=4.0e-09 PJ=6.3e-05 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=1.5e-07n w=8.4e-07u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=2.7e-07n w=1.8e-06u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=2.1e-07n w=1.2e-06u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=1.8e-07n w=1.0e-06u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant17
+
+subckt OPAMP1_variant18 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=1.7e-07 w=7.5e-07 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=2.9e-07n w=2.0e-06u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant18
+
+subckt OPAMP1_variant19 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1.6e-12p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=2.6e-07n w=6.9e-07u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant19
+
+subckt OPAMP1_variant20 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=2.7e-07n w=9.9e-07u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=2.9e-07n w=1.1e-06u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=2.5e-07n w=6.0e-07u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant20
+
+subckt OPAMP1_variant21 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1.6e-09 PJ=2.9e-06 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=6.1e-13p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=1.1e-07n w=1.8e-06u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=2.8e-07n w=1.9e-06u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant21
+
+subckt OPAMP1_variant22 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=3.0e-09 PJ=8.1e-05 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=1.6e-07n w=5.9e-07u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=1.8e-07n w=1.7e-06u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=1.5e-07n w=1.2e-06u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=1.2e-07n w=1.5e-06u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant22
+
+subckt OPAMP1_variant23 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=3.6e-09 PJ=5.1e-05 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=1.6e-07 w=7.9e-07 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=8.4e-13p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=1.9e-07n w=7.5e-07u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=2.9e-07n w=6.7e-07u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant23
+
+subckt OPAMP1_variant24 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=9.4e-13p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=1.2e-07n w=1.3e-06u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant24
+
+subckt OPAMP1_variant25 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.6e-07 w=5.4e-07 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=1.2e-07n w=2.0e-06u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=2.9e-07n w=1.3e-06u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=1.8e-07n w=1.5e-06u m=1
+ends OPAMP1_variant25
+
+subckt OPAMP1_variant26 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=1.6e-07 w=1.3e-06 m=1
+	xcc01 (net12 out) prim_cpoly c=8.0e-13p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=2.5e-07n w=9.9e-07u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=2.4e-07n w=8.3e-07u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=1.8e-07n w=7.1e-07u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant26
+
+subckt OPAMP1_variant27 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=2.1e-07n w=8.8e-07u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=1.0e-07n w=1.7e-06u m=1
+ends OPAMP1_variant27
+
+subckt OPAMP1_variant28 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.6e-10 PJ=7.6e-05 m=1
+	xi0 (vssa net69) prim_nd AREA=5.6e-09 PJ=1.8e-05 m=1
+	xi3 (net51 vdda) prim_pd AREA=3.2e-09 PJ=1.4e-05 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=1.8e-07n w=1.9e-06u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant28
+
+subckt OPAMP1_variant29 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=9.4e-09 PJ=9.3e-05 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1.5e-12p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=2.5e-07n w=1.9e-06u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=2.9e-07n w=1.7e-06u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=2.9e-07n w=1.6e-06u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant29
+
+subckt OPAMP1_variant30 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.1e-09 PJ=4.6e-06 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=1.7e-07n w=7.9e-07u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=2.5e-07n w=8.0e-07u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=2.1e-07n w=1.9e-06u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=2.6e-07n w=5.4e-07u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant30
+
+subckt OPAMP1_variant31 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1.7e-09 PJ=7.8e-05 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.7e-07 w=7.8e-07 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=2.3e-07n w=5.8e-07u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=2.6e-07n w=7.7e-07u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant31
+
+subckt OPAMP1_variant32 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=4.1e-10 PJ=7.2e-05 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.6e-07 w=1.3e-06 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=1.9e-07n w=1.2e-06u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=1.1e-07n w=1.5e-06u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=1.4e-07n w=1.6e-06u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant32
+
+subckt OPAMP1_variant33 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=2.5e-07n w=1.2e-06u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=2.0e-07n w=1.1e-06u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant33
+
+subckt OPAMP1_variant34 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1.7e-09 PJ=2.0e-05 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1.4e-12p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=1.3e-07n w=1.9e-06u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=2.7e-07n w=1.2e-06u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant34
+
+subckt OPAMP1_variant35 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=2.5e-07n w=1.2e-06u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=1.1e-07n w=1.7e-06u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant35
+
+subckt OPAMP1_variant36 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=2.6e-09 PJ=4.4e-05 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.7e-07 w=1.4e-06 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=1.9e-07n w=1.2e-06u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=1.1e-07n w=1.7e-06u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=2.9e-07n w=7.2e-07u m=1
+ends OPAMP1_variant36
+
+subckt OPAMP1_variant37 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1.1e-12p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=1.0e-07n w=1.3e-06u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=2.1e-07n w=1.7e-06u m=1
+ends OPAMP1_variant37
+
+subckt OPAMP1_variant38 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=1.4e-07 w=1.2e-06 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=1.9e-07n w=1.5e-06u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant38
+
+subckt OPAMP1_variant39 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=1.8e-07n w=1.1e-06u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=1.3e-07n w=1.8e-06u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant39
+
+subckt OPAMP1_variant40 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=8.3e-09 PJ=2.8e-05 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=2.5e-07n w=1.3e-06u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=2.0e-07n w=5.5e-07u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=1.5e-07n w=1.7e-06u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=2.9e-07n w=9.6e-07u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant40
+
+subckt OPAMP1_variant41 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=2.1e-09 PJ=4.0e-05 m=1
+	xi3 (net51 vdda) prim_pd AREA=3.8e-09 PJ=9.1e-05 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1.5e-12p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=2.7e-07n w=9.2e-07u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=1.3e-07n w=9.4e-07u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant41
+
+subckt OPAMP1_variant42 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1.1e-12p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=2.7e-07n w=1.4e-06u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=1.7e-07n w=1.9e-06u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=2.9e-07n w=5.7e-07u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=1.2e-07n w=1.7e-06u m=1
+ends OPAMP1_variant42
+
+subckt OPAMP1_variant43 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1.5e-12p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=1.3e-07n w=1.1e-06u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant43
+
+subckt OPAMP1_variant44 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1.9e-12p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=2.4e-07n w=5.5e-07u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=1.4e-07n w=1.7e-06u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=1.6e-07n w=1.9e-06u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant44
+
+subckt OPAMP1_variant45 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=4.6e-09 PJ=4.5e-05 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=2.9e-07n w=7.2e-07u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant45
+
+subckt OPAMP1_variant46 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=7.5e-10 PJ=9.4e-06 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=2.9e-07n w=1.7e-06u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=1.8e-07n w=1.4e-06u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=2.6e-07n w=1.5e-06u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant46
+
+subckt OPAMP1_variant47 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=7.7e-10 PJ=3.7e-05 m=1
+	xi0 (vssa net69) prim_nd AREA=4.6e-09 PJ=8.8e-05 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.0e-07 w=1.5e-06 m=1
+	xcc01 (net12 out) prim_cpoly c=1.3e-12p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=1.8e-07n w=1.8e-06u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant47
+
+subckt OPAMP1_variant48 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=6.5e-10 PJ=1.2e-05 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=2.8e-07n w=1.4e-06u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=2.6e-07n w=1.1e-06u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=1.7e-07n w=1.2e-06u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=2.3e-07n w=1.9e-06u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant48
+
+subckt OPAMP1_variant49 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1.5e-09 PJ=9.3e-05 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1.4e-12p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=1.2e-07n w=1.5e-06u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=1.0e-07n w=5.6e-07u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=1.4e-07n w=1.1e-06u m=1
+ends OPAMP1_variant49
+
+subckt OPAMP1_variant50 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=5.1e-09 PJ=6.4e-05 m=1
+	xi3 (net51 vdda) prim_pd AREA=7.7e-09 PJ=9.7e-05 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=2.0e-07n w=1.3e-06u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=2.5e-07n w=8.5e-07u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=1.7e-07n w=1.7e-06u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant50
+
+subckt OPAMP1_variant51 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=1.0e-07n w=1.0e-06u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=2.1e-07n w=6.9e-07u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=2.5e-07n w=1.6e-06u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant51
+
+subckt OPAMP1_variant52 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.4e-07 w=1.7e-06 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=1.7e-07n w=5.3e-07u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=1.5e-07n w=1.2e-06u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant52
+
+subckt OPAMP1_variant53 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=9.3e-09 PJ=6.2e-05 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=1.6e-07n w=1.4e-06u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=2.4e-07n w=1.2e-06u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=2.3e-07n w=1.3e-06u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=1.7e-07n w=1.3e-06u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant53
+
+subckt OPAMP1_variant54 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=2.7e-09 PJ=5.5e-05 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=1.9e-07 w=1.1e-06 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=1.6e-07n w=1.4e-06u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=2.2e-07n w=1.4e-06u m=1
+ends OPAMP1_variant54
+
+subckt OPAMP1_variant55 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.8e-07 w=1.4e-06 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=2.4e-07n w=1.7e-06u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=1.2e-07n w=1.1e-06u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant55
+
+subckt OPAMP1_variant56 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=8.0e-09 PJ=7.6e-05 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=2.1e-07n w=5.7e-07u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=2.5e-07n w=9.6e-07u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=2.8e-07n w=1.0e-06u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant56
+
+subckt OPAMP1_variant57 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=2.0e-07n w=5.6e-07u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=2.8e-07n w=6.9e-07u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant57
+
+subckt OPAMP1_variant58 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=5.5e-09 PJ=9.0e-05 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1.5e-12p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=1.8e-07n w=1.4e-06u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=1.1e-07n w=6.6e-07u m=1
+ends OPAMP1_variant58
+
+subckt OPAMP1_variant59 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.6e-09 PJ=7.4e-05 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=7.4e-13p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant59
+
+subckt OPAMP1_variant60 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=8.3e-09 PJ=1.5e-05 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=1.8e-07 w=1.1e-06 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=2.9e-07n w=8.3e-07u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=1.1e-07n w=6.9e-07u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=1.1e-07n w=9.6e-07u m=1
+ends OPAMP1_variant60
+
+subckt OPAMP1_variant61 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.4e-07 w=1.4e-06 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=2.9e-07n w=5.5e-07u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=1.3e-07n w=1.4e-06u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant61
+
+subckt OPAMP1_variant62 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.3e-09 PJ=2.6e-05 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=9.4e-13p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant62
+
+subckt OPAMP1_variant63 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=2.7e-07n w=8.9e-07u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=1.8e-07n w=1.8e-06u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant63
+
+subckt OPAMP1_variant64 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=6.3e-13p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=2.2e-07n w=1.2e-06u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant64
+
+subckt OPAMP1_variant65 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=2.6e-07n w=1.1e-06u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=1.8e-07n w=1.8e-06u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant65
+
+subckt OPAMP1_variant66 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=1.7e-07n w=9.5e-07u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=2.7e-07n w=1.2e-06u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=2.5e-07n w=1.9e-06u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=1.0e-07n w=1.7e-06u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=2.7e-07n w=1.4e-06u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant66
+
+subckt OPAMP1_variant67 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=5.5e-09 PJ=1.8e-05 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=2.5e-07n w=9.3e-07u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=1.5e-07n w=6.3e-07u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=1.4e-07n w=1.6e-06u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant67
+
+subckt OPAMP1_variant68 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=5.3e-09 PJ=5.9e-06 m=1
+	xi0 (vssa net69) prim_nd AREA=4.1e-11 PJ=9.4e-05 m=1
+	xi3 (net51 vdda) prim_pd AREA=1.6e-09 PJ=6.0e-05 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=2.3e-07n w=1.5e-06u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=1.7e-07n w=1.1e-06u m=1
+ends OPAMP1_variant68
+
+subckt OPAMP1_variant69 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=9.3e-13p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=1.9e-07n w=1.9e-06u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=1.6e-07n w=8.9e-07u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant69
+
+subckt OPAMP1_variant70 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=2.6e-07n w=5.7e-07u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=1.9e-07n w=1.0e-06u m=1
+ends OPAMP1_variant70
+
+subckt OPAMP1_variant71 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=1.4e-07n w=1.1e-06u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=1.6e-07n w=1.7e-06u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant71
+
+subckt OPAMP1_variant72 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=7.0e-09 PJ=8.8e-05 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=1.6e-07 w=5.0e-07 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=2.1e-07n w=1.2e-06u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=1.2e-07n w=6.4e-07u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=2.6e-07n w=6.9e-07u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant72
+
+subckt OPAMP1_variant73 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=3.0e-07 w=1.3e-06 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=1.0e-07n w=1.6e-06u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=1.9e-07n w=9.9e-07u m=1
+ends OPAMP1_variant73
+
+subckt OPAMP1_variant74 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=6.5e-09 PJ=9.4e-05 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=1.7e-07n w=1.4e-06u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=2.4e-07n w=1.5e-06u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant74
+
+subckt OPAMP1_variant75 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=9.3e-09 PJ=1.1e-05 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=2.6e-07n w=1.5e-06u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=2.1e-07n w=8.5e-07u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=2.4e-07n w=1.5e-06u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant75
+
+subckt OPAMP1_variant76 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=1.1e-07n w=8.5e-07u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=2.4e-07n w=6.5e-07u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=1.5e-07n w=1.7e-06u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant76
+
+subckt OPAMP1_variant77 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=8.8e-09 PJ=3.2e-05 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=8.1e-13p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=2.6e-07n w=9.9e-07u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=2.7e-07n w=6.6e-07u m=1
+ends OPAMP1_variant77
+
+subckt OPAMP1_variant78 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=7.5e-09 PJ=9.9e-05 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=6.9e-13p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=2.8e-07n w=1.1e-06u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant78
+
+subckt OPAMP1_variant79 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=5.2e-09 PJ=5.5e-05 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=2.5e-07n w=1.7e-06u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant79
+
+subckt OPAMP1_variant80 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.5e-07 w=6.6e-07 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=3.0e-07n w=2.0e-06u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=2.7e-07n w=5.7e-07u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=2.2e-07n w=1.7e-06u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant80
+
+subckt OPAMP1_variant81 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=6.0e-13p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=2.9e-07n w=1.0e-06u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=1.6e-07n w=1.6e-06u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant81
+
+subckt OPAMP1_variant82 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.5e-07 w=1.4e-06 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=1.6e-07n w=1.7e-06u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=2.1e-07n w=1.3e-06u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=3.0e-07n w=8.7e-07u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant82
+
+subckt OPAMP1_variant83 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1.5e-12p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=2.5e-07n w=1.7e-06u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=2.0e-07n w=1.0e-06u m=1
+ends OPAMP1_variant83
+
+subckt OPAMP1_variant84 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=8.8e-09 PJ=3.6e-05 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=2.9e-07n w=5.5e-07u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=1.7e-07n w=6.5e-07u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=2.0e-07n w=5.1e-07u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=2.4e-07n w=9.4e-07u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant84
+
+subckt OPAMP1_variant85 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.9e-07 w=1.1e-06 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=2.0e-07n w=5.2e-07u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant85
+
+subckt OPAMP1_variant86 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1.7e-09 PJ=8.7e-05 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=1.8e-07n w=1.4e-06u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=2.2e-07n w=8.2e-07u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=2.1e-07n w=7.5e-07u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant86
+
+subckt OPAMP1_variant87 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=2.7e-07n w=1.8e-06u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=1.7e-07n w=1.6e-06u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=1.4e-07n w=1.9e-06u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant87
+
+subckt OPAMP1_variant88 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=3.9e-10 PJ=4.7e-05 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=2.7e-07n w=6.5e-07u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=1.5e-07n w=1.4e-06u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=1.5e-07n w=1.2e-06u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=2.6e-07n w=1.4e-06u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant88
+
+subckt OPAMP1_variant89 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=2.6e-09 PJ=3.0e-05 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=2.4e-07n w=1.4e-06u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=1.7e-07n w=1.4e-06u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant89
+
+subckt OPAMP1_variant90 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=1.3e-07n w=1.1e-06u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=2.4e-07n w=8.2e-07u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=1.5e-07n w=5.2e-07u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant90
+
+subckt OPAMP1_variant91 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=6.8e-10 PJ=8.6e-05 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=2.7e-07n w=8.0e-07u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=2.3e-07n w=1.1e-06u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant91
+
+subckt OPAMP1_variant92 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=2.0e-07n w=1.6e-06u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=1.5e-07n w=1.5e-06u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=2.5e-07n w=1.3e-06u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant92
+
+subckt OPAMP1_variant93 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=8.8e-09 PJ=5.4e-05 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=1.7e-07n w=1.4e-06u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant93
+
+subckt OPAMP1_variant94 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=2.4e-07n w=1.8e-06u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=2.6e-07n w=1.3e-06u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant94
+
+subckt OPAMP1_variant95 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1.8e-09 PJ=7.8e-05 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1.7e-12p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=2.2e-07n w=8.0e-07u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=2.0e-07n w=1.7e-06u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=1.4e-07n w=1.6e-06u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant95
+
+subckt OPAMP1_variant96 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=4.8e-09 PJ=5.1e-05 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=2.7e-07n w=1.7e-06u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant96
+
+subckt OPAMP1_variant97 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=3.8e-09 PJ=2.0e-05 m=1
+	xi3 (net51 vdda) prim_pd AREA=1.2e-09 PJ=7.0e-05 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=2.6e-07n w=1.9e-06u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=2.0e-07n w=9.5e-07u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant97
+
+subckt OPAMP1_variant98 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=6.13907e-9 PJ=476.6e-6 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.7e-07 w=1.5e-06 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=1.8e-07n w=7.4e-07u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant98
+
+subckt OPAMP1_variant99 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=8.9e-09 PJ=9.4e-05 m=1
+	xi0 (vssa net69) prim_nd AREA=8.9e-09 PJ=7.4e-05 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xcc01 (net12 out) prim_cpoly c=9.7e-13p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=2.6e-07n w=1.2e-06u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=1.5e-07n w=1.4e-06u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=180n w=1u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant99
+
+subckt OPAMP1_variant100 inn inp out pd xpd vdda vssa
+	xd1 (vssa vdda) prim_nwd AREA=9.9e-09 PJ=9.9e-05 m=1
+	xi0 (vssa net69) prim_nd AREA=1e-12 PJ=4e-6 m=1
+	xi3 (net51 vdda) prim_pd AREA=790e-15 PJ=3.3e-6 m=1
+	xr0 (vssa vdda net51) prim_rdiffp l=2.1e-6 w=700e-9 m=1
+	xr1 (vdda vdda net69) prim_rdiffp l=1.6e-07 w=1.7e-06 m=1
+	xcc01 (net12 out) prim_cpoly c=1p m=1
+	mnm12 (net13 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnm11 (net56 net56 vssa vssa) nmos1 l=180n w=1u m=1
+	mnb02 (net27 net27 net21 vssa) nmos1 l=180n w=1u m=1
+	mnpd1 (net21 xpd vssa vssa) nmos1 l=180n w=1u m=1
+	mn001 (out net13 vssa vssa) nmos1 l=180n w=1u m=1
+	mnpd2 (net13 pd vssa vssa) nmos1 l=180n w=1u m=1
+	mnc01 (net13 net69 net12 vssa) nmos1 l=180n w=1u m=1
+	mpb02 (net27 net51 net158 vdda) pmos1 l=2.8e-07n w=1.0e-06u m=1
+	mppd1 (net158 xpd vdda vdda) pmos1 l=180n w=1u m=1
+	mps11 (net31 net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd11 (net56 inn net31 net31) pmos1 l=180n w=1u m=1
+	mp001 (out net158 vdda vdda) pmos1 l=180n w=1u m=1
+	mpd12 (net13 inp net31 net31) pmos1 l=180n w=1u m=1
+	mpb01 (net158 net158 vdda vdda) pmos1 l=180n w=1u m=1
+ends OPAMP1_variant100
