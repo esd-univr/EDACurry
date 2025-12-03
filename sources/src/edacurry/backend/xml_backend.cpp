@@ -365,6 +365,10 @@ int XmlBackend::visitValueList(const std::shared_ptr<structure::ValueList> &e)
 
 std::string write_xml(const std::shared_ptr<structure::Object> &object)
 {
+    if (!object) {
+        std::cerr << "write_xml: provided object is null (parsing failed)" << std::endl;
+        return std::string("");
+    }
     edacurry::backend::XmlBackend backend;
     object->accept(&backend);
     return backend.str();

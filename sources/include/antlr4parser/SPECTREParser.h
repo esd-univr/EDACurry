@@ -15,45 +15,45 @@ public:
   enum {
     BLOCK_COMMENT = 1, LINE_COMMENT = 2, GLOBAL = 3, INCLUDE = 4, CPP_INCLUDE = 5, 
     AHDL_INCLUDE = 6, LIBRARY = 7, LIBRARY_END = 8, SECTION = 9, SECTION_END = 10, 
-    SUBCKT = 11, INLINE_SUBCKT = 12, SUBCKT_END = 13, SIMULATOR = 14, GLOBAL_PARAMETERS = 15, 
-    MODEL = 16, EXPORT = 17, SAVE = 18, ALTER = 19, ALTERGROUP = 20, OPTIONS = 21, 
-    SET = 22, SHELL = 23, INFO = 24, NODESET = 25, IC = 26, ASSERT = 27, 
-    CHECK = 28, LANGUAGE = 29, PORTS = 30, WAVE = 31, PWL = 32, SIN = 33, 
-    SFFM = 34, PULSE = 35, COEFFS = 36, INSENSITIVE = 37, IF = 38, ELSE = 39, 
-    PARAMETERS = 40, ANALOGMODEL = 41, CHECKPOINT = 42, SPECTRE = 43, SPICE = 44, 
-    STATISTICS = 45, PROCESS = 46, CORRELATE = 47, TRUNCATE = 48, MISMATCH = 49, 
-    VARY = 50, RELIABILITY = 51, AC = 52, ACMATCH = 53, DC = 54, DCMATCH = 55, 
-    ENVLP = 56, SP = 57, STB = 58, SWEEP = 59, TDR = 60, TRAN = 61, XF = 62, 
-    PAC = 63, PDISTO = 64, PNOISE = 65, PSP = 66, PSS = 67, PXF = 68, PZ = 69, 
-    QPAC = 70, QPNOISE = 71, QPSP = 72, QPSS = 73, QPXF = 74, SENS = 75, 
-    MONTECARLO = 76, NOISE = 77, CHECKLIMIT = 78, A2D = 79, B3SOIPD = 80, 
-    BJT = 81, BJT301 = 82, BJT500 = 83, BJT503 = 84, BJT504 = 85, BJT504T = 86, 
-    BSIM1 = 87, BSIM2 = 88, BSIM3 = 89, BSIM3V3 = 90, BSIM4 = 91, BSIMSOI = 92, 
-    BTASOI = 93, CAPACITOR = 94, CCCS = 95, CCVS = 96, CKTROM = 97, CORE = 98, 
-    D2A = 99, DELAY = 100, DIO500 = 101, DIODE = 102, EKV = 103, FOURIER = 104, 
-    GAAS = 105, HBT = 106, HISIM = 107, HVMOS = 108, INDUCTOR = 109, INTCAP = 110, 
-    IPROBE = 111, ISOURCE = 112, JFET = 113, JUNCAP = 114, MISNAN = 115, 
-    MOS11011 = 116, MOS11010 = 117, MOS3002 = 118, MOS3100 = 119, MOS1000 = 120, 
-    MOS1100 = 121, MUTUAL_INDUCTOR = 122, MSLINE = 123, MTLINE = 124, MOS705 = 125, 
-    MOS902 = 126, MOS903 = 127, MOS30 = 128, MOS40 = 129, MOS15 = 130, MOS0 = 131, 
-    MOS1 = 132, MOS2 = 133, MOS3 = 134, NODCAP = 135, NODE = 136, NPORT = 137, 
-    PARAMTEST = 138, PCCCS = 139, PCCVS = 140, PHY_RES = 141, PORT = 142, 
-    PSITFT = 143, PVCCS = 144, PVCVS = 145, QUANTITY = 146, RDIFF = 147, 
-    RELAY = 148, RESISTOR = 149, SCCCS = 150, SCCVS = 151, SVCCS = 152, 
-    SVCVS = 153, SWITCH = 154, TLINE = 155, TOM2 = 156, TOM3 = 157, TRANSFORMER = 158, 
-    VBIC = 159, VCCS = 160, VCVS = 161, VSOURCE = 162, WINDING = 163, ZCCCS = 164, 
-    ZCCVS = 165, ZVCCS = 166, ZVCVS = 167, BSOURCE = 168, EQUAL = 169, EXCLAMATION_MARK = 170, 
-    LESS_THAN = 171, GREATER_THAN = 172, LESS_THAN_EQUAL = 173, GREATER_THAN_EQUAL = 174, 
-    LOGIC_EQUAL = 175, LOGIC_NOT_EQUAL = 176, LOGIC_AND = 177, LOGIC_OR = 178, 
-    LOGIC_BITWISE_AND = 179, LOGIC_BITWISE_OR = 180, LOGIC_XOR = 181, BITWISE_SHIFT_LEFT = 182, 
-    BITWISE_SHIFT_RIGHT = 183, POWER_OPERATOR = 184, AND = 185, OR = 186, 
-    COLON = 187, SEMICOLON = 188, PLUS = 189, MINUS = 190, STAR = 191, OPEN_ROUND = 192, 
-    CLOSE_ROUND = 193, OPEN_SQUARE = 194, CLOSE_SQUARE = 195, OPEN_CURLY = 196, 
-    CLOSE_CURLY = 197, QUESTION_MARK = 198, COMMA = 199, DOLLAR = 200, AMPERSAND = 201, 
-    DOT = 202, UNDERSCORE = 203, AT_SIGN = 204, POUND_SIGN = 205, BACKSLASH = 206, 
-    SLASH = 207, APEX = 208, QUOTES = 209, PIPE = 210, PERCENT = 211, CARET = 212, 
-    TILDE = 213, ARROW = 214, NUMBER = 215, ID = 216, STRING = 217, PERCENTAGE = 218, 
-    COMPLEX = 219, WS = 220, NL = 221, CNL = 222
+    SUBCKT = 11, INLINE_SUBCKT = 12, SUBCKT_END = 13, SIMULATOR = 14, MODEL = 15, 
+    EXPORT = 16, SAVE = 17, ALTER = 18, ALTERGROUP = 19, OPTIONS = 20, SET = 21, 
+    SHELL = 22, INFO = 23, NODESET = 24, IC = 25, ASSERT = 26, CHECK = 27, 
+    LANGUAGE = 28, PORTS = 29, WAVE = 30, PWL = 31, SIN = 32, SFFM = 33, 
+    PULSE = 34, COEFFS = 35, INSENSITIVE = 36, IF = 37, ELSE = 38, PARAMETERS = 39, 
+    ANALOGMODEL = 40, CHECKPOINT = 41, SPECTRE = 42, SPICE = 43, STATISTICS = 44, 
+    PROCESS = 45, CORRELATE = 46, TRUNCATE = 47, MISMATCH = 48, VARY = 49, 
+    RELIABILITY = 50, AC = 51, ACMATCH = 52, DC = 53, DCMATCH = 54, ENVLP = 55, 
+    SP = 56, STB = 57, SWEEP = 58, TDR = 59, TRAN = 60, XF = 61, PAC = 62, 
+    PDISTO = 63, PNOISE = 64, PSP = 65, PSS = 66, PXF = 67, PZ = 68, QPAC = 69, 
+    QPNOISE = 70, QPSP = 71, QPSS = 72, QPXF = 73, SENS = 74, MONTECARLO = 75, 
+    NOISE = 76, CHECKLIMIT = 77, A2D = 78, B3SOIPD = 79, BJT = 80, BJT301 = 81, 
+    BJT500 = 82, BJT503 = 83, BJT504 = 84, BJT504T = 85, BSIM1 = 86, BSIM2 = 87, 
+    BSIM3 = 88, BSIM3V3 = 89, BSIM4 = 90, BSIMSOI = 91, BTASOI = 92, CAPACITOR = 93, 
+    CCCS = 94, CCVS = 95, CKTROM = 96, CORE = 97, D2A = 98, DELAY = 99, 
+    DIO500 = 100, DIODE = 101, EKV = 102, FOURIER = 103, GAAS = 104, HBT = 105, 
+    HISIM = 106, HVMOS = 107, INDUCTOR = 108, INTCAP = 109, IPROBE = 110, 
+    ISOURCE = 111, JFET = 112, JUNCAP = 113, MISNAN = 114, MOS11011 = 115, 
+    MOS11010 = 116, MOS3002 = 117, MOS3100 = 118, MOS1000 = 119, MOS1100 = 120, 
+    MUTUAL_INDUCTOR = 121, MSLINE = 122, MTLINE = 123, MOS705 = 124, MOS902 = 125, 
+    MOS903 = 126, MOS30 = 127, MOS40 = 128, MOS15 = 129, MOS0 = 130, MOS1 = 131, 
+    MOS2 = 132, MOS3 = 133, NODCAP = 134, NODE = 135, NPORT = 136, PARAMTEST = 137, 
+    PCCCS = 138, PCCVS = 139, PHY_RES = 140, PORT = 141, PSITFT = 142, PVCCS = 143, 
+    PVCVS = 144, QUANTITY = 145, RDIFF = 146, RELAY = 147, RESISTOR = 148, 
+    SCCCS = 149, SCCVS = 150, SVCCS = 151, SVCVS = 152, SWITCH = 153, TLINE = 154, 
+    TOM2 = 155, TOM3 = 156, TRANSFORMER = 157, VBIC = 158, VCCS = 159, VCVS = 160, 
+    VSOURCE = 161, WINDING = 162, ZCCCS = 163, ZCCVS = 164, ZVCCS = 165, 
+    ZVCVS = 166, BSOURCE = 167, EQUAL = 168, EXCLAMATION_MARK = 169, LESS_THAN = 170, 
+    GREATER_THAN = 171, LESS_THAN_EQUAL = 172, GREATER_THAN_EQUAL = 173, 
+    LOGIC_EQUAL = 174, LOGIC_NOT_EQUAL = 175, LOGIC_AND = 176, LOGIC_OR = 177, 
+    LOGIC_BITWISE_AND = 178, LOGIC_BITWISE_OR = 179, LOGIC_XOR = 180, BITWISE_SHIFT_LEFT = 181, 
+    BITWISE_SHIFT_RIGHT = 182, POWER_OPERATOR = 183, AND = 184, OR = 185, 
+    COLON = 186, SEMICOLON = 187, PLUS = 188, MINUS = 189, STAR = 190, OPEN_ROUND = 191, 
+    CLOSE_ROUND = 192, OPEN_SQUARE = 193, CLOSE_SQUARE = 194, OPEN_CURLY = 195, 
+    CLOSE_CURLY = 196, QUESTION_MARK = 197, COMMA = 198, DOLLAR = 199, AMPERSAND = 200, 
+    DOT = 201, UNDERSCORE = 202, AT_SIGN = 203, POUND_SIGN = 204, BACKSLASH = 205, 
+    SLASH = 206, APEX = 207, QUOTES = 208, PIPE = 209, PERCENT = 210, CARET = 211, 
+    TILDE = 212, ARROW = 213, NUMBER = 214, ID = 215, STRING = 216, PERCENTAGE = 217, 
+    COMPLEX = 218, WS = 219, NL = 220, CNL = 221
   };
 
   enum {
@@ -89,10 +89,11 @@ public:
     RuleNode = 108, RuleExpression = 109, RuleExpression_unary = 110, RuleExpression_function_call = 111, 
     RuleExpression_pair = 112, RuleExpression_scope = 113, RuleExpression_operator = 114, 
     RuleExpression_atom = 115, RuleParameter_list = 116, RuleParameter_list_item = 117, 
-    RuleParameter_assign = 118, RuleParameter_id = 119, RuleParameter_access = 120, 
-    RuleValue_access = 121, RuleValue_access_assign = 122, RuleTime_pair = 123, 
-    RuleTime_point = 124, RuleFilepath = 125, RuleFilepath_element = 126, 
-    RuleKeyword = 127, RuleAnalysis_type = 128, RuleComponent_type = 129
+    RuleArray_expression = 118, RuleArray_item = 119, RuleParameter_assign = 120, 
+    RuleParameter_id = 121, RuleParameter_access = 122, RuleValue_access = 123, 
+    RuleValue_access_assign = 124, RuleTime_pair = 125, RuleTime_point = 126, 
+    RuleFilepath = 127, RuleFilepath_element = 128, RuleKeyword = 129, RuleAnalysis_type = 130, 
+    RuleComponent_type = 131
   };
 
   SPECTREParser(antlr4::TokenStream *input);
@@ -223,6 +224,8 @@ public:
   class Expression_atomContext;
   class Parameter_listContext;
   class Parameter_list_itemContext;
+  class Array_expressionContext;
+  class Array_itemContext;
   class Parameter_assignContext;
   class Parameter_idContext;
   class Parameter_accessContext;
@@ -2125,7 +2128,7 @@ public:
   public:
     Global_declarationsContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *GLOBAL_PARAMETERS();
+    antlr4::tree::TerminalNode *PARAMETERS();
     antlr4::tree::TerminalNode *OPEN_ROUND();
     antlr4::tree::TerminalNode *CLOSE_ROUND();
     antlr4::tree::TerminalNode *EOF();
@@ -2477,10 +2480,8 @@ public:
     antlr4::tree::TerminalNode *OPEN_CURLY();
     std::vector<antlr4::tree::TerminalNode *> APEX();
     antlr4::tree::TerminalNode* APEX(size_t i);
-    antlr4::tree::TerminalNode *OPEN_SQUARE();
     antlr4::tree::TerminalNode *CLOSE_ROUND();
     antlr4::tree::TerminalNode *CLOSE_CURLY();
-    antlr4::tree::TerminalNode *CLOSE_SQUARE();
     std::vector<ExpressionContext *> expression();
     ExpressionContext* expression(size_t i);
     std::vector<antlr4::tree::TerminalNode *> COMMA();
@@ -2573,6 +2574,7 @@ public:
     virtual size_t getRuleIndex() const override;
     Parameter_idContext *parameter_id();
     antlr4::tree::TerminalNode *EQUAL();
+    Array_expressionContext *array_expression();
     ExpressionContext *expression();
     FilepathContext *filepath();
 
@@ -2584,6 +2586,45 @@ public:
   };
 
   Parameter_list_itemContext* parameter_list_item();
+
+  class  Array_expressionContext : public antlr4::ParserRuleContext {
+  public:
+    Array_expressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *OPEN_SQUARE();
+    antlr4::tree::TerminalNode *CLOSE_SQUARE();
+    std::vector<Array_itemContext *> array_item();
+    Array_itemContext* array_item(size_t i);
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  Array_expressionContext* array_expression();
+
+  class  Array_itemContext : public antlr4::ParserRuleContext {
+  public:
+    Array_itemContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *NUMBER();
+    antlr4::tree::TerminalNode *ID();
+    antlr4::tree::TerminalNode *STRING();
+    antlr4::tree::TerminalNode *PERCENTAGE();
+    KeywordContext *keyword();
+    Analysis_typeContext *analysis_type();
+    Component_typeContext *component_type();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  Array_itemContext* array_item();
 
   class  Parameter_assignContext : public antlr4::ParserRuleContext {
   public:
@@ -2607,10 +2648,15 @@ public:
   public:
     Parameter_idContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *ID();
+    std::vector<antlr4::tree::TerminalNode *> ID();
+    antlr4::tree::TerminalNode* ID(size_t i);
     antlr4::tree::TerminalNode *SECTION();
     antlr4::tree::TerminalNode *DC();
-    Expression_scopeContext *expression_scope();
+    antlr4::tree::TerminalNode *SAVE();
+    antlr4::tree::TerminalNode *DELAY();
+    antlr4::tree::TerminalNode *PORTS();
+    std::vector<antlr4::tree::TerminalNode *> COLON();
+    antlr4::tree::TerminalNode* COLON(size_t i);
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;

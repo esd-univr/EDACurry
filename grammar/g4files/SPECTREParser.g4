@@ -663,8 +663,8 @@ reliability_control
 
 // ============================================================================
 global_declarations
-    : GLOBAL_PARAMETERS OPEN_ROUND parameter_list_item+ CLOSE_ROUND (NL* | EOF)
-    | GLOBAL_PARAMETERS          parameter_list_item+           (NL* | EOF);
+    : PARAMETERS OPEN_ROUND parameter_list_item+ CLOSE_ROUND (NL* | EOF)
+    | PARAMETERS          parameter_list_item+           (NL* | EOF);
 
 // ============================================================================
 // COMPONENTS
@@ -723,7 +723,7 @@ expression_function_call
 expression_pair
     : expression_atom COMMA expression_atom;
 expression_scope
-    : (OPEN_ROUND | OPEN_CURLY | APEX | OPEN_SQUARE) (expression COMMA?)+ (CLOSE_ROUND | CLOSE_CURLY | APEX | CLOSE_SQUARE);
+    : (OPEN_ROUND | OPEN_CURLY | APEX) (expression COMMA?)+ (CLOSE_ROUND | CLOSE_CURLY | APEX);
 expression_operator
     // : EQUAL // This is now handled by parameter_assign, removing ambiguity
     
@@ -759,12 +759,25 @@ expression_atom
 parameter_list
     : parameter_list_item+;
 parameter_list_item
-    : parameter_id (EQUAL (expression | filepath))?;
+    : parameter_id EQUAL array_expression
+    | parameter_id EQUAL expression
+    | parameter_id EQUAL filepath
+    | parameter_id;
+array_expression
+    : OPEN_SQUARE array_item* CLOSE_SQUARE;
+array_item
+    : NUMBER
+    | ID
+    | STRING
+    | PERCENTAGE
+    | keyword
+    | analysis_type
+    | component_type;
 parameter_assign
     : parameter_id EQUAL expression
     | parameter_id EQUAL filepath;
 parameter_id
-    : (ID | SECTION | DC) expression_scope?;
+    : (ID | SECTION | DC | SAVE | DELAY | PORTS) (COLON ID)*;
 parameter_access
     : COLON (ID | NUMBER);
 

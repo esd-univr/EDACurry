@@ -489,6 +489,14 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual antlrcpp::Any visitArray_expression(SPECTREParser::Array_expressionContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitArray_item(SPECTREParser::Array_itemContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual antlrcpp::Any visitParameter_assign(SPECTREParser::Parameter_assignContext *ctx) override {
     return visitChildren(ctx);
   }

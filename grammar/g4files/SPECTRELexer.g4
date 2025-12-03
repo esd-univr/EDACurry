@@ -26,7 +26,7 @@ SUBCKT            : [sS][uU][bB][cC][kK][tT]; // Subckt begin
 INLINE_SUBCKT     : [iI][nN][lL][iI][nN][eE]' '[sS][uU][bB][cC][kK][tT]; // Inline Subckt begin
 SUBCKT_END        : [eE][nN][dD][sS]; // Subckt end
 SIMULATOR         : [sS][iI][mM][uU][lL][aA][tT][oO][rR]; // Simulator language
-GLOBAL_PARAMETERS : [pP][aA][rR][aA][mM][eE][tT][eE][rR][sS]; // Netlist Parameters
+//GLOBAL_PARAMETERS : [pP][aA][rR][aA][mM][eE][tT][eE][rR][sS]; // Netlist Parameters
 MODEL	            : [mM][oO][dD][eE][lL];
 EXPORT            : [eE][xX][pP][oO][rR][tT];
 SAVE              : [sS][aA][vV][eE]; // Output Selections
@@ -282,8 +282,10 @@ NUMBER
 
 // An identifier must start with a letter or underscore.
 // It cannot match something that has already been matched as a NUMBER.
+// Supports hierarchical identifiers like i_vref1:fb (instance:pin)
+// Note: [ and ] are excluded to allow array syntax
 ID
-    : (LETTER | '_') (LETTER | DIGIT | '_' | '$' | '`' | '/' | '[' | ']' | '<' | '>' | '!' | '.' | '-' | '+')*
+    : (LETTER | '_') (LETTER | DIGIT | '_' | '$' | '`' | '/' | '<' | '>' | '!' | '.' | '-' | '+' | ':')*
     ;
 
 STRING

@@ -278,6 +278,10 @@ public:
 
     antlrcpp::Any visitExpression_scope(SPECTREParser::Expression_scopeContext *ctx) override;
 
+    antlrcpp::Any visitArray_expression(SPECTREParser::Array_expressionContext *ctx) override;
+
+    antlrcpp::Any visitArray_item(SPECTREParser::Array_itemContext *ctx) override;
+
     antlrcpp::Any visitExpression_operator(SPECTREParser::Expression_operatorContext *ctx) override;
 
     antlrcpp::Any visitExpression_atom(SPECTREParser::Expression_atomContext *ctx) override;

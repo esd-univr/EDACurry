@@ -1,3 +1,4 @@
+#include <iostream>
 #include "edacurry/frontend/spectre_frontend.hpp"
 #include "edacurry/utility/logging.hpp"
 #include "edacurry/utility/utility.hpp"
@@ -16,6 +17,8 @@
 
 using antlrcpp::Any;
 using namespace std;
+
+#define TRACE_VISIT(name) std::cerr << "[TRACE] Visiting " << name << " : " << (ctx ? ctx->getText().substr(0, 50) : "null") << std::endl;
 
 namespace edacurry::frontend {
 
@@ -43,35 +46,34 @@ std::shared_ptr<structure::Value> to_number(antlr4::tree::TerminalNode *ctx, Fac
     std::string s = ctx->getText();
     if (s.empty()) return nullptr;
 
-    std::string num_str = s;
-    double multiplier = 1.0;
-    char last_char = num_str.back();
-
-    if (isalpha(last_char)) {
-        switch (std::toupper(last_char)) {
-            case 'T': multiplier = 1e12;  num_str.pop_back(); break;
-            case 'G': multiplier = 1e9;   num_str.pop_back(); break;
-            case 'M': multiplier = 1e6;   num_str.pop_back(); break;
-            case 'K': multiplier = 1e3;   num_str.pop_back(); break;
-            case 'm': multiplier = 1e-3;  num_str.pop_back(); break;
-            case 'U': multiplier = 1e-6;  num_str.pop_back(); break;
-            case 'N': multiplier = 1e-9;  num_str.pop_back(); break;
-            case 'P': multiplier = 1e-12; num_str.pop_back(); break;
-            case 'F': multiplier = 1e-15; num_str.pop_back(); break;
-        }
-        if (s.length() > 3 && utility::to_lower(s.substr(s.length() - 3)) == "meg") {
-            multiplier = 1e6;
-            num_str = s.substr(0, s.length() - 3);
-        }
-    }
-
-    if (num_str.empty()) return nullptr;
-
     try {
         size_t processed_chars = 0;
-        double value = std::stod(num_str, &processed_chars);
-        if (processed_chars != num_str.length()) return nullptr;
-        return factory.number<double>(value * multiplier);
+        double value = std::stod(s, &processed_chars);
+        
+        if (processed_chars < s.length()) {
+            std::string suffix = s.substr(processed_chars);
+            if (utility::to_lower(suffix) == "meg") {
+                value *= 1e6;
+            } else if (!suffix.empty()) {
+                char prefix = suffix[0];
+                if (prefix == 'm') {
+                    value *= 1e-3;
+                } else if (prefix == 'M') {
+                    value *= 1e6;
+                } else {
+                    switch (std::toupper(prefix)) {
+                        case 'T': value *= 1e12; break;
+                        case 'G': value *= 1e9; break;
+                        case 'K': value *= 1e3; break;
+                        case 'U': value *= 1e-6; break;
+                        case 'N': value *= 1e-9; break;
+                        case 'P': value *= 1e-12; break;
+                        case 'F': value *= 1e-15; break;
+                    }
+                }
+            }
+        }
+        return factory.number<double>(value);
     } catch (...) {
         return nullptr;
     }
@@ -247,7 +249,8 @@ Any SPECTREFrontend::visitComponent_type(SPECTREParser::Component_typeContext *c
 
 Any SPECTREFrontend::visitComponent_value(SPECTREParser::Component_valueContext *ctx) {
     auto value = visit(ctx->expression()).as<std::shared_ptr<structure::Value>>();
-    this->add_to_parent(value);
+    // The value is already added to the parent by visitExpression -> visitExpression_atom
+    // this->add_to_parent(value);
     return value;
 }
 
@@ -278,16 +281,16 @@ Any SPECTREFrontend::visitParameter_assign(SPECTREParser::Parameter_assignContex
     // 4) Evaluate RHS
     std::shared_ptr<structure::Value> val;
     if (ctx->expression()) {
-        val = visit(ctx->expression()).as<std::shared_ptr<structure::Value>>();
-    } else {
+        visit(ctx->expression());
+        // Value should already be assigned to the Parameter by add_to_parent
+        val = param->getRight();
+    } else if (ctx->filepath()) {
         auto txt = ctx->filepath()->getText();
         val = _factory.string(strip_quotes(txt));
         add_to_parent(val);
     }
     // 5) Pop back to the Model (or Analysis, etc.)
     pop();
-    // 6) Set the right‐hand side
-    param->setRight(val);
     return param;
 }
 
@@ -299,10 +302,35 @@ Any SPECTREFrontend::visitParameter_list(SPECTREParser::Parameter_listContext *c
 
 Any SPECTREFrontend::visitParameter_list_item(SPECTREParser::Parameter_list_itemContext *ctx)
 {
-    return visitChildren(ctx);
+    TRACE_VISIT("Parameter_list_item");
+    // 1) Build the LHS identifier
+    auto idVal = _factory.identifier(ctx->parameter_id()->getText());
+    // 2) Create and attach the empty Parameter
+    auto param = _factory.parameter(idVal, nullptr, param_assign, false);
+    add_to_parent(param);
+    push(param);
+    
+    // 3) Evaluate RHS if present
+    if (ctx->array_expression()) {
+        visit(ctx->array_expression());
+    } else if (ctx->expression()) {
+        visit(ctx->expression());
+    } else if (ctx->filepath()) {
+        auto txt = ctx->filepath()->getText();
+        auto val = _factory.string(strip_quotes(txt));
+        add_to_parent(val);
+    }
+    
+    pop();
+    return param;
 }
 
-Any SPECTREFrontend::visitOption(SPECTREParser::OptionContext *ctx) { return visitChildren(ctx); }
+Any SPECTREFrontend::visitOption(SPECTREParser::OptionContext *ctx) { 
+    TRACE_VISIT("Option");
+    std::string name = ctx->ID() ? ctx->ID()->getText() : "";
+    auto control = _factory.control(name, ctrl_option);
+    return this->advance_visit(ctx, control);
+}
 
 Any SPECTREFrontend::visitGlobal(SPECTREParser::GlobalContext *ctx) { return visitChildren(ctx); }
 
@@ -336,6 +364,7 @@ Any SPECTREFrontend::visitFilepath(SPECTREParser::FilepathContext *ctx) { return
 Any SPECTREFrontend::visitFilepath_element(SPECTREParser::Filepath_elementContext *ctx) { return visitChildren(ctx); }
 
 Any SPECTREFrontend::visitExpression(SPECTREParser::ExpressionContext *ctx) {
+    // TRACE_VISIT("Expression");
     // Binary expression: expression operator expression
     if (ctx->expression().size() == 2) {
         auto op = to_operator(ctx->expression_operator());
@@ -369,6 +398,13 @@ Any SPECTREFrontend::visitExpression_atom(SPECTREParser::Expression_atomContext 
         this->add_to_parent(str);
         return str;
     }
+    // Handle keyword, analysis_type, component_type, and PERCENTAGE as identifiers
+    if (ctx->keyword() || ctx->analysis_type() || ctx->component_type() || ctx->PERCENTAGE()) {
+        auto id = _factory.identifier(ctx->getText());
+        this->add_to_parent(id);
+        return id;
+    }
+    std::cerr << "visitExpression_atom: Unhandled atom: " << ctx->getText() << std::endl;
     return Any();
 }
 
@@ -391,7 +427,58 @@ Any SPECTREFrontend::visitExpression_scope(SPECTREParser::Expression_scopeContex
     if (ctx->expression().size() == 1) {
         return visit(ctx->expression(0));
     }
-    return visitChildren(ctx);
+    // Multiple expressions - create a ValueList
+    DelimiterType delimiter = DelimiterType::dlm_none;
+    if (ctx->OPEN_ROUND()) {
+        delimiter = DelimiterType::dlm_round;
+    } else if (ctx->OPEN_CURLY()) {
+        delimiter = DelimiterType::dlm_curly;
+    } else if (ctx->APEX().size() > 0) {
+        delimiter = DelimiterType::dlm_apex;
+    }
+    auto valueList = _factory.valueList(delimiter);
+    this->add_to_parent(valueList);
+    this->push(valueList);
+    visitChildren(ctx);
+    this->pop();
+    return valueList;
+}
+
+Any SPECTREFrontend::visitArray_expression(SPECTREParser::Array_expressionContext *ctx) {
+    // Create a ValueList with square bracket delimiter
+    auto valueList = _factory.valueList(DelimiterType::dlm_square);
+    this->add_to_parent(valueList);
+    this->push(valueList);
+    visitChildren(ctx);
+    this->pop();
+    return valueList;
+}
+
+Any SPECTREFrontend::visitArray_item(SPECTREParser::Array_itemContext *ctx) {
+    if (ctx->NUMBER()) {
+        auto num_val = to_number(ctx->NUMBER(), _factory);
+        if (!num_val) 
+            return Any();
+        this->add_to_parent(num_val);
+        return num_val;
+    }
+    if (ctx->ID()) {
+        auto id = _factory.identifier(ctx->ID()->getText());
+        this->add_to_parent(id);
+        return id;
+    }
+    if (ctx->STRING()) {
+        auto str = _factory.string(strip_quotes(ctx->STRING()->getText()));
+        this->add_to_parent(str);
+        return str;
+    }
+    // Handle keyword, analysis_type, component_type, and PERCENTAGE as identifiers
+    if (ctx->keyword() || ctx->analysis_type() || ctx->component_type() || ctx->PERCENTAGE()) {
+        auto id = _factory.identifier(ctx->getText());
+        this->add_to_parent(id);
+        return id;
+    }
+    return Any();
 }
 
 Any SPECTREFrontend::visitExpression_unary(SPECTREParser::Expression_unaryContext *ctx) {
@@ -435,7 +522,11 @@ Any SPECTREFrontend::visitControl(SPECTREParser::ControlContext *ctx) { return v
 
 Any SPECTREFrontend::visitCorrelate(SPECTREParser::CorrelateContext *ctx) { return visitChildren(ctx); }
 
-Any SPECTREFrontend::visitDc(SPECTREParser::DcContext *ctx) { return this->advance_visit(ctx, _factory.analysis("dc")); }
+Any SPECTREFrontend::visitDc(SPECTREParser::DcContext *ctx) {
+    std::string name = ctx->ID() ? ctx->ID()->getText() : "dc";
+    auto component = _factory.component(name, "dc");
+    return this->advance_visit(ctx, component);
+}
 
 Any SPECTREFrontend::visitDcmatch(SPECTREParser::DcmatchContext *ctx) { return this->advance_visit(ctx, _factory.analysis("dcmatch")); }
 
@@ -449,7 +540,10 @@ Any SPECTREFrontend::visitIf_body(SPECTREParser::If_bodyContext *ctx) { return v
 
 Any SPECTREFrontend::visitIf_statement(SPECTREParser::If_statementContext *ctx) { return visitChildren(ctx); }
 
-Any SPECTREFrontend::visitInfo(SPECTREParser::InfoContext *ctx) { return visitChildren(ctx); }
+Any SPECTREFrontend::visitInfo(SPECTREParser::InfoContext *ctx) { 
+    std::string name = ctx->ID() ? ctx->ID()->getText() : "";
+    return this->advance_visit(ctx, _factory.analysis(name));
+}
 
 Any SPECTREFrontend::visitKeyword(SPECTREParser::KeywordContext *ctx) { return visitChildren(ctx); }
 
@@ -503,7 +597,24 @@ Any SPECTREFrontend::visitReliability_footer(SPECTREParser::Reliability_footerCo
 
 Any SPECTREFrontend::visitReliability_header(SPECTREParser::Reliability_headerContext *ctx) { return visitChildren(ctx); }
 
-Any SPECTREFrontend::visitSave(SPECTREParser::SaveContext *ctx) { return visitChildren(ctx); }
+Any SPECTREFrontend::visitSave(SPECTREParser::SaveContext *ctx) { 
+    // First ID after SAVE is saved signals, not a name
+    auto control = _factory.control("", ctrl_save);
+    this->add_to_parent(control);
+    this->push(control);
+    // Add the ID as a parameter (the signal name to save)
+    if (ctx->ID()) {
+        auto id = _factory.identifier(ctx->ID()->getText());
+        auto param = _factory.parameter(id, nullptr, param_assign, false);  // Don't hide the name
+        control->parameters.push_back(param);
+    }
+    // Visit the rest (parameter_list if any)
+    if (ctx->parameter_list()) {
+        visit(ctx->parameter_list());
+    }
+    this->pop();
+    return control;
+}
 
 Any SPECTREFrontend::visitSection(SPECTREParser::SectionContext *ctx) { return visitChildren(ctx); }
 
@@ -525,7 +636,11 @@ Any SPECTREFrontend::visitSet(SPECTREParser::SetContext *ctx) { return visitChil
 
 Any SPECTREFrontend::visitShell(SPECTREParser::ShellContext *ctx) { return visitChildren(ctx); }
 
-Any SPECTREFrontend::visitSp(SPECTREParser::SpContext *ctx) { return this->advance_visit(ctx, _factory.analysis("sp")); }
+Any SPECTREFrontend::visitSp(SPECTREParser::SpContext *ctx) {
+    std::string name = ctx->ID() ? ctx->ID()->getText() : "sp";
+    auto component = _factory.component(name, "sp");
+    return this->advance_visit(ctx, component);
+}
 
 Any SPECTREFrontend::visitStatistics(SPECTREParser::StatisticsContext *ctx) { return visitChildren(ctx); }
 
@@ -547,7 +662,11 @@ Any SPECTREFrontend::visitSweep_header(SPECTREParser::Sweep_headerContext *ctx) 
 
 Any SPECTREFrontend::visitTdr(SPECTREParser::TdrContext *ctx) { return this->advance_visit(ctx, _factory.analysis("tdr")); }
 
-Any SPECTREFrontend::visitTran(SPECTREParser::TranContext *ctx) { return this->advance_visit(ctx, _factory.analysis("tran")); }
+Any SPECTREFrontend::visitTran(SPECTREParser::TranContext *ctx) {
+    std::string name = ctx->ID() ? ctx->ID()->getText() : "tran";
+    auto component = _factory.component(name, "tran");
+    return this->advance_visit(ctx, component);
+}
 
 Any SPECTREFrontend::visitTruncate(SPECTREParser::TruncateContext *ctx) { return visitChildren(ctx); }
 
@@ -586,6 +705,9 @@ std::shared_ptr<structure::Object> SPECTREFrontend::pop()
 void SPECTREFrontend::add_to_parent(const std::shared_ptr<structure::Object> &node)
 {
     auto parent = this->back();
+    if (parent) {
+        // std::cout << "Adding " << (node ? "Node" : "NULL") << " to " << "Parent" << std::endl;
+    }
     if (parent == nullptr) {
         _root = node;
         return;
@@ -701,6 +823,7 @@ antlrcpp::Any SPECTREFrontend::advance_visit(antlr4::ParserRuleContext *ctx, con
 
 std::shared_ptr<edacurry::structure::Object> parse_spectre(const std::string &path)
 {    
+    std::cerr << "Starting parse_spectre for " << path << std::endl;
     std::ifstream fileStream(path);
     if (!fileStream.is_open()) {
         std::cerr << "ERROR: Cannot open file " << path << std::endl;
@@ -712,7 +835,9 @@ std::shared_ptr<edacurry::structure::Object> parse_spectre(const std::string &pa
     tokens.fill();
     edacurry::SPECTREParser parser(&tokens);
     edacurry::frontend::SPECTREFrontend frontend(tokens);
+    std::cerr << "Invoking accept" << std::endl;
     parser.netlist()->accept(&frontend);
+    std::cerr << "Finished accept" << std::endl;
     return frontend.getRoot();
 }
 

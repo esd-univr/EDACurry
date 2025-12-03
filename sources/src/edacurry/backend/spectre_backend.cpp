@@ -22,19 +22,29 @@ int SpectreBackend::visitCircuit(const std::shared_ptr<structure::Circuit> &e)
 {
     // If the IR labels top-level as "spectre_top", treat that as the global netlist
     if (e->getName() == "spectre_top") {
+        ss << "simulator lang=spectre\n";
         // If the circuit has a title, print it at top-level
         if (!e->getTitle().empty()) {
             ss << e->getTitle() << "\n";
         }
 
-        // If the circuit has any parameters, emit them as “.param …”
+        // If the circuit has global nodes, emit them
+        if (!e->nodes.empty()) {
+            ss << "global";
+            for (auto &node : e->nodes) {
+                ss << " " << node->getName();
+            }
+            ss << "\n";
+        }
+
+        // If the circuit has any parameters, emit them as "parameters …" (Spectre format)
         if (e->parameters) {
-            ss << ".param";
+            ss << "parameters";
             for (auto &param : e->parameters) {
                 ss << ' ';
                 param->accept(this);
             }
-            ss << '\n';
+            ss << "\n";
         }
 
         // Visit all child objects (subcircuits, components, analyses, etc.)
@@ -77,10 +87,15 @@ int SpectreBackend::visitCircuit(const std::shared_ptr<structure::Circuit> &e)
 
 int SpectreBackend::visitAnalysis(const std::shared_ptr<structure::Analysis> &e)
 {
+    // Check for special analysis types that need specific formatting
     if ((e->getName() == "ac_parameter_driven") || (e->getName() == "ac_data_driven") || (e->getName() == "ac_list_driven") || (e->getName() == "ac_adaptive")) {
         ss << ".ac";
     } else if ((e->getName() == "tran_point_driven") || (e->getName() == "tran_parameterized") || (e->getName() == "tran_data_driven")) {
         ss << ".tran";
+    } else {
+        // Generic Spectre analysis: name analysisType param=value ...
+        // For "info" type analyses like "dcOpInfo info what=oppoint"
+        ss << e->getName() << " info";
     }
     for (const auto &parameter : e->parameters) {
         ss << ' ';
@@ -157,9 +172,13 @@ int SpectreBackend::visitControlScope(const std::shared_ptr<structure::ControlSc
 int SpectreBackend::visitControl(const std::shared_ptr<structure::Control> &e)
 {
     if (e->getControlType() == ctrl_option) {
-        ss << ".option";
+        // Spectre format: name options param=value ...
+        if (!e->getName().empty())
+            ss << e->getName() << " options";
+        else
+            ss << "options";
     } else if (e->getControlType() == ctrl_save) {
-        ss << ".save";
+        ss << "save";
     } else if (e->getControlType() == ctrl_print) {
         ss << ".print";
     } else if (e->getControlType() == ctrl_plot) {
@@ -172,8 +191,6 @@ int SpectreBackend::visitControl(const std::shared_ptr<structure::Control> &e)
         ss << ".meas";
     }
 
-    if (!e->getName().empty())
-        ss << " " << e->getName();
     for (const auto &parameter : e->parameters) {
         ss << ' ';
         parameter->accept(this);
@@ -229,7 +246,13 @@ int SpectreBackend::visitIdentifier(const std::shared_ptr<structure::Identifier>
 
 int SpectreBackend::visitInclude(const std::shared_ptr<structure::Include> &e)
 {
-    ss << "include \"" << e->getPath() << "\"\n";
+    ss << "include \"" << e->getPath() << "\"";
+    // Emit include parameters (like section=tt)
+    for (const auto &param : e->parameters) {
+        ss << ' ';
+        param->accept(this);
+    }
+    ss << "\n";
     return 0;
 }
 
@@ -245,12 +268,12 @@ int SpectreBackend::visitLibrary(const std::shared_ptr<structure::Library> &e)
 
 int SpectreBackend::visitModel(const std::shared_ptr<structure::Model> &e)
 {
-    ss << "model " << e->getName() << " " << e->getMaster() << "(";
+    ss << "model " << e->getName() << " " << e->getMaster();
     for (const auto &parameter : e->parameters) {
         ss << ' ';
         parameter->accept(this);
     }
-    ss << ")\n";
+    ss << "\n";
     return 0;
 }
 
@@ -370,7 +393,8 @@ int SpectreBackend::visitSubckt(const std::shared_ptr<structure::Subckt> &e)
 
 int SpectreBackend::visitString(const std::shared_ptr<structure::String> &e)
 {
-    ss << e->getString();
+    // Add quotes around string values for Spectre format
+    ss << '"' << e->getString() << '"';
     return 0;
 }
 
@@ -393,8 +417,13 @@ int SpectreBackend::visitValueList(const std::shared_ptr<structure::ValueList> &
         size_t size = e->values.size(), i = 0;
         for (const auto &value : e->values) {
             value->accept(this);
-            if (i++ < (size - 1))
-                ss << ", ";
+            if (i++ < (size - 1)) {
+                // In Spectre, array elements (square brackets) are space-separated
+                if (e->getDelimiterType() == DelimiterType::dlm_square)
+                    ss << " ";
+                else
+                    ss << ", ";
+            }
         }
     }
     ss << delimiter_type_close_char(e->getDelimiterType());
@@ -403,6 +432,10 @@ int SpectreBackend::visitValueList(const std::shared_ptr<structure::ValueList> &
 
 std::string write_spectre(const std::shared_ptr<structure::Object> &object)
 {
+    if (!object) {
+        std::cerr << "write_spectre: provided object is null (parsing failed)" << std::endl;
+        return std::string("");
+    }
     edacurry::backend::SpectreBackend backend;
     object->accept(&backend);
     return backend.str();

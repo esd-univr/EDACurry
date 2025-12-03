@@ -256,6 +256,10 @@ public:
 
     virtual antlrcpp::Any visitParameter_list_item(SPECTREParser::Parameter_list_itemContext *context) = 0;
 
+    virtual antlrcpp::Any visitArray_expression(SPECTREParser::Array_expressionContext *context) = 0;
+
+    virtual antlrcpp::Any visitArray_item(SPECTREParser::Array_itemContext *context) = 0;
+
     virtual antlrcpp::Any visitParameter_assign(SPECTREParser::Parameter_assignContext *context) = 0;
 
     virtual antlrcpp::Any visitParameter_id(SPECTREParser::Parameter_idContext *context) = 0;

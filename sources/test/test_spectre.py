@@ -149,12 +149,12 @@ for i in range(1, len(sys.argv)):
         print("Writing `{}`".format(out_json))
         with open(out_json, "w") as outf:
             outf.write(json_content)
-        # Write to eldo.
-        eldo_content = edacurry.write_eldo(root)
+        # Write to spectre.
+        spectre_content = edacurry.write_spectre(root)
         # If required generate the output file.
         print("Writing `{}`".format(out_spectre))
         with open(out_spectre, "w") as outf:
-            outf.write(eldo_content)
+            outf.write(spectre_content)
         # Compare the two files.
         compare(argument, out_spectre)
     else:

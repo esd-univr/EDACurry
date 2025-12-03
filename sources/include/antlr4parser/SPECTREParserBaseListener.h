@@ -372,6 +372,12 @@ public:
   virtual void enterParameter_list_item(SPECTREParser::Parameter_list_itemContext * /*ctx*/) override { }
   virtual void exitParameter_list_item(SPECTREParser::Parameter_list_itemContext * /*ctx*/) override { }
 
+  virtual void enterArray_expression(SPECTREParser::Array_expressionContext * /*ctx*/) override { }
+  virtual void exitArray_expression(SPECTREParser::Array_expressionContext * /*ctx*/) override { }
+
+  virtual void enterArray_item(SPECTREParser::Array_itemContext * /*ctx*/) override { }
+  virtual void exitArray_item(SPECTREParser::Array_itemContext * /*ctx*/) override { }
+
   virtual void enterParameter_assign(SPECTREParser::Parameter_assignContext * /*ctx*/) override { }
   virtual void exitParameter_assign(SPECTREParser::Parameter_assignContext * /*ctx*/) override { }
 

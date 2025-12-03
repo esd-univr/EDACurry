@@ -416,6 +416,10 @@ namespace edacurry::backend
 {
 std::string write_json(const std::shared_ptr<structure::Object> &object)
 {
+    if (!object) {
+        std::cerr << "write_json: provided object is null (parsing failed)" << std::endl;
+        return std::string("");
+    }
     json::jnode_t jnode;
     jnode << object;
     return jnode.to_string(true, 4);
