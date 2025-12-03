@@ -1134,7 +1134,9 @@ Any ELDOFrontend::visitFfile_storage_format(ELDOParser::Ffile_storage_formatCont
 Any ELDOFrontend::visitProbe(ELDOParser::ProbeContext *ctx)
 {
     auto ctrl = _factory.control("", ctrl_probe);
-    ctrl->parameters.push_back(_factory.parameter(nullptr, _factory.identifier(ctx->ID()->toString()), param_assign, false));
+    if (ctx->ID()) {
+        ctrl->parameters.push_back(_factory.parameter(nullptr, _factory.identifier(ctx->ID()->toString()), param_assign, false));
+    }
     return this->advance_visit(ctx, ctrl);
 }
 

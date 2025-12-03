@@ -17,6 +17,10 @@ endif()
 # Add location of cmake modules.
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 # -----------------------------------------------------------------------------
 # OPTIONS
 # -----------------------------------------------------------------------------
@@ -197,18 +201,27 @@ pybind11_add_module(
 target_compile_definitions(${PROJECT_NAME} PRIVATE PYTHON_INTERFACE_ENABLED)
 
 # --- Use local ANTLR4 library and headers ---
-set(ANTLR4_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/libraries/include")
-target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE ${ANTLR4_INCLUDE_DIRS})
-target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/libraries/include/antlr4-runtime)
-set(ANTLR4_LIBRARIES "${PROJECT_SOURCE_DIR}/libraries/libantlr4-runtime.so")
+#set(ANTLR4_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/libraries/include")
+#target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE ${ANTLR4_INCLUDE_DIRS})
+#target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/libraries/include/antlr4-runtime)
+#set(ANTLR4_LIBRARIES "${PROJECT_SOURCE_DIR}/libraries/libantlr4-runtime.so")
 
-target_link_libraries(${PROJECT_NAME} PRIVATE ${ANTLR4_LIBRARIES})
+#target_link_libraries(${PROJECT_NAME} PRIVATE ${ANTLR4_LIBRARIES})
 
 # --- Set RPATH so the .so finds libraries at runtime ---
-set_target_properties(${PROJECT_NAME} PROPERTIES
-    INSTALL_RPATH "$ORIGIN/libraries"
-    BUILD_WITH_INSTALL_RPATH TRUE
-)
+#set_target_properties(${PROJECT_NAME} PROPERTIES
+#    INSTALL_RPATH "$ORIGIN/libraries"
+#    BUILD_WITH_INSTALL_RPATH TRUE
+#)
+
+# --- Use local statically compiled ANTLR4 library and headers ---
+set(ANTLR4_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/libraries/include")
+set(ANTLR4_STATIC_LIB "${PROJECT_SOURCE_DIR}/libraries/libantlr4-runtime.a")
+
+target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE ${ANTLR4_INCLUDE_DIRS})
+target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/libraries/include/antlr4-runtime)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE ${ANTLR4_STATIC_LIB})
 
 # Include the project headers.
 target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/include)
@@ -223,6 +236,9 @@ target_link_libraries(${PROJECT_NAME} PRIVATE pugixml-static)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${ANTLR4_LIBRARIES})
 
 target_compile_options(${PROJECT_NAME} PRIVATE -fPIC)
+
+target_link_options(${PROJECT_NAME} PRIVATE -static-libstdc++ -static-libgcc)
+
 
 # -----------------------------------------------------------------------------
 # COMPILATION FLAGS

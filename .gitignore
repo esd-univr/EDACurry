@@ -1,4 +1,3 @@
-.gitignore
 build/
 build_py37/
 sources/test/eldo/amsnet_1.0
@@ -8,4 +7,7 @@ sources/test/eldo/nuovi_circuiti
 *.tar.gz
 .vscode
 *.dot
+sources/test/eldo_result
+sources/test/spectre_result
+.clang-format
 
