@@ -1,13 +1,79 @@
+# Build directories
 build/
 build_py37/
+cmake-build-*
+
+# Test data to ignore
 sources/test/eldo/amsnet_1.0
 sources/test/eldo/analog_benchmark2017_v2.2
 sources/test/eldo/analog.com
 sources/test/eldo/nuovi_circuiti
-*.tar.gz
-.vscode
-*.dot
+
+# Test results
 sources/test/eldo_result
 sources/test/spectre_result
+
+# Archives
+*.tar.gz
+
+# IDEs
+.vscode
+.idea
+
+# Graphviz
+*.dot
+
+# Clang format
 .clang-format
 
+# Grammar generation files
+*.interp
+*.tokens
+*.class
+*.java
+
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Python
+__pycache__
+
+# Cache
+.cache
+
+# XML files (from sources/test)
+*.xml
+
+# Exceptions for libraries (to allow committing bundled libs)
+!sources/libraries/*.so
+!sources/libraries/*.a
