@@ -873,14 +873,16 @@ PYBIND11_MODULE(edacurry, m)
     // ========================================================================
     py::class_<Analysis, Object, NamedObject, std::shared_ptr<Analysis>>(m, "Analysis")
         .def(
-            py::init([](const std::string &name) {
-                auto _ptr = std::make_shared<structure::Analysis>(name);
+            py::init([](const std::string &name, const std::string &type) {
+                auto _ptr = std::make_shared<structure::Analysis>(name, type);
                 _ptr->parameters.setOwner(_ptr);
                 return _ptr;
             }),
             py::arg("name") = std::string(),
+            py::arg("type") = std::string(),
             "Construct a new analysis.")
         .def_readonly("parameters", &Analysis::parameters)
+        .def_property("type", &Analysis::getType, &Analysis::setType, "The analysis type (dc, tran, sp, ac, info, etc.).")
         .def("__str__", &Analysis::toString)
         .def("__repr__", &Analysis::toString);
 

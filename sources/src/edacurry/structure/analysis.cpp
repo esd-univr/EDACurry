@@ -14,7 +14,8 @@ namespace edacurry::structure
 Analysis::Analysis()
     : Object(),
       features::NamedObject(),
-      parameters(this->weak_from_this())
+      parameters(this->weak_from_this()),
+      _type()
 {
     // Nothing to do.
 }
@@ -22,14 +23,25 @@ Analysis::Analysis()
 Analysis::Analysis(const std::string &name)
     : Object(),
       features::NamedObject(name),
-      parameters(this->weak_from_this())
+      parameters(this->weak_from_this()),
+      _type()
 {
     // Nothing to do.
 }
+
+Analysis::Analysis(const std::string &name, const std::string &type)
+    : Object(),
+      features::NamedObject(name),
+      parameters(this->weak_from_this()),
+      _type(type)
+{
+    // Nothing to do.
+}
+
 std::string Analysis::toString() const
 {
     std::stringstream ss;
-    ss << "(analysis `" << this->getName() << "` " << parameters.toString() << ")";
+    ss << "(analysis `" << this->getName() << "` `" << _type << "` " << parameters.toString() << ")";
     return ss.str();
 }
 } // namespace edacurry::structure

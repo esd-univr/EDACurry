@@ -20,6 +20,23 @@ using namespace std;
 
 #define TRACE_VISIT(name) std::cerr << "[TRACE] Visiting " << name << " : " << (ctx ? ctx->getText().substr(0, 50) : "null") << std::endl;
 
+// Helper macro for analysis visitors that support "type type" pattern (e.g., "tran tran", "dc dc")
+// TOKEN_METHOD is the method to get the token list (e.g., TRAN, DC, SP)
+// type_str is the analysis type as a string (e.g., "tran", "dc", "sp")
+#define VISIT_ANALYSIS_WITH_TYPE_PATTERN(ctx, TOKEN_METHOD, type_str) \
+    do { \
+        std::string name; \
+        if (ctx->ID()) { \
+            name = ctx->ID()->getText(); \
+        } else if (ctx->TOKEN_METHOD().size() > 1) { \
+            name = ctx->TOKEN_METHOD(0)->getText(); \
+        } else { \
+            name = type_str; \
+        } \
+        auto analysis = _factory.analysis(name, type_str); \
+        return this->advance_visit(ctx, analysis); \
+    } while(0)
+
 namespace edacurry::frontend {
 
 /// @brief Strips quotes from the beginning and end of a string.
@@ -498,9 +515,13 @@ Any SPECTREFrontend::visitTime_point(SPECTREParser::Time_pointContext *ctx) { re
 Any SPECTREFrontend::visitTime_pair(SPECTREParser::Time_pairContext *ctx) { return visitChildren(ctx); }
 
 /// === Control, sweep, analysis types, statistics, etc. ===
-Any SPECTREFrontend::visitAc(SPECTREParser::AcContext *ctx) { return this->advance_visit(ctx, _factory.analysis("ac")); }
+Any SPECTREFrontend::visitAc(SPECTREParser::AcContext *ctx) {
+    VISIT_ANALYSIS_WITH_TYPE_PATTERN(ctx, AC, "ac");
+}
 
-Any SPECTREFrontend::visitAcmatch(SPECTREParser::AcmatchContext *ctx) { return this->advance_visit(ctx, _factory.analysis("acmatch")); }
+Any SPECTREFrontend::visitAcmatch(SPECTREParser::AcmatchContext *ctx) {
+    VISIT_ANALYSIS_WITH_TYPE_PATTERN(ctx, ACMATCH, "acmatch");
+}
 
 Any SPECTREFrontend::visitAlter(SPECTREParser::AlterContext *ctx) { return visitChildren(ctx); }
 
@@ -518,21 +539,36 @@ Any SPECTREFrontend::visitAssert_statement(SPECTREParser::Assert_statementContex
 
 Any SPECTREFrontend::visitCheck_statement(SPECTREParser::Check_statementContext *ctx) { return visitChildren(ctx); }
 
-Any SPECTREFrontend::visitChecklimit(SPECTREParser::ChecklimitContext *ctx) { return this->advance_visit(ctx, _factory.analysis("checklimit")); }
+Any SPECTREFrontend::visitChecklimit(SPECTREParser::ChecklimitContext *ctx) {
+    VISIT_ANALYSIS_WITH_TYPE_PATTERN(ctx, CHECKLIMIT, "checklimit");
+}
 
 Any SPECTREFrontend::visitControl(SPECTREParser::ControlContext *ctx) { return visitChildren(ctx); }
 
 Any SPECTREFrontend::visitCorrelate(SPECTREParser::CorrelateContext *ctx) { return visitChildren(ctx); }
 
 Any SPECTREFrontend::visitDc(SPECTREParser::DcContext *ctx) {
-    std::string name = ctx->ID() ? ctx->ID()->getText() : "dc";
-    auto component = _factory.component(name, "dc");
-    return this->advance_visit(ctx, component);
+    // The instance name can be ID or DC token (when dc dc ...)
+    std::string name;
+    if (ctx->ID()) {
+        name = ctx->ID()->getText();
+    } else if (ctx->DC().size() > 1) {
+        // Two DC tokens: first is the instance name
+        name = ctx->DC(0)->getText();
+    } else {
+        name = "dc";
+    }
+    auto analysis = _factory.analysis(name, "dc");
+    return this->advance_visit(ctx, analysis);
 }
 
-Any SPECTREFrontend::visitDcmatch(SPECTREParser::DcmatchContext *ctx) { return this->advance_visit(ctx, _factory.analysis("dcmatch")); }
+Any SPECTREFrontend::visitDcmatch(SPECTREParser::DcmatchContext *ctx) {
+    VISIT_ANALYSIS_WITH_TYPE_PATTERN(ctx, DCMATCH, "dcmatch");
+}
 
-Any SPECTREFrontend::visitEnvlp(SPECTREParser::EnvlpContext *ctx) { return this->advance_visit(ctx, _factory.analysis("envlp")); }
+Any SPECTREFrontend::visitEnvlp(SPECTREParser::EnvlpContext *ctx) {
+    VISIT_ANALYSIS_WITH_TYPE_PATTERN(ctx, ENVLP, "envlp");
+}
 
 Any SPECTREFrontend::visitIc(SPECTREParser::IcContext *ctx) { return visitChildren(ctx); }
 
@@ -544,14 +580,31 @@ Any SPECTREFrontend::visitIf_statement(SPECTREParser::If_statementContext *ctx) 
 
 Any SPECTREFrontend::visitInfo(SPECTREParser::InfoContext *ctx) { 
     std::string name = ctx->ID() ? ctx->ID()->getText() : "";
-    return this->advance_visit(ctx, _factory.analysis(name));
+    return this->advance_visit(ctx, _factory.analysis(name, "info"));
 }
 
 Any SPECTREFrontend::visitKeyword(SPECTREParser::KeywordContext *ctx) { return visitChildren(ctx); }
 
 Any SPECTREFrontend::visitMismatch(SPECTREParser::MismatchContext *ctx) { return visitChildren(ctx); }
 
-Any SPECTREFrontend::visitMontecarlo(SPECTREParser::MontecarloContext *ctx) { return this->advance_visit(ctx, _factory.analysis("montecarlo")); }
+Any SPECTREFrontend::visitMontecarlo(SPECTREParser::MontecarloContext *ctx) {
+    // Montecarlo has header/content/export/footer structure, extract name from header
+    std::string name;
+    auto header = ctx->montecarlo_header();
+    if (header) {
+        if (header->ID()) {
+            name = header->ID()->getText();
+        } else if (header->MONTECARLO().size() > 1) {
+            name = header->MONTECARLO(0)->getText();
+        } else {
+            name = "montecarlo";
+        }
+    } else {
+        name = "montecarlo";
+    }
+    auto analysis = _factory.analysis(name, "montecarlo");
+    return this->advance_visit(ctx, analysis);
+}
 
 Any SPECTREFrontend::visitMontecarlo_content(SPECTREParser::Montecarlo_contentContext *ctx) { return visitChildren(ctx); }
 
@@ -561,35 +614,61 @@ Any SPECTREFrontend::visitMontecarlo_footer(SPECTREParser::Montecarlo_footerCont
 
 Any SPECTREFrontend::visitMontecarlo_header(SPECTREParser::Montecarlo_headerContext *ctx) { return visitChildren(ctx); }
 
-Any SPECTREFrontend::visitNoise(SPECTREParser::NoiseContext *ctx) { return this->advance_visit(ctx, _factory.analysis("noise")); }
+Any SPECTREFrontend::visitNoise(SPECTREParser::NoiseContext *ctx) {
+    VISIT_ANALYSIS_WITH_TYPE_PATTERN(ctx, NOISE, "noise");
+}
 
-Any SPECTREFrontend::visitPac(SPECTREParser::PacContext *ctx) { return this->advance_visit(ctx, _factory.analysis("pac")); }
+Any SPECTREFrontend::visitPac(SPECTREParser::PacContext *ctx) {
+    VISIT_ANALYSIS_WITH_TYPE_PATTERN(ctx, PAC, "pac");
+}
 
-Any SPECTREFrontend::visitPdisto(SPECTREParser::PdistoContext *ctx) { return this->advance_visit(ctx, _factory.analysis("pdisto")); }
+Any SPECTREFrontend::visitPdisto(SPECTREParser::PdistoContext *ctx) {
+    VISIT_ANALYSIS_WITH_TYPE_PATTERN(ctx, PDISTO, "pdisto");
+}
 
-Any SPECTREFrontend::visitPnoise(SPECTREParser::PnoiseContext *ctx) { return this->advance_visit(ctx, _factory.analysis("pnoise")); }
+Any SPECTREFrontend::visitPnoise(SPECTREParser::PnoiseContext *ctx) {
+    VISIT_ANALYSIS_WITH_TYPE_PATTERN(ctx, PNOISE, "pnoise");
+}
 
 Any SPECTREFrontend::visitProcess(SPECTREParser::ProcessContext *ctx) { return visitChildren(ctx); }
 
-Any SPECTREFrontend::visitPsp(SPECTREParser::PspContext *ctx) { return this->advance_visit(ctx, _factory.analysis("psp")); }
+Any SPECTREFrontend::visitPsp(SPECTREParser::PspContext *ctx) {
+    VISIT_ANALYSIS_WITH_TYPE_PATTERN(ctx, PSP, "psp");
+}
 
-Any SPECTREFrontend::visitPss(SPECTREParser::PssContext *ctx) { return this->advance_visit(ctx, _factory.analysis("pss")); }
+Any SPECTREFrontend::visitPss(SPECTREParser::PssContext *ctx) {
+    VISIT_ANALYSIS_WITH_TYPE_PATTERN(ctx, PSS, "pss");
+}
 
-Any SPECTREFrontend::visitPxf(SPECTREParser::PxfContext *ctx) { return this->advance_visit(ctx, _factory.analysis("pxf")); }
+Any SPECTREFrontend::visitPxf(SPECTREParser::PxfContext *ctx) {
+    VISIT_ANALYSIS_WITH_TYPE_PATTERN(ctx, PXF, "pxf");
+}
 
-Any SPECTREFrontend::visitPz(SPECTREParser::PzContext *ctx) { return this->advance_visit(ctx, _factory.analysis("pz")); }
+Any SPECTREFrontend::visitPz(SPECTREParser::PzContext *ctx) {
+    VISIT_ANALYSIS_WITH_TYPE_PATTERN(ctx, PZ, "pz");
+}
 
-Any SPECTREFrontend::visitQpac(SPECTREParser::QpacContext *ctx) { return this->advance_visit(ctx, _factory.analysis("qpac")); }
+Any SPECTREFrontend::visitQpac(SPECTREParser::QpacContext *ctx) {
+    VISIT_ANALYSIS_WITH_TYPE_PATTERN(ctx, QPAC, "qpac");
+}
 
-Any SPECTREFrontend::visitQpnoise(SPECTREParser::QpnoiseContext *ctx) { return this->advance_visit(ctx, _factory.analysis("qpnoise")); }
+Any SPECTREFrontend::visitQpnoise(SPECTREParser::QpnoiseContext *ctx) {
+    VISIT_ANALYSIS_WITH_TYPE_PATTERN(ctx, QPNOISE, "qpnoise");
+}
 
-Any SPECTREFrontend::visitQpsp(SPECTREParser::QpspContext *ctx) { return this->advance_visit(ctx, _factory.analysis("qpsp")); }
+Any SPECTREFrontend::visitQpsp(SPECTREParser::QpspContext *ctx) {
+    VISIT_ANALYSIS_WITH_TYPE_PATTERN(ctx, QPSP, "qpsp");
+}
 
-Any SPECTREFrontend::visitQpss(SPECTREParser::QpssContext *ctx) { return this->advance_visit(ctx, _factory.analysis("qpss")); }
+Any SPECTREFrontend::visitQpss(SPECTREParser::QpssContext *ctx) {
+    VISIT_ANALYSIS_WITH_TYPE_PATTERN(ctx, QPSS, "qpss");
+}
 
-Any SPECTREFrontend::visitQpxf(SPECTREParser::QpxfContext *ctx) { return this->advance_visit(ctx, _factory.analysis("qpxf")); }
+Any SPECTREFrontend::visitQpxf(SPECTREParser::QpxfContext *ctx) {
+    VISIT_ANALYSIS_WITH_TYPE_PATTERN(ctx, QPXF, "qpxf");
+}
 
-Any SPECTREFrontend::visitReliability(SPECTREParser::ReliabilityContext *ctx) { return this->advance_visit(ctx, _factory.analysis("reliability")); }
+Any SPECTREFrontend::visitReliability(SPECTREParser::ReliabilityContext *ctx) { return this->advance_visit(ctx, _factory.analysis("reliability", "reliability")); }
 
 Any SPECTREFrontend::visitReliability_content(SPECTREParser::Reliability_contentContext *ctx) { return visitChildren(ctx); }
 
@@ -626,7 +705,7 @@ Any SPECTREFrontend::visitSection_footer(SPECTREParser::Section_footerContext *c
 
 Any SPECTREFrontend::visitSection_header(SPECTREParser::Section_headerContext *ctx) { return visitChildren(ctx); }
 
-Any SPECTREFrontend::visitSens(SPECTREParser::SensContext *ctx) { return this->advance_visit(ctx, _factory.analysis("sens")); }
+Any SPECTREFrontend::visitSens(SPECTREParser::SensContext *ctx) { return this->advance_visit(ctx, _factory.analysis("sens", "sens")); }
 
 Any SPECTREFrontend::visitSens_analyses_list(SPECTREParser::Sens_analyses_listContext *ctx) { return visitChildren(ctx); }
 
@@ -649,8 +728,8 @@ Any SPECTREFrontend::visitSp(SPECTREParser::SpContext *ctx) {
     } else {
         name = "sp";
     }
-    auto component = _factory.component(name, "sp");
-    return this->advance_visit(ctx, component);
+    auto analysis = _factory.analysis(name, "sp");
+    return this->advance_visit(ctx, analysis);
 }
 
 Any SPECTREFrontend::visitStatistics(SPECTREParser::StatisticsContext *ctx) { return visitChildren(ctx); }
@@ -661,9 +740,28 @@ Any SPECTREFrontend::visitStatistics_footer(SPECTREParser::Statistics_footerCont
 
 Any SPECTREFrontend::visitStatistics_header(SPECTREParser::Statistics_headerContext *ctx) { return visitChildren(ctx); }
 
-Any SPECTREFrontend::visitStb(SPECTREParser::StbContext *ctx) { return this->advance_visit(ctx, _factory.analysis("stb")); }
+Any SPECTREFrontend::visitStb(SPECTREParser::StbContext *ctx) {
+    VISIT_ANALYSIS_WITH_TYPE_PATTERN(ctx, STB, "stb");
+}
 
-Any SPECTREFrontend::visitSweep(SPECTREParser::SweepContext *ctx) { return this->advance_visit(ctx, _factory.analysis("sweep")); }
+Any SPECTREFrontend::visitSweep(SPECTREParser::SweepContext *ctx) {
+    // Sweep has header/content/footer structure, extract name from header
+    std::string name;
+    auto header = ctx->sweep_header();
+    if (header) {
+        if (header->ID()) {
+            name = header->ID()->getText();
+        } else if (header->SWEEP().size() > 1) {
+            name = header->SWEEP(0)->getText();
+        } else {
+            name = "sweep";
+        }
+    } else {
+        name = "sweep";
+    }
+    auto analysis = _factory.analysis(name, "sweep");
+    return this->advance_visit(ctx, analysis);
+}
 
 Any SPECTREFrontend::visitSweep_content(SPECTREParser::Sweep_contentContext *ctx) { return visitChildren(ctx); }
 
@@ -671,7 +769,9 @@ Any SPECTREFrontend::visitSweep_footer(SPECTREParser::Sweep_footerContext *ctx) 
 
 Any SPECTREFrontend::visitSweep_header(SPECTREParser::Sweep_headerContext *ctx) { return visitChildren(ctx); }
 
-Any SPECTREFrontend::visitTdr(SPECTREParser::TdrContext *ctx) { return this->advance_visit(ctx, _factory.analysis("tdr")); }
+Any SPECTREFrontend::visitTdr(SPECTREParser::TdrContext *ctx) {
+    VISIT_ANALYSIS_WITH_TYPE_PATTERN(ctx, TDR, "tdr");
+}
 
 Any SPECTREFrontend::visitTran(SPECTREParser::TranContext *ctx) {
     // The instance name can be ID or TRAN token (when tran tran ...)
@@ -684,8 +784,8 @@ Any SPECTREFrontend::visitTran(SPECTREParser::TranContext *ctx) {
     } else {
         name = "tran";
     }
-    auto component = _factory.component(name, "tran");
-    return this->advance_visit(ctx, component);
+    auto analysis = _factory.analysis(name, "tran");
+    return this->advance_visit(ctx, analysis);
 }
 
 Any SPECTREFrontend::visitTruncate(SPECTREParser::TruncateContext *ctx) { return visitChildren(ctx); }
@@ -696,7 +796,9 @@ Any SPECTREFrontend::visitValue_access_assign(SPECTREParser::Value_access_assign
 
 Any SPECTREFrontend::visitVary(SPECTREParser::VaryContext *ctx) { return visitChildren(ctx); }
 
-Any SPECTREFrontend::visitXf(SPECTREParser::XfContext *ctx) { return this->advance_visit(ctx, _factory.analysis("xf")); }
+Any SPECTREFrontend::visitXf(SPECTREParser::XfContext *ctx) {
+    VISIT_ANALYSIS_WITH_TYPE_PATTERN(ctx, XF, "xf");
+}
 
 // ============================================================================
 std::shared_ptr<structure::Object> SPECTREFrontend::back() const

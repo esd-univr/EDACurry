@@ -26,6 +26,12 @@ public:
     /// @return the newly generated object.
     std::shared_ptr<structure::Analysis> analysis(const std::string &name);
 
+    /// @brief Creates a new analysis with type.
+    /// @param name       the name (instance name).
+    /// @param type       the analysis type (dc, tran, sp, etc.).
+    /// @return the newly generated object.
+    std::shared_ptr<structure::Analysis> analysis(const std::string &name, const std::string &type);
+
     /// @brief Creates a new circuit.
     /// @param name the name of the circuit.
     /// @param title the title of the circuit.

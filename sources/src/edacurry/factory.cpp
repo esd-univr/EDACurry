@@ -16,6 +16,13 @@ std::shared_ptr<structure::Analysis> Factory::analysis(const std::string &name)
     return _ptr;
 }
 
+std::shared_ptr<structure::Analysis> Factory::analysis(const std::string &name, const std::string &type)
+{
+    auto _ptr = std::make_shared<structure::Analysis>(utility::trim(name, "'\""), utility::trim(type, "'\""));
+    _ptr->parameters.setOwner(_ptr->weak_from_this());
+    return _ptr;
+}
+
 std::shared_ptr<structure::Circuit> Factory::circuit(const std::string &name, const std::string &title)
 {
     auto _ptr = std::make_shared<structure::Circuit>(utility::trim(name, "'\""), utility::trim(title, "'\""));

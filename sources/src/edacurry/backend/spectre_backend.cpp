@@ -87,15 +87,25 @@ int SpectreBackend::visitCircuit(const std::shared_ptr<structure::Circuit> &e)
 
 int SpectreBackend::visitAnalysis(const std::shared_ptr<structure::Analysis> &e)
 {
-    // Check for special analysis types that need specific formatting
-    if ((e->getName() == "ac_parameter_driven") || (e->getName() == "ac_data_driven") || (e->getName() == "ac_list_driven") || (e->getName() == "ac_adaptive")) {
+    std::string name = e->getName();
+    std::string type = e->getType();
+    
+    // Check for ELDO-style special analysis types (backward compatibility)
+    if ((name == "ac_parameter_driven") || (name == "ac_data_driven") || 
+        (name == "ac_list_driven") || (name == "ac_adaptive")) {
         ss << ".ac";
-    } else if ((e->getName() == "tran_point_driven") || (e->getName() == "tran_parameterized") || (e->getName() == "tran_data_driven")) {
+    } else if ((name == "tran_point_driven") || (name == "tran_parameterized") || 
+               (name == "tran_data_driven")) {
         ss << ".tran";
     } else {
-        // Generic Spectre analysis: name analysisType param=value ...
-        // For "info" type analyses like "dcOpInfo info what=oppoint"
-        ss << e->getName() << " info";
+        // Spectre-style analysis: name type param=value ...
+        // Use the stored type, or default to "info" if not set
+        if (type.empty()) {
+            type = "info";
+        }
+        // Always write both name and type for Spectre format
+        // Example: "tran tran stop=10n" or "myTran tran stop=10n"
+        ss << name << ' ' << type;
     }
     for (const auto &parameter : e->parameters) {
         ss << ' ';

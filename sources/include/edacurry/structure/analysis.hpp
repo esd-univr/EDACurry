@@ -21,11 +21,24 @@ public:
     explicit Analysis();
 
     /// @brief Construct a new analysis object.
-    /// @param name   the name.
+    /// @param name   the name (instance name).
     Analysis(const std::string &name);
+
+    /// @brief Construct a new analysis object.
+    /// @param name   the name (instance name).
+    /// @param type   the analysis type (dc, tran, sp, ac, info, etc.).
+    Analysis(const std::string &name, const std::string &type);
 
     /// @brief Destroy the analysis object.
     ~Analysis() override = default;
+
+    /// @brief Get the analysis type.
+    /// @return the analysis type.
+    inline const std::string &getType() const { return _type; }
+
+    /// @brief Set the analysis type.
+    /// @param type the analysis type.
+    inline void setType(const std::string &type) { _type = type; }
 
     /// @brief Provides a string representation of the object for **debugging** purposes.
     /// @return the string representation.
@@ -37,6 +50,10 @@ public:
     {
         return visitor->visitAnalysis(std::static_pointer_cast<Analysis>(this->shared_from_this()));
     }
+
+private:
+    /// The analysis type (dc, tran, sp, ac, info, etc.).
+    std::string _type;
 };
 
 } // namespace edacurry::structure

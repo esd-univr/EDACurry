@@ -168,50 +168,50 @@ analysis
 // AC Analysis (ac)
 // Syntax:
 //      Name ac <param>=<value> ...
+//      ac ac <param>=<value> ...  (when instance name is "ac")
 // 
 ac
-    : (ID)? AC parameter_list? (NL* | EOF)
-    | (ID)? AC (NL* | EOF)
+    : (ID | AC)? AC parameter_list? (NL* | EOF)
     ;
 
 // ------------------------------------
 // ACMatch Analysis
 // Syntax:
 //      Name ([node1] [node2]) acmatch <param>=<value> ...
+//      acmatch acmatch ... (when instance name is "acmatch")
 // 
 acmatch
-    : (ID)? ACMATCH node_list? parameter_list? (NL* | EOF)
-    | (ID)? ACMATCH node_list? (NL* | EOF)
+    : (ID | ACMATCH)? node_list? ACMATCH parameter_list? (NL* | EOF)
     ;
 
 // ------------------------------------
 // DC Analysis
 // Syntax:
 //      Name dc parameter=value ...
+//      dc dc parameter=value ...  (when instance name is "dc")
 // 
 dc
-    : (ID)? DC parameter_list? (NL* | EOF)
-    | (ID)? DC (NL* | EOF)
+    : (ID | DC)? DC parameter_list? (NL* | EOF)
     ;
 
 // ------------------------------------
 // DC Device Matching Analysis
 // Syntax:
 //      Name [<node> <node>] dcmatch parameter=value ...
+//      dcmatch dcmatch ... (when instance name is "dcmatch")
 // 
 dcmatch
-    : (ID)? node_list? DCMATCH parameter_list? (NL* | EOF)
-    | (ID)? node_list? DCMATCH (NL* | EOF)
+    : (ID | DCMATCH)? node_list? DCMATCH parameter_list? (NL* | EOF)
     ;
 
 // ------------------------------------
 // Envelope Following Analysis
 // Syntax:
 //      Name [<node> <node>] envlp parameter=value ...
+//      envlp envlp ... (when instance name is "envlp")
 // 
 envlp
-    : (ID)? node_list? ENVLP parameter_list? (NL* | EOF)
-    | (ID)? node_list? ENVLP (NL* | EOF)
+    : (ID | ENVLP)? node_list? ENVLP parameter_list? (NL* | EOF)
     ;
 
 // ------------------------------------
@@ -227,10 +227,10 @@ sp
 // Stability Analysis
 // Syntax:
 //      Name stb parameter=value ...
+//      stb stb ... (when instance name is "stb")
 // 
 stb
-    : (ID)? STB parameter_list? (NL* | EOF)
-    | (ID)? STB (NL* | EOF)
+    : (ID | STB)? STB parameter_list? (NL* | EOF)
     ;
 
 // ------------------------------------
@@ -239,11 +239,12 @@ stb
 //      Name sweep [param=value ...] {
 //          <statements
 //      }
+//      sweep sweep ... (when instance name is "sweep")
 // 
 sweep
     : sweep_header sweep_content+ sweep_footer;
 sweep_header
-    : (ID)? SWEEP NL* parameter_list* OPEN_CURLY (NL* | EOF);
+    : (ID | SWEEP)? SWEEP NL* parameter_list* OPEN_CURLY (NL* | EOF);
 sweep_content
     : netlist_entity;
 sweep_footer
@@ -253,10 +254,10 @@ sweep_footer
 // Time-Domain Reflectometer Analysis (tdr)
 // Syntax:
 //      Name tdr parameter=value ...
+//      tdr tdr ... (when instance name is "tdr")
 // 
 tdr
-    : (ID)? TDR parameter_list? (NL* | EOF)
-    | (ID)? TDR (NL* | EOF)
+    : (ID | TDR)? TDR parameter_list? (NL* | EOF)
     ;
 
 // ------------------------------------
@@ -272,130 +273,130 @@ tran
 // Transfer Function Analysis (xf)
 // Syntax:
 //      Name [<node> <node>] xf parameter=value ...
+//      xf xf ... (when instance name is "xf")
 // 
 xf
-    : (ID)? node_list? XF parameter_list? (NL* | EOF)
-    | (ID)? node_list? XF (NL* | EOF)
+    : (ID | XF)? node_list? XF parameter_list? (NL* | EOF)
     ;
 
 // ------------------------------------
 // Periodic AC Analysis (pac)
 // Syntax:
 //      Name [<node> <node>] pac parameter=value ...
+//      pac pac ... (when instance name is "pac")
 // 
 pac
-    : (ID)? node_list? PAC parameter_list? (NL* | EOF)
-    | (ID)? node_list? PAC (NL* | EOF)
+    : (ID | PAC)? node_list? PAC parameter_list? (NL* | EOF)
     ;
 
 // ------------------------------------
 // Periodic Distortion Analysis (pdisto)
 // Syntax:
-//      Name [<node> <node>] pac parameter=value ...
+//      Name [<node> <node>] pdisto parameter=value ...
+//      pdisto pdisto ... (when instance name is "pdisto")
 // 
 pdisto
-    : (ID)? node_list? PDISTO parameter_list? (NL* | EOF)
-    | (ID)? node_list? PDISTO (NL* | EOF)
+    : (ID | PDISTO)? node_list? PDISTO parameter_list? (NL* | EOF)
     ;
 
 // ------------------------------------
 // Periodic Noise Analysis (pnoise)
 // Syntax:
 //      Name [<node> <node>] ... pnoise parameter=value ...
+//      pnoise pnoise ... (when instance name is "pnoise")
 // 
 pnoise
-    : (ID)? node_list? PNOISE parameter_list? (NL* | EOF)
-    | (ID)? node_list? PNOISE (NL* | EOF)
+    : (ID | PNOISE)? node_list? PNOISE parameter_list? (NL* | EOF)
     ;
 
 // ------------------------------------
 // Periodic S-Parameter Analysis (psp)
 // Syntax:
 //      Name psp parameter=value ...
+//      psp psp ... (when instance name is "psp")
 // 
 psp
-    : (ID)? PSP parameter_list? (NL* | EOF)
-    | (ID)? PSP (NL* | EOF)
+    : (ID | PSP)? PSP parameter_list? (NL* | EOF)
     ;
 
 // ------------------------------------
 // Periodic Steady-State Analysis (pss)
 // Syntax:
 //      Name [<node> <node>] pss parameter=value ...
+//      pss pss ... (when instance name is "pss")
 // 
 pss
-    : (ID)? node_list? PSS parameter_list? (NL* | EOF)
-    | (ID)? node_list? PSS (NL* | EOF)
+    : (ID | PSS)? node_list? PSS parameter_list? (NL* | EOF)
     ;
 
 // ------------------------------------
 // Periodic Transfer Function Analysis (pxf)
 // Syntax:
 //      Name [<node> <node>] ... pxf parameter=value ...
+//      pxf pxf ... (when instance name is "pxf")
 // 
 pxf
-    : (ID)? node_list? PXF parameter_list? (NL* | EOF)
-    | (ID)? node_list? PXF (NL* | EOF)
+    : (ID | PXF)? node_list? PXF parameter_list? (NL* | EOF)
     ;
 
 // ------------------------------------
 // PZ Analysis (pz)
 // Syntax:
 //      Name ... pz parameter=value ...
+//      pz pz ... (when instance name is "pz")
 // 
 pz
-    : (ID)? node_list? PZ parameter_list? (NL* | EOF)
-    | (ID)? node_list? PZ (NL* | EOF)
+    : (ID | PZ)? node_list? PZ parameter_list? (NL* | EOF)
     ;
 
 // ------------------------------------
 // Quasi-Periodic AC Analysis (qpac)
 // Syntax:
 //      Name qpac parameter=value ...
+//      qpac qpac ... (when instance name is "qpac")
 // 
 qpac
-    : (ID)? QPAC parameter_list? (NL* | EOF)
-    | (ID)? QPAC (NL* | EOF)
+    : (ID | QPAC)? QPAC parameter_list? (NL* | EOF)
     ;
 
 // ------------------------------------
 // Quasi-Periodic Noise Analysis (qpnoise)
 // Syntax:
 //      Name [<node> <node>] qpnoise parameter=value ...
+//      qpnoise qpnoise ... (when instance name is "qpnoise")
 // 
 qpnoise
-    : (ID)? node_list? QPNOISE parameter_list? (NL* | EOF)
-    | (ID)? node_list? QPNOISE (NL* | EOF)
+    : (ID | QPNOISE)? node_list? QPNOISE parameter_list? (NL* | EOF)
     ;
 
 // ------------------------------------
 // Quasi-Periodic S-Parameter Analysis (qpsp)
 // Syntax:
 //      Name qpsp parameter=value ...
+//      qpsp qpsp ... (when instance name is "qpsp")
 // 
 qpsp
-    : (ID)? QPSP parameter_list? (NL* | EOF)
-    | (ID)? QPSP (NL* | EOF)
+    : (ID | QPSP)? QPSP parameter_list? (NL* | EOF)
     ;
 
 // ------------------------------------
 // Quasi-Periodic Steady State Analysis (qpss)
 // Syntax:
 //      Name (<node> <node>) ... qpss parameter=value ...
+//      qpss qpss ... (when instance name is "qpss")
 // 
 qpss 
-    : (ID)? node_list? QPSS parameter_list? (NL* | EOF)
-    | (ID)? node_list? QPSS (NL* | EOF)
+    : (ID | QPSS)? node_list? QPSS parameter_list? (NL* | EOF)
     ;
 
 // ------------------------------------
 // Quasi-Periodic Transfer Function Analysis (qpxf)
 // Syntax:
 //      Name [<node> <node>] qpxf parameter=value ...
+//      qpxf qpxf ... (when instance name is "qpxf")
 // 
 qpxf
-    : (ID)? node_list? QPXF parameter_list? (NL* | EOF)
-    | (ID)? node_list? QPXF (NL* | EOF)
+    : (ID | QPXF)? node_list? QPXF parameter_list? (NL* | EOF)
     ;
 
 // ------------------------------------
@@ -419,11 +420,12 @@ sens_analyses_list
 //          analysis statements ...
 //          export statements ...
 //      }
+//      montecarlo montecarlo ... (when instance name is "montecarlo")
 // 
 montecarlo
     : montecarlo_header montecarlo_content+ montecarlo_export montecarlo_footer;
 montecarlo_header
-    : ID MONTECARLO NL* parameter_list* OPEN_CURLY (NL* | EOF);
+    : (ID | MONTECARLO) MONTECARLO NL* parameter_list* OPEN_CURLY (NL* | EOF);
 montecarlo_content
     : netlist_entity;
 montecarlo_export
@@ -435,20 +437,20 @@ montecarlo_footer
 // Noise Analysis (noise)
 // Syntax:
 //      Name [<node> <node>] noise parameter=value ...
+//      noise noise ... (when instance name is "noise")
 // 
 noise
-    : ID node_list? NOISE parameter_list? (NL* | EOF)
-    | ID node_list? NOISE (NL* | EOF)
+    : (ID | NOISE) node_list? NOISE parameter_list? (NL* | EOF)
     ;
 
 // ------------------------------------
 // Checklimit Analysis (checklimit)
 // Syntax:
 //      Name checklimit parameter=value ...
+//      checklimit checklimit ... (when instance name is "checklimit")
 // 
 checklimit
-    : ID CHECKLIMIT parameter_list? (NL* | EOF)
-    | ID CHECKLIMIT (NL* | EOF)
+    : (ID | CHECKLIMIT) CHECKLIMIT parameter_list? (NL* | EOF)
     ;
 
 // ============================================================================
