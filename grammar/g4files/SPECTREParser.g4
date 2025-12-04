@@ -220,8 +220,7 @@ envlp
 //      Name sp parameter=value ...
 // 
 sp
-    : (ID)? SP parameter_list? (NL* | EOF)
-    | (ID)? SP (NL* | EOF)
+    : (ID | SP)? SP parameter_list? (NL* | EOF)
     ;
 
 // ------------------------------------
@@ -266,8 +265,7 @@ tdr
 //      Name tran parameter=value ...
 // 
 tran
-    : (ID)? TRAN parameter_list? (NL* | EOF)
-    | (ID)? TRAN (NL* | EOF)
+    : (ID | TRAN)? TRAN parameter_list? (NL* | EOF)
     ;
 
 // ------------------------------------

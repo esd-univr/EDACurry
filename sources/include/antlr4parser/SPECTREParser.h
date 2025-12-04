@@ -848,10 +848,11 @@ public:
   public:
     SpContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *SP();
+    std::vector<antlr4::tree::TerminalNode *> SP();
+    antlr4::tree::TerminalNode* SP(size_t i);
     antlr4::tree::TerminalNode *EOF();
-    antlr4::tree::TerminalNode *ID();
     Parameter_listContext *parameter_list();
+    antlr4::tree::TerminalNode *ID();
     std::vector<antlr4::tree::TerminalNode *> NL();
     antlr4::tree::TerminalNode* NL(size_t i);
 
@@ -981,10 +982,11 @@ public:
   public:
     TranContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *TRAN();
+    std::vector<antlr4::tree::TerminalNode *> TRAN();
+    antlr4::tree::TerminalNode* TRAN(size_t i);
     antlr4::tree::TerminalNode *EOF();
-    antlr4::tree::TerminalNode *ID();
     Parameter_listContext *parameter_list();
+    antlr4::tree::TerminalNode *ID();
     std::vector<antlr4::tree::TerminalNode *> NL();
     antlr4::tree::TerminalNode* NL(size_t i);
 

@@ -217,7 +217,9 @@ Any SPECTREFrontend::visitAnalysis(SPECTREParser::AnalysisContext *ctx) {
     return visitChildren(ctx);
 }
 
-Any SPECTREFrontend::visitAnalysis_type(SPECTREParser::Analysis_typeContext *ctx) { return visitChildren(ctx); }
+Any SPECTREFrontend::visitAnalysis_type(SPECTREParser::Analysis_typeContext *ctx) { 
+    return visitChildren(ctx); 
+}
 
 /// === Component ===
 Any SPECTREFrontend::visitComponent(SPECTREParser::ComponentContext* ctx) {
@@ -637,7 +639,16 @@ Any SPECTREFrontend::visitSet(SPECTREParser::SetContext *ctx) { return visitChil
 Any SPECTREFrontend::visitShell(SPECTREParser::ShellContext *ctx) { return visitChildren(ctx); }
 
 Any SPECTREFrontend::visitSp(SPECTREParser::SpContext *ctx) {
-    std::string name = ctx->ID() ? ctx->ID()->getText() : "sp";
+    // The instance name can be ID or SP token (when sp sp ...)
+    std::string name;
+    if (ctx->ID()) {
+        name = ctx->ID()->getText();
+    } else if (ctx->SP().size() > 1) {
+        // Two SP tokens: first is the instance name
+        name = ctx->SP(0)->getText();
+    } else {
+        name = "sp";
+    }
     auto component = _factory.component(name, "sp");
     return this->advance_visit(ctx, component);
 }
@@ -663,7 +674,16 @@ Any SPECTREFrontend::visitSweep_header(SPECTREParser::Sweep_headerContext *ctx) 
 Any SPECTREFrontend::visitTdr(SPECTREParser::TdrContext *ctx) { return this->advance_visit(ctx, _factory.analysis("tdr")); }
 
 Any SPECTREFrontend::visitTran(SPECTREParser::TranContext *ctx) {
-    std::string name = ctx->ID() ? ctx->ID()->getText() : "tran";
+    // The instance name can be ID or TRAN token (when tran tran ...)
+    std::string name;
+    if (ctx->ID()) {
+        name = ctx->ID()->getText();
+    } else if (ctx->TRAN().size() > 1) {
+        // Two TRAN tokens: first is the instance name
+        name = ctx->TRAN(0)->getText();
+    } else {
+        name = "tran";
+    }
     auto component = _factory.component(name, "tran");
     return this->advance_visit(ctx, component);
 }
