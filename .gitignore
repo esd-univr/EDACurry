@@ -1,6 +1,7 @@
 # Build directories
 build/
 build_py37/
+build_py37_release/
 cmake-build-*
 
 # Test data to ignore

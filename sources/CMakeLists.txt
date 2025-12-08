@@ -233,10 +233,10 @@ target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE ${ANTLR4_INCLUDE_DIRS}
 # Link libraries.
 target_link_libraries(${PROJECT_NAME} PRIVATE json)
 target_link_libraries(${PROJECT_NAME} PRIVATE pugixml-static)
-target_link_libraries(${PROJECT_NAME} PRIVATE ${ANTLR4_LIBRARIES})
 
 target_compile_options(${PROJECT_NAME} PRIVATE -fPIC)
 
+# Static link libstdc++ and libgcc for portability
 target_link_options(${PROJECT_NAME} PRIVATE -static-libstdc++ -static-libgcc)
 
 
