@@ -1,4 +1,5 @@
 # EDACurry: A Multi-Language Framework to Create, Translate, and Manipulate Transistor-Level Netlists
+![EDACurry Framework Overview](edacurry_framework.png)
 
 The Simulation Program with Integrated Circuit Emphasis (SPICE), introduced in 1973, laid the foundation for transistor-level netlist representation. Over the decades, numerous SPICE dialects emerged, each tailored to specific needs but sharing core semantics. This article presents EDACurry, an innovative, open-source framework designed to simplify and automate the creation, translation, and manipulation of transistor-level netlists across SPICE-based languages such as Eldo and Spectre.
 
@@ -15,3 +16,27 @@ space exploration, defect model injection, and subcircuit wrapping, all accessib
     ├── sources/                # Netlist manipulator (includes C++ parser).
     ├── LICENSE                       
     └── README.md
+ 
+## Scalability Analysis
+
+EDACurry has been tested on large-scale netlists to assess its scalability. The following benchmarks show parsing and writing times for both Eldo and Spectre formats, using up to 200,000 components. Results were obtained on Ubuntu 22.04.5 LTS, Intel Core i7-9700, 32 GB RAM.
+
+**Key findings:**
+- Parsing time increases linearly with the number of components, confirming good scalability.
+- Per-device cost remains nearly constant, even for the largest cases.
+- No exponential growth in processing time was observed.
+
+### Eldo Results
+
+![Eldo Tabular Results](eldo_tabular_results.png)
+
+![Eldo Parsing Time vs Number of Components](eldo_graph_results.png)
+
+### Spectre Results
+
+![Spectre Tabular Results](spectre_tabular_results.png)
+
+![Spectre Parsing Time vs Number of Components](spectre_graph_results.png)
+
+**Summary:**
+The analysis demonstrates that EDACurry can efficiently handle very large netlists, with linear scaling in parsing and writing operations for both Eldo and Spectre formats. This makes the tool suitable for industrial-scale analog design workflows.
