@@ -19,10 +19,7 @@ space exploration, defect model injection, and subcircuit wrapping, all accessib
  
 ## Scalability Analysis
 
-
-All the circuits used for scalability tests are available in the repository under [EDACurry/sources/test](sources/test).
-
-EDACurry has been tested on large-scale netlists to assess its scalability. The following benchmarks show parsing and writing times for both Eldo and Spectre formats, using up to 200,000 components. Results were obtained on Ubuntu 22.04.5 LTS, Intel Core i7-9700, 32 GB RAM.
+EDACurry has been tested on large-scale netlists to assess its scalability. The following benchmarks show parsing and writing times for both Eldo and Spectre formats, using up to 200,000 components. Results were obtained on Ubuntu 22.04.5 LTS, Intel Core i7-9700, 32 GB RAM. All the circuits used for scalability tests are available in the repository under [EDACurry/sources/test](sources/test).
 
 **Key findings:**
 - Parsing time increases linearly with the number of components, confirming good scalability.
