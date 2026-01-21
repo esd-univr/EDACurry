@@ -1,6 +1,7 @@
 /// @file spectre_frontend.hpp
 /// @author Enrico Fraccaroli (enrico.fraccaroli@gmail.com)
 /// @copyright Copyright (c) 2021 sydelity.net (info@sydelity.com)
+/// @copyright Copyright (c) 2025 Electronic Systems Design (ESD) Laboratory, University of Verona
 /// Distributed under the MIT License (MIT) (See accompanying LICENSE file or
 ///  copy at http://opensource.org/licenses/MIT)
 

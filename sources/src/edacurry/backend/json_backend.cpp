@@ -2,12 +2,13 @@
 /// @author Enrico Fraccaroli (enry.frak@gmail.com)
 /// @brief
 /// @copyright Copyright (c) 2021 sydelity.net (info@sydelity.com)
+/// @copyright Copyright (c) 2026 Electronic Systems Design (ESD) Laboratory, University of Verona
 /// Distributed under the MIT License (MIT) (See accompanying LICENSE file or
 ///  copy at http://opensource.org/licenses/MIT)
 
 #include <json/json.hpp>
 
-#include "edacurry/utility/typename.hpp"
+#include "edacurry/utility/typename_specializations.hpp"
 #include "edacurry/classes.hpp"
 
 #include <memory>

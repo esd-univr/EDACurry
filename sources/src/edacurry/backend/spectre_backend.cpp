@@ -3,6 +3,10 @@
 /// @details This file implements the SpectreBackend class, which generates
 /// Spectre netlists from the internal representation of circuits.
 /// @date 2025-04-14
+/// @copyright Copyright (c) 2021 sydelity.net (info@sydelity.com)
+/// @copyright Copyright (c) 2025 Electronic Systems Design (ESD) Laboratory, University of Verona
+/// Distributed under the MIT License (MIT) (See accompanying LICENSE file or
+///  copy at http://opensource.org/licenses/MIT)
 
 #include "edacurry/backend/spectre_backend.hpp"
 #include "edacurry/classes.hpp"
@@ -111,7 +115,19 @@ int SpectreBackend::visitAnalysis(const std::shared_ptr<structure::Analysis> &e)
         ss << ' ';
         parameter->accept(this);
     }
-    ss << '\n';
+    
+    // Handle nested content for sweep/montecarlo analyses
+    if (e->content.size() > 0) {
+        ss << " {\n";
+        ss << ind_increase;
+        for (const auto &child : e->content) {
+            child->accept(this);
+        }
+        ss << ind_decrease;
+        ss << "}\n";
+    } else {
+        ss << '\n';
+    }
     return 0;
 }
 

@@ -1,6 +1,7 @@
 /// @file   edacurry.cpp
 /// @author Enrico Fraccaroli (enrico.fraccaroli@gmail.com)
 /// @copyright Copyright (c) 2021 sydelity.net (info@sydelity.com)
+/// @copyright Copyright (c) 2025 Electronic Systems Design (ESD) Laboratory, University of Verona
 /// Distributed under the MIT License (MIT) (See accompanying LICENSE file or
 ///  copy at http://opensource.org/licenses/MIT)
 
@@ -876,12 +877,14 @@ PYBIND11_MODULE(edacurry, m)
             py::init([](const std::string &name, const std::string &type) {
                 auto _ptr = std::make_shared<structure::Analysis>(name, type);
                 _ptr->parameters.setOwner(_ptr);
+                _ptr->content.setOwner(_ptr);
                 return _ptr;
             }),
             py::arg("name") = std::string(),
             py::arg("type") = std::string(),
             "Construct a new analysis.")
         .def_readonly("parameters", &Analysis::parameters)
+        .def_readonly("content", &Analysis::content, "Nested content for sweep/montecarlo analyses.")
         .def_property("type", &Analysis::getType, &Analysis::setType, "The analysis type (dc, tran, sp, ac, info, etc.).")
         .def("__str__", &Analysis::toString)
         .def("__repr__", &Analysis::toString);

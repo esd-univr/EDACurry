@@ -2,6 +2,7 @@
 build/
 build_py37/
 build_py37_release/
+build_py38
 cmake-build-*
 
 # Test data to ignore

@@ -1,3 +1,10 @@
+/// @file   spectre_frontend.cpp
+/// @author Enrico Fraccaroli (enrico.fraccaroli@gmail.com)
+/// @copyright Copyright (c) 2021 sydelity.net (info@sydelity.com)
+/// @copyright Copyright (c) 2025 Electronic Systems Design (ESD) Laboratory, University of Verona
+/// Distributed under the MIT License (MIT) (See accompanying LICENSE file or
+///  copy at http://opensource.org/licenses/MIT)
+
 #include <iostream>
 #include "edacurry/frontend/spectre_frontend.hpp"
 #include "edacurry/utility/logging.hpp"
@@ -840,7 +847,8 @@ void SPECTREFrontend::add_to_parent(const std::shared_ptr<structure::Object> &no
         } else if (auto value = utility::to<structure::Value>(node)) {
             analysis->parameters.push_back(_factory.parameter(nullptr, value, param_assign, false));
         } else {
-            _error("Wrong item added to Analysis: %s", node->toString().c_str());
+            // Support nested content for sweep/montecarlo analyses
+            analysis->content.push_back(node);
         }
     } else if (auto circuit = utility::to<structure::Circuit>(parent)) {
         if (auto circuit_node = utility::to<structure::Node>(node)) {

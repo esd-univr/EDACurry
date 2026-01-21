@@ -1,6 +1,7 @@
 /// @file   analysis.hpp
 /// @author Enrico Fraccaroli (enrico.fraccaroli@gmail.com)
 /// @copyright Copyright (c) 2021 sydelity.net (info@sydelity.com)
+/// @copyright Copyright (c) 2025 Electronic Systems Design (ESD) Laboratory, University of Verona
 /// Distributed under the MIT License (MIT) (See accompanying LICENSE file or
 ///  copy at http://opensource.org/licenses/MIT)
 
@@ -12,10 +13,15 @@
 namespace edacurry::structure
 {
 /// @brief Represent a analysis.
+/// @note For sweep/montecarlo analyses, nested analyses are stored in 'content'.
 class Analysis : public Object, public features::NamedObject {
 public:
     /// The parameters of the analysis statement.
     features::OwnedList<Parameter> parameters;
+    
+    /// The nested content (for sweep, montecarlo, etc. that contain other analyses).
+    /// Empty for simple analyses like dc, tran, sp, ac.
+    features::OwnedList<Object> content;
 
     /// @brief Construct a new analysis object.
     explicit Analysis();
