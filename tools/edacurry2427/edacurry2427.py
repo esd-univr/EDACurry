@@ -76,6 +76,17 @@ if __name__ == '__main__':
         print("[EDACURRY2427] Spectre dialect is not supported\n")
         exit(1)
 
+    # Retrieving test tolerance limits
+    print("[EDACURRY2427] Retrieving tolerance limits to establish defect relevation...")
+    tolerance_lim = None
+    try:
+        tolerance_lim = manifest_data["tolerance_limit"] # Expressed as a percentual
+    except KeyError:
+        raise ValueError("[EDACURRY2427] Unable to extract tolerance limit value from manifest")
+    if tolerance_lim is None:
+        raise ValueError("[EDACURRY2427] Unable to extract tolerance limit value from manifest")
+    print(f"[EDACURRY2427] Tolerance limit set to ±{tolerance_lim}%\n")
+
     # Retrieving timeout
     timeout = None
     try:
