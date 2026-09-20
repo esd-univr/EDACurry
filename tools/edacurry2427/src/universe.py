@@ -37,6 +37,7 @@ class DefectEngine:
     _manifest_data : dict
     _optimizer : Optimizer
     _excluded_target : dict
+    _dut : str
     _id_generator : IdGenerator
     _universe_details : List = []
 
@@ -58,6 +59,10 @@ class DefectEngine:
         if manifest_data is None:
             raise ValueError("[DefectEngine] No manifest provided")
         self._manifest_data = manifest_data
+        try:
+            self._dut = manifest_data["dut"]
+        except KeyError:
+            raise ValueError("[DefectEngine] Missing dut target on which to perform the analysis")
         try:
             self._excluded_target = manifest_data["excluded_target"]
         except KeyError:
@@ -81,7 +86,7 @@ class DefectEngine:
         for element in structure:
             content = element[0]
             # Check if analysis must be performed
-            if not content.name in self._excluded_target["content"]:
+            if content.name in self._dut:
                 components = element[1]
                 signatures = element[2]
 
@@ -163,7 +168,7 @@ class DefectEngine:
                                 "component_category" : category.value,
                                 "defect_type" : DefectType.SHORT,
                                 "open_gate" : False,
-                                "circuit": self._circuit,
+                                #"circuit": self._circuit,
                                 "defect_id" : self._id_generator.generate_id(DefectType.SHORT),
                                 "defect_instance" : f"{content.name}.{components[index].name}",
                                 "name" : "short_model",
@@ -183,7 +188,7 @@ class DefectEngine:
                                 "component_category": category.value,
                                 "defect_type": DefectType.OPEN,
                                 "open_gate": False,
-                                "circuit": self._circuit,
+                                #"circuit": self._circuit,
                                 "defect_id": self._id_generator.generate_id(DefectType.OPEN),
                                 "defect_instance": f"{content.name}.{components[index].name}",
                                 "name": "open_model",
@@ -202,7 +207,7 @@ class DefectEngine:
                                 "component_category": category.value,
                                 "defect_type": DefectType.OPEN,
                                 "open_gate": False,
-                                "circuit": self._circuit,
+                                #"circuit": self._circuit,
                                 "defect_id": self._id_generator.generate_id(DefectType.OPEN),
                                 "defect_instance": f"{content.name}.{components[index].name}",
                                 "name": "open_model",
@@ -266,7 +271,7 @@ class DefectEngine:
                                         "component_category": category.value,
                                         "defect_type": DefectType.PARAMETRIC,
                                         "open_gate": False,
-                                        "circuit": self._circuit,
+                                        #"circuit": self._circuit,
                                         "defect_id" : self._id_generator.generate_id(DefectType.PARAMETRIC),
                                         "defect_instance" : f"{content.name}.{components[index].name}",
                                         "name" : "MIN",
@@ -294,7 +299,7 @@ class DefectEngine:
                                         "No_2427_defect": no_2427_defect,
                                         "component_category": category.value,
                                         "defect_type": DefectType.PARAMETRIC,
-                                        "circuit": self._circuit,
+                                        #"circuit": self._circuit,
                                         "open_gate": False,
                                         "defect_id": self._id_generator.generate_id(DefectType.PARAMETRIC),
                                         "defect_instance": f"{content.name}.{components[index].name}",
@@ -416,7 +421,7 @@ class DefectEngine:
                                     "component_category": category.value,
                                     "defect_type": DefectType.SHORT,
                                     "open_gate": False,
-                                    "circuit": self._circuit,
+                                    #"circuit": self._circuit,
                                     "defect_id": self._id_generator.generate_id(DefectType.SHORT),
                                     "defect_instance": f"{content.name}.{components[index].name}",
                                     "name": "short_model",
@@ -443,7 +448,7 @@ class DefectEngine:
                                 "component_category": category.value,
                                 "defect_type": DefectType.OPEN,
                                 "open_gate": False,
-                                "circuit": self._circuit,
+                                #"circuit": self._circuit,
                                 "defect_id": self._id_generator.generate_id(DefectType.OPEN),
                                 "defect_instance": f"{content.name}.{components[index].name}",
                                 "name": "open_model",
@@ -465,7 +470,7 @@ class DefectEngine:
                                 "component_category": category.value,
                                 "defect_type": DefectType.OPEN,
                                 "open_gate": False,
-                                "circuit": self._circuit,
+                                #"circuit": self._circuit,
                                 "defect_id": self._id_generator.generate_id(DefectType.OPEN),
                                 "defect_instance": f"{content.name}.{components[index].name}",
                                 "name": "open_model",
@@ -484,7 +489,7 @@ class DefectEngine:
                                 "component_category": category.value,
                                 "defect_type": DefectType.OPEN,
                                 "open_gate": True,
-                                "circuit": self._circuit,
+                                #"circuit": self._circuit,
                                 "defect_id": self._id_generator.generate_id(DefectType.OPEN),
                                 "defect_instance": f"{content.name}.{components[index].name}",
                                 "name": "open_model",
@@ -508,7 +513,7 @@ class DefectEngine:
                                 "component_category": category.value,
                                 "defect_type": DefectType.OPEN,
                                 "open_gate": False,
-                                "circuit": self._circuit,
+                                #"circuit": self._circuit,
                                 "defect_id": self._id_generator.generate_id(DefectType.OPEN),
                                 "defect_instance": f"{content.name}.{components[index].name}",
                                 "name": "open_model",
@@ -534,7 +539,7 @@ class DefectEngine:
                                 "component_category": category.value,
                                 "defect_type": DefectType.OPEN,
                                 "open_gate": False,
-                                "circuit": self._circuit,
+                                #"circuit": self._circuit,
                                 "defect_id": self._id_generator.generate_id(DefectType.OPEN),
                                 "defect_instance": f"{content.name}.{components[index].name}",
                                 "name": "open_model",
@@ -588,7 +593,7 @@ class DefectEngine:
                                         "component_category": category.value,
                                         "defect_type": DefectType.PARAMETRIC,
                                         "open_gate": False,
-                                        "circuit": self._circuit,
+                                        #"circuit": self._circuit,
                                         "defect_id": self._id_generator.generate_id(DefectType.PARAMETRIC),
                                         "defect_instance": f"{content.name}.{components[index].name}",
                                         "name": "MIN",
@@ -616,7 +621,7 @@ class DefectEngine:
                                         "No_2427_defect": no_2427_defect,
                                         "component_category": category.value,
                                         "defect_type": DefectType.PARAMETRIC,
-                                        "circuit": self._circuit,
+                                        #"circuit": self._circuit,
                                         "open_gate": False,
                                         "defect_id": self._id_generator.generate_id(DefectType.PARAMETRIC),
                                         "defect_instance": f"{content.name}.{components[index].name}",
@@ -676,7 +681,7 @@ class DefectEngine:
                                 "component_category": category.value,
                                 "defect_type": DefectType.SHORT,
                                 "open_gate": False,
-                                "circuit": self._circuit,
+                                #"circuit": self._circuit,
                                 "defect_id": self._id_generator.generate_id(DefectType.SHORT),
                                 "defect_instance": f"{content.name}.{components[index].name}",
                                 "name": "short_model",
@@ -697,7 +702,7 @@ class DefectEngine:
                                 "component_category": category.value,
                                 "defect_type": DefectType.OPEN,
                                 "open_gate": False,
-                                "circuit": self._circuit,
+                                #"circuit": self._circuit,
                                 "defect_id": self._id_generator.generate_id(DefectType.OPEN),
                                 "defect_instance": f"{content.name}.{components[index].name}",
                                 "name": "short_model",
@@ -716,7 +721,7 @@ class DefectEngine:
                                 "component_category": category.value,
                                 "defect_type": DefectType.OPEN,
                                 "open_gate": False,
-                                "circuit": self._circuit,
+                                #"circuit": self._circuit,
                                 "defect_id": self._id_generator.generate_id(DefectType.OPEN),
                                 "defect_instance": f"{content.name}.{components[index].name}",
                                 "name": "short_model",
@@ -770,7 +775,7 @@ class DefectEngine:
                                         "component_category": category.value,
                                         "defect_type": DefectType.PARAMETRIC,
                                         "open_gate": False,
-                                        "circuit": self._circuit,
+                                        #"circuit": self._circuit,
                                         "defect_id": self._id_generator.generate_id(DefectType.PARAMETRIC),
                                         "defect_instance": f"{content.name}.{components[index].name}",
                                         "name": "MIN",
@@ -798,7 +803,7 @@ class DefectEngine:
                                         "No_2427_defect": False,
                                         "component_category": category.value,
                                         "defect_type": DefectType.PARAMETRIC,
-                                        "circuit": self._circuit,
+                                        #"circuit": self._circuit,
                                         "open_gate": False,
                                         "defect_id": self._id_generator.generate_id(DefectType.PARAMETRIC),
                                         "defect_instance": f"{content.name}.{components[index].name}",

@@ -18,6 +18,22 @@ import argparse
 from src import Optimizer, DefectEngine, DependencyManager, CampaignDirector
 
 
+# Cleaning temporary dirs
+def clean():
+    print("[EDACURRY2427] Cleaning up temporary directories...")
+    try:
+        if os.path.exists(tmp_log_dir):
+            shutil.rmtree(tmp_log_dir)
+            print("[EDACURRY2427] tmp_logs directory removed")
+        if os.path.exists(simulation_results):
+            shutil.rmtree(simulation_results)
+            print("[EDACURRY2427] simulation results directory removed")
+        print("\n")
+    except Exception as e:
+        print(f"[EDACURRY2427] Unable to remove temporary directory: {e}\n")
+
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="IEEE 2427 compliant tool to perform fault injection")
     parser.add_argument("-dut", "--dut", required=True, help="Name of the design under test on which to perform the analysis")
@@ -88,7 +104,7 @@ if __name__ == '__main__':
     print("[EDACURRY2427] Creating temporary directory for logs produced by divergent simulations...")
     tmp_log_dir = content_dir/"tmp_logs"
     os.makedirs(tmp_log_dir, exist_ok=True)
-    print("[EDACURRY2427] Logs dir created")
+    print("[EDACURRY2427] Logs directory created")
 
     content = os.listdir(content_dir)
     entry_point_filename = None
@@ -137,27 +153,65 @@ if __name__ == '__main__':
     print("[EDACURRY2427] Retrieving defect universe details...")
     defect_universe_details = defect_engine.get_universe_details()
     print("[EDACURRY2427] Done\n")
+
+    # Saving defect universe details to disk
+    print("[EDACURRY2427] Saving defect universe details in JSON format...")
+    output_dir = content_dir/"output"
+    os.makedirs(output_dir, exist_ok=True)
+    defect_universe_output = output_dir/"defect_universe_details.json"
+    with open(defect_universe_output, "w") as f:
+        json.dump(defect_universe_details, f, indent=4)
+    print("[EDACURRY2427] Done\n")
+
+    # Retrieving Defect universe
     print("[EDACURRY2427] Retrieving defect universe...")
     defect_universe = defect_engine.generate_defect_universe()
     print("[EDACURRY2427] Done\n\n")
     
     # Running simulation
+    print("[EDACURRY2427] Creating temporary simulation results directory...")
+    simulation_results = content_dir/"simulation_results"
+    os.makedirs(simulation_results, exist_ok=True)
+    print("[EDACURRY2427] Done\n")
+
     campaign_director = CampaignDirector(defect_universe, ngspice_path, circuit_filename, raw_circuit_filename, entry_point_filename, tmp_log_dir)
     print("[EDACURRY2427] Running golden simulation on defect-free netlist...")
-    golden_report = campaign_director.run_golden_simulation(circuit, timeout, dialect)
-    print("[EDACURRY2427] Golden report retrieved\n")
+    golden_report_file = simulation_results/"golden_report.json"
+    if not "golden_report.json" in os.listdir(simulation_results):
+        golden_report = campaign_director.run_golden_simulation(circuit, timeout, dialect)
+        with open(golden_report_file, "w") as f:
+            json.dump(golden_report, f, indent=4)
+        print("[EDACURRY2427] Golden report retrieved and saved in JSON format\n")
+    else:
+        print("[EDACURRY2427] Golden report already generated\n")
 
     print("[EDACURRY2427] Retrieving defect simulation report...")
-    campaign_report = campaign_director.run_campaign(timeout, dialect)
-    print("[EDACURRY2427] Report acquired\n")
+    simulated_elements = 0
+    sim_files = os.listdir(simulation_results)
+    for sim_file in sim_files:
+        if sim_file.endswith(".json"):
+            simulated_elements += 1
+    if simulated_elements == 1:
+        campaign_report = campaign_director.run_campaign(timeout, dialect)
+        for cr in campaign_report:
+            report_name = f"{simulation_results}/{cr["target"]}.json"
+            with open(report_name, "w") as f:
+                json.dump(cr, f, indent=4)
+        print("[EDACURRY2427] Report acquired. Simulation results have been saved in JSON format\n")
+    else:
+        print("[EDACURRY2427] Report already generated\n")
 
-
-
-    # Cleaning tmp_logs dir
-    print("[EDACURRY2427] Cleaning up temporary logs directory...")
-    try:
-        if os.path.exists(tmp_log_dir):
-            shutil.rmtree(tmp_log_dir)
-            print("[EDACURRY2427] Done\n")
-    except Exception as e:
-        print(f"[EDACURRY2427] Unable to remove temporary logs directory: {e}\n")
+    # Check data integrity
+    print("[EDACURRY2427] Checking data integrity...")
+    simulated_elements = 0
+    sim_files = os.listdir(simulation_results)
+    for sim_file in sim_files:
+        if sim_file.endswith(".json"):
+            simulated_elements += 1
+    estimated_elements = len(defect_universe) + 1
+    if simulated_elements == estimated_elements:
+        print(f"[EDACURRY2427] {simulated_elements}/{estimated_elements} found. OK to proceed\n")
+    else:
+        print(f"[EDACURRY2427] ERROR: {simulated_elements}/{estimated_elements} found. Something went wrong during defect simulations. Operation aborted\n")
+        clean()
+        exit(1)

@@ -1,7 +1,7 @@
 # @author: Christian Checchetti (chris22checchetti@gmail.com)
 # utility defines a set of enumerations and useful components
 
-from enum import Enum
+from enum import Enum, StrEnum
 from typing import List, Optional
 import hashlib
 import re
@@ -15,7 +15,7 @@ import edacurry
 from collections import defaultdict
 
 
-class DefectType (Enum):
+class DefectType (StrEnum):
     SHORT = "short"
     OPEN = "open"
     PARAMETRIC = "parametric"
