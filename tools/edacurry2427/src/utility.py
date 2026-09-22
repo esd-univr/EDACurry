@@ -55,10 +55,11 @@ class StructuralUndetectabilityReason (UndetectabilityReason):
             return cls.OTHER
 
 
-class DetectionStatus(Enum):
+class DetectionStatus(StrEnum):
     UNDETECTED = "undetected"
     DETECTED = "detected"
     UNKNOWN = "unknown"
+    UNSIMULATED = "unsimulated"
 
 
 class DefectRecord:
@@ -83,7 +84,7 @@ class DefectRecord:
                                                                     # must be specified
     _0_weight_justification: Optional[str]                          # the reason behind a 0 weighed element must be
                                                                     # provided
-    _detected: DetectionStatus                                     # defect detection status. Default is undetected
+    _detection_status: DetectionStatus                              # defect detection status. Default is unsimulated
 
 
 
@@ -120,7 +121,7 @@ class DefectRecord:
                     raise Exception("the reason behind a zero-weighted defect must be provided\n")
             else:
                 self._0_weight_justification = zero_weight_justification
-            self._detected = DetectionStatus.UNDETECTED
+            self._detection_status = DetectionStatus.UNSIMULATED
         except (Exception) as e:
             raise Exception(f"[DefectRecord] Initialization error: {e}\n")
 
@@ -143,11 +144,11 @@ class DefectRecord:
 
 
 
-    def set_detection_status(self, status):
-        self._detected = status
+    def set_detection_status(self, status : DetectionStatus):
+        self._detection_status = status
 
     def get_detection_status(self):
-        return self._detected
+        return self._detection_status
 
 
     def get_info(self):
@@ -163,7 +164,7 @@ class DefectRecord:
             "undetectable": self._undetectable,
             "undetectability_reason": self._undetectability_reason,
             "0_weight_justification": self._0_weight_justification,
-            "detected": self._detected
+            "detection_status": self._detection_status
         }
         return dr_dict
 

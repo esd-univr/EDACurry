@@ -23,3 +23,5 @@ from .dependency_manager import DependencyManager
 from .simulator_engine import SimulatorEngine
 
 from .campaign_director import CampaignDirector
+
+from .analyzer import Analyzer

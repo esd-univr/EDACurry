@@ -15,7 +15,7 @@ import edacurry
 import argparse
 
 # Import modules
-from src import Optimizer, DefectEngine, DependencyManager, CampaignDirector
+from src import Optimizer, DefectEngine, DependencyManager, CampaignDirector, Analyzer
 
 
 # Cleaning temporary dirs
@@ -86,6 +86,19 @@ if __name__ == '__main__':
     if tolerance_lim is None:
         raise ValueError("[EDACURRY2427] Unable to extract tolerance limit value from manifest")
     print(f"[EDACURRY2427] Tolerance limit set to ±{tolerance_lim}%\n")
+
+    # Retrieving variables defined by test that have to be compared to verify defect detection
+    cmp_vars = None
+    try:
+        cmp_vars = manifest_data["cmp_vars"]
+    except KeyError:
+        raise ValueError("[EDACURRY2427] Unable to extract test variables from manifest")
+    if cmp_vars is None:
+        raise ValueError("[EDACURRY2427] Unable to extract test variables from manifest")
+    print("[EDACURRY2427] Variables in test to be compared:")
+    for var in cmp_vars:
+        print(f"> {var}")
+    print("\n")
 
     # Retrieving timeout
     timeout = None
@@ -165,11 +178,11 @@ if __name__ == '__main__':
     defect_universe_details = defect_engine.get_universe_details()
     print("[EDACURRY2427] Done\n")
 
-    # Saving defect universe details to disk
-    print("[EDACURRY2427] Saving defect universe details in JSON format...")
+    # Saving defect universe details to output directory
     output_dir = content_dir/"output"
     os.makedirs(output_dir, exist_ok=True)
     defect_universe_output = output_dir/"defect_universe_details.json"
+    print(f"[EDACURRY2427] Writing {defect_universe_output}...")
     with open(defect_universe_output, "w") as f:
         json.dump(defect_universe_details, f, indent=4)
     print("[EDACURRY2427] Done\n")
@@ -226,3 +239,32 @@ if __name__ == '__main__':
         print(f"[EDACURRY2427] ERROR: {simulated_elements}/{estimated_elements} found. Something went wrong during defect simulations. Operation aborted\n")
         clean()
         exit(1)
+
+    # Running analyzer
+    print("[EDACURRY2427] Loading analyzer...")
+    analyzer = Analyzer(defect_universe, tolerance_lim, cmp_vars, simulation_results)
+    analyzer.analyze()
+    print("[EDACURRY2427] Done\n")
+
+    # Saving detection information as a JSON file inside the output directory (defect coverage details)
+    defect_coverage_output = output_dir/"defect_coverage_details.json"
+    # Saving defect record using defect id as key
+    defect_coverage_details = {
+        defect.get_info()["defect_record"]["id"] : defect.get_info()["defect_record"] for defect in defect_universe
+    }
+    print(f"[EDACURRY2427] Writing {defect_coverage_output}...")
+    with open(defect_coverage_output, "w") as f:
+        json.dump(defect_coverage_details, f, indent=4)
+    print("[EDACURRY2427] Done\n")
+
+    choice = input("[EDACURRY2427] Do you like to remove all temporary files? [Y/N] ")
+    stop = 0
+    while not stop:
+        if choice.lower() == "y" or choice.lower() == "yes":
+            clean()
+            stop = 1
+        elif choice.lower() == "n" or choice.lower() == "no":
+            stop = 1
+        else:
+            print(f"[EDACURRY2427] {choice} is not a valid option")
+            choice = input("[EDACURRY2427] Do you like to remove all temporary files? [Y/N] ")
