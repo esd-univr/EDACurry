@@ -47,7 +47,7 @@ class WorkerStdoutStream:
 
 
 # Top-level worker function to avoid pickling/spawn issues with instance methods
-def _execute_simulation(slot_id: int, log_queue: mp.Queue, defect : DefectModel, ngspice_path: Path | str, circuit_path : str | Path, raw_circuit_filename : Path | str, entry_point_filename : str | Path, tmp_log_dir : Path | str, timeout : float, dialect : str) -> List:
+def _execute_simulation(slot_id: int, log_queue: mp.Queue, defect : DefectModel, ngspice_path: Path | str, circuit_path : str | Path, netlist_output_dir : str | Path, raw_circuit_filename : Path | str, entry_point_filename : str | Path, tmp_log_dir : Path | str, timeout : float, dialect : str) -> List:
 
     # Direct all prints in this worker execution to the UI log queue for the assigned core slot
     stream = WorkerStdoutStream(slot_id, log_queue)
@@ -66,7 +66,7 @@ def _execute_simulation(slot_id: int, log_queue: mp.Queue, defect : DefectModel,
 
     print(f"[CampaignDirector::execute_simulation] Starting defect simulation @{defect_id}...\n")
 
-    injector = Injector(circuit_path)
+    injector = Injector(circuit_path, netlist_output_dir)
     simulator_engine = SimulatorEngine(ngspice_path, tmp_log_file, timeout)
 
     ngspice_netlist, warnings = injector.inject_defect(defect)
@@ -191,6 +191,7 @@ class CampaignDirector:
     _defect_universe : List[DefectModel]
     _ngspice_path : Path | str
     _circuit_path : str | Path
+    _netlist_dir : Path | str
     _raw_circuit_filename : Path | str
     _entry_point_filename : Path | str
     _tmp_log_dir : Path | str
@@ -199,7 +200,7 @@ class CampaignDirector:
     _manager : mp.Manager
     _dashboard_app : SimulationDashboard
 
-    def __init__(self, defect_universe : List[DefectModel], ngspice_path : Path | str, circuit_path : str | Path, raw_circuit_filename : Path | str, entry_point_filename : Path | str, tmp_log_dir : Path | str):
+    def __init__(self, defect_universe : List[DefectModel], ngspice_path : Path | str, circuit_path : str | Path, netlist_dir : str | Path, raw_circuit_filename : Path | str, entry_point_filename : Path | str, tmp_log_dir : Path | str):
         print("[CampaignDirector] Initializing campaign director...")
         if defect_universe is None:
             raise ValueError("[CampaignDirector] Initialization error: no defect universe has been provided")
@@ -210,6 +211,9 @@ class CampaignDirector:
         if circuit_path is None:
             raise ValueError("[CampaignDirector] Initialization error: no netlist has been provided")
         self._circuit_path = circuit_path
+        if netlist_dir is None:
+            raise ValueError("[CampaignDirector] Initialization error: no ngspice netlist output directory has been provided")
+        self._netlist_dir = netlist_dir
         if raw_circuit_filename is None:
             raise ValueError("[CampaignDirector] Initialization error: no netlist filename has been provided")
         self._raw_circuit_filename = raw_circuit_filename
@@ -282,6 +286,7 @@ class CampaignDirector:
                             defect,
                             self._ngspice_path,
                             self._circuit_path,
+                            self._netlist_dir,
                             self._raw_circuit_filename,
                             self._entry_point_filename,
                             self._tmp_log_dir,

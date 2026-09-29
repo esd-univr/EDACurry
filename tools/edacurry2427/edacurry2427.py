@@ -27,7 +27,10 @@ def clean():
             print("[EDACURRY2427] tmp_logs directory removed")
         if os.path.exists(simulation_results):
             shutil.rmtree(simulation_results)
-            print("[EDACURRY2427] simulation results directory removed")
+            print("[EDACURRY2427] simulation_results directory removed")
+        if os.path.exists(ngspice_netlists_dir):
+            shutil.rmtree(ngspice_netlists_dir)
+            print("[EDACURRY2427] ngspice_netlists directory removed")
         print("\n")
     except Exception as e:
         print(f"[EDACURRY2427] Unable to remove temporary directory: {e}\n")
@@ -99,6 +102,16 @@ if __name__ == '__main__':
     for var in cmp_vars:
         print(f"> {var}")
     print("\n")
+
+    # Retrieving llm api key
+    llm_api_key = None
+    try:
+        llm_api_key = manifest_data["llm_api_key"]
+    except KeyError:
+        raise ValueError("[EDACURRY2427] Unable to get LLM API key from manifest")
+    if llm_api_key is None:
+        raise ValueError("[EDACURRY2427] Unable to get LLM API key from manifest")
+    print("[EDACURRY2427] LLM API key retrieved\n")
 
     # Retrieving timeout
     timeout = None
@@ -198,7 +211,12 @@ if __name__ == '__main__':
     os.makedirs(simulation_results, exist_ok=True)
     print("[EDACURRY2427] Done\n")
 
-    campaign_director = CampaignDirector(defect_universe, ngspice_path, circuit_filename, raw_circuit_filename, entry_point_filename, tmp_log_dir)
+    print("[EDACURRY2427] Creating directory for ngspice defected netlists...")
+    ngspice_netlists_dir = content_dir/"ngspice_defected_netlists"
+    os.makedirs(ngspice_netlists_dir, exist_ok=True)
+    print("[EDACURRY2427] Done\n")
+
+    campaign_director = CampaignDirector(defect_universe, ngspice_path, circuit_filename, ngspice_netlists_dir, raw_circuit_filename, entry_point_filename, tmp_log_dir)
     print("[EDACURRY2427] Running golden simulation on defect-free netlist...")
     golden_report_file = simulation_results/"golden_report.json"
     if not "golden_report.json" in os.listdir(simulation_results):
@@ -242,7 +260,7 @@ if __name__ == '__main__':
 
     # Running analyzer
     print("[EDACURRY2427] Loading analyzer...")
-    analyzer = Analyzer(defect_universe, tolerance_lim, cmp_vars, simulation_results)
+    analyzer = Analyzer(defect_universe, tolerance_lim, cmp_vars, simulation_results, llm_api_key, circuit_filename, entry_point_filename, ngspice_netlists_dir)
     analyzer.analyze()
     print("[EDACURRY2427] Done\n")
 
