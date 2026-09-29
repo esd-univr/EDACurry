@@ -143,6 +143,7 @@ class Analyzer:
         defect = self._defect_universe_dict[target]
 
         defect_id = defect.get_info()["defect_record"]["id"]
+        print(f"[Analyzer::llm_triage] Defect {defect_id} has not been detected. Starting llm triage to diagnose a possible cause. This may take a while...")
 
         testbench_netlist_path = None
         net_files = os.listdir(self._netlist_dir)
@@ -207,11 +208,13 @@ class Analyzer:
         }}
         """
 
+        """"
         config = types.GenerateContentConfig(
             response_mime_type="application/json",
             temperature=0.1,
-            tools=None  # Disabilita esplicitamente l'automatic function calling
+            tools=None
         )
+        """
 
         # Handle model unavailability
         max_retries = 5
@@ -222,33 +225,27 @@ class Analyzer:
 
         for attempt in range(max_retries):
             try:
-                response = agent.models.generate_content(
+                response = agent.interactions.create(
                     model="gemini-3.8-flash",
-                    contents=triage_prompt,
-                    config=config
+                    input=triage_prompt,
+                    #config=config
                 )
                 llm_response = response.text
                 break
             except (errors.ServerError, errors.APIError) as e:
                 # Intercept 503 (Unavailable) or 429 (Rate limit)
-                """
-                if ("503" in str(e) or "429" in str(e)) and attempt < max_retries - 1:
-                    sleep_time = base_delay * (2 ** attempt)
-                    print(f"[Analyzer::llm_triage] API momentaneamente non disponibile (503/429). Retry {attempt + 1}/{max_retries} tra {sleep_time}s ...")
-                    time.sleep(sleep_time)
-                else:
-                    raise e
-                """
                 if ("503" in str(e)) and attempt < max_retries - 1:
                     sleep_time = base_delay * (2 ** attempt)
-                    print(f"[Analyzer::llm_triage] API temporarily unavailable. Retrying attempt {attempt + 1}/{max_retries} in {sleep_time}s...")
+                    print(f"[Analyzer::llm_triage] Attempt {attempt + 1}/{max_retries} failed: API temporarily unavailable. Retrying in {sleep_time}s...")
                     time.sleep(sleep_time)
                 elif ("429" in str(e)) and attempt < max_retries - 1:
-                    sleep_time = base_delay * (2 ** attempt)
-                    print(f"[Analyzer::llm_triage] Rate limit exceeded: {e}")
+                    print(f"[Analyzer::llm_triage] Rate limit exceeded: {e}\n")
                     break
                 else:
-                    print(f"[Analyzer::llm_triage] An error occurred while asking the llm model: {e}")
+                    print(f"[Analyzer::llm_triage] An error occurred while asking the llm model: {e}\n")
                     break
 
-        print(llm_response, "\n\n")
+        if llm_response:
+            print("[Analyzer::llm_triage] Diagnosis formulated\n")
+            print(llm_response, "\n\n")
+            # TODO: process the response in a proper way

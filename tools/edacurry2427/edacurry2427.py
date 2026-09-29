@@ -227,7 +227,7 @@ if __name__ == '__main__':
     else:
         print("[EDACURRY2427] Golden report already generated\n")
 
-    print("[EDACURRY2427] Retrieving defect simulation report...")
+    print("[EDACURRY2427] Retrieving defect simulation reports...")
     simulated_elements = 0
     sim_files = os.listdir(simulation_results)
     for sim_file in sim_files:
@@ -239,9 +239,9 @@ if __name__ == '__main__':
             report_name = f"{simulation_results}/{cr["target"]}.json"
             with open(report_name, "w") as f:
                 json.dump(cr, f, indent=4)
-        print("[EDACURRY2427] Report acquired. Simulation results have been saved in JSON format\n")
+        print("[EDACURRY2427] Reports acquired. Simulation results have been saved in JSON format\n")
     else:
-        print("[EDACURRY2427] Report already generated\n")
+        print("[EDACURRY2427] Reports already generated\n")
 
     # Check data integrity
     print("[EDACURRY2427] Checking data integrity...")
