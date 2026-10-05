@@ -1,16 +1,17 @@
 # @author: Christian Checchetti (chris22checchetti@gmail.com)
 # Analyzer aim is to analyze simulation reports and establish if a defect is detected or not according to the specified tolerance limit
 
-from typing import List
+from typing import List, Optional
 from .models import DefectModel
 from .utility import DetectionStatus
 from .injector import Injector
 from pathlib import Path
 import os
+import re
 import json
 import time
-from google import genai
-from google.genai import types, errors
+import shutil
+import textwrap
 
 class Analyzer:
     _defect_universe_dict : dict[str, DefectModel]
@@ -55,8 +56,18 @@ class Analyzer:
             raise ValueError("[Analyzer] Initalization error: Missing netlist_dir directory")
         self._netlist_dir = netlist_dir
 
-        # Initialize ai agent
+        # Initialize ai agent (Note: planned for replacement/removal with local reasoning)
         self._ai_agent = genai.Client(api_key = str(self._llm_api_key))
+
+
+    # Helper to extract scalar values matching a variable name from ngspice stdout/stderr output
+    def _extract_metric_value(self, log_content: str, var_name: str) -> Optional[float]:
+        # Matches: var_name followed by '=' or spaces, then an optional sign (+/-), mantissa, and optional exponent (e.g. 1.40288e+00)
+        pattern = rf"{re.escape(var_name)}\s*(?:=|\s)\s*([+-]?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)"
+        match = re.search(pattern, log_content)
+        if match:
+            return float(match.group(1))
+        return None
 
 
     def analyze(self):
@@ -80,59 +91,62 @@ class Analyzer:
         if gs_file is None:
             raise Exception("[Analyzer::analyze] Unable to access golden report file")
 
-        # Find cmp_vars value in golden report file
+        # Find cmp_vars value in golden report file and determine acceptance tolerances
         gs_file_content = gs_file.read()
-        for var in self._cmp_vars:
-            if var in gs_file_content:
-                index = gs_file_content.index(var)
-                tmp_value = ""
-                while index < len(gs_file_content):
-                    if not gs_file_content[index].isdigit():
-                        index += 1
-                    else:
-                        break
-                while gs_file_content[index].isdigit() or gs_file_content[index] in ["+", "-", "e", ".", ","]:
-                    tmp_value += gs_file_content[index]
-                    index += 1
-                cmp_dict[var]["value"] = float(tmp_value)
+        gs_file.close()
 
-                # Set lower and upper limits
-                cmp_dict[var]["lower_limit"] = cmp_dict[var]["value"] - (cmp_dict[var]["value"] * (self._tolerance_limit / 100))
-                cmp_dict[var]["upper_limit"] = cmp_dict[var]["value"] + (cmp_dict[var]["value"] * (self._tolerance_limit / 100))
+        for var in self._cmp_vars:
+            extracted_val = self._extract_metric_value(gs_file_content, var)
+            if extracted_val is not None:
+                cmp_dict[var]["value"] = extracted_val
+
+                # Calculate symmetric absolute delta using abs() to guarantee lower_limit <= upper_limit on negative quantities
+                # Fallback to an absolute epsilon if the nominal value is exactly zero to prevent range collapse [0, 0]
+                delta = abs(extracted_val) * (self._tolerance_limit / 100.0)
+                if delta == 0.0:
+                    delta = 1e-12
+
+                cmp_dict[var]["lower_limit"] = extracted_val - delta
+                cmp_dict[var]["upper_limit"] = extracted_val + delta
+            else:
+                print(f"[Analyzer::analyze] Warning: metric '{var}' was not found in nominal golden simulation output")
 
         # Check cmp_vars in defected reports and verify if a defect is detected
         for simulation_file in simulation_files:
             file_path = self._simulation_results_dir / simulation_file
             with open(file_path, "r") as f:
                 content = json.load(f)
-                text_res = content["simulation_result"]
-                if content["timeout_limit_exceeded"]:
+                text_res = content.get("simulation_result", "")
+                target_defect = content["target"]
+
+                if content.get("timeout_limit_exceeded", False):
                     # If simulation has been halted after timeout limit exceeded, detection status for defect is set to unknown
-                    self._defect_universe_dict[content["target"]].get_record().set_detection_status(DetectionStatus.UNKNOWN)
-                    # TODO: Integrate LLM intervention
-                    self._llm_triage(content["target"], gs_file_content, text_res)
+                    self._defect_universe_dict[target_defect].get_record().set_detection_status(DetectionStatus.UNKNOWN)
+                    self._llm_triage(target_defect, gs_file_content, text_res)
                 else:
+                    # Multi-variable evaluation per IEEE Std 2427:
+                    # A defect is flagged as DETECTED if ANY comparison variable shifts outside acceptance bounds.
+                    is_detected = False
+                    evaluated_any_metric = False
+
                     for var in self._cmp_vars:
-                        if var in text_res:
-                            index = text_res.index(var)
-                            tmp_value = ""
-                            while index < len(text_res):
-                                if not text_res[index].isdigit():
-                                    index += 1
-                                else:
-                                    break
-                            while text_res[index].isdigit() or text_res[index] in ["+", "-", "e", ".", ","]:
-                                tmp_value += text_res[index]
-                                index += 1
-                            f_value = float(tmp_value)
-                            if f_value >= cmp_dict[var]["lower_limit"] and f_value <= cmp_dict[var]["upper_limit"]:
-                                # If value in simulation report is between tolerance limits, defect is set to undetected
-                                self._defect_universe_dict[content["target"]].get_record().set_detection_status(DetectionStatus.UNDETECTED)
-                                # TODO: Call llm
-                                self._llm_triage(content["target"], gs_file_content, text_res)
-                            else:
-                                # If value in simulation report is between tolerance limits, defect is set to detected
-                                self._defect_universe_dict[content["target"]].get_record().set_detection_status(DetectionStatus.DETECTED)
+                        if cmp_dict[var]["value"] is None:
+                            continue
+
+                        f_value = self._extract_metric_value(text_res, var)
+                        if f_value is not None:
+                            evaluated_any_metric = True
+                            if f_value < cmp_dict[var]["lower_limit"] or f_value > cmp_dict[var]["upper_limit"]:
+                                is_detected = True
+                                break
+
+                    if is_detected:
+                        self._defect_universe_dict[target_defect].get_record().set_detection_status(DetectionStatus.DETECTED)
+                    else:
+                        # If all monitored outputs stay within tolerance (or no valid output was measured), status is set to UNDETECTED
+                        self._defect_universe_dict[target_defect].get_record().set_detection_status(DetectionStatus.UNDETECTED)
+                        # Perform triage on undetectable defect runs
+                        self._llm_triage(target_defect, gs_file_content, text_res)
 
         print("[Analyzer::analyze] Analysis concluded")
 
@@ -160,16 +174,36 @@ class Analyzer:
         if testbench_netlist is None:
             raise Exception(f"[Analyzer::llm_triage] Unable to extract netlist file content for defect {defect_id}")
 
-        triage_prompt = f"""
-        You are an expert in analog circuit design, SPICE simulation engines, and the IEEE Std 2427 fault/defect modeling standard.
-        Your objective is to diagnose why an injected defect was NOT detected by the testbench, or why the simulation failed to yield a valid measurement.
-        You know simulations have been performed via the open-source simulator ngspice.
+        system_content = """You are an expert in analog IC design, SPICE simulation engines (ngspice), and the IEEE Std 2427-2025 defect modeling standard.
+        Your role is to diagnose why an injected circuit defect was not detected by a testbench or why the simulation failed.
+
+        STRICT INSTRUCTIONS:
+        1. Output Format:
+           - Output EXCLUSIVELY a single valid JSON object.
+           - Do NOT wrap in markdown code blocks (no ```json or ```).
+           - Do NOT output any introductory text, explanation, or conversational closing.
+           - Text Encoding: Use raw plain ASCII text only. NEVER use LaTeX math mode, subscripts, superscripts, backslashes, or Unicode formatting for variable/node names (e.g., always write "v_bg_val" or "xi79.net011", never $v_{bg\_val}$).
+
+        2. IEEE Std 2427-2025 Classification Rules:
+           - "simulator_issue": ngspice numerical solver convergence failures (e.g., non-convergence at DC op, singular matrix, timestep too small).
+           - "computer_issue": Platform/infrastructure failures (e.g., wall-clock timeout exceeded, memory exhaustion / OOM, process SIGKILL).
+           - "test_issue": SPICE measurement failure (e.g., .MEAS directive failed to find trigger/target threshold, uninitialized output vector).
+           - "structurally_undetectable": Device/branch is cut off, permanently OFF, unpowered, or functionally inactive during the measurement window (e.g., power-down, sleep, reset, or clamp transistors during active functional test).
+           - "potentially_undetectable": Device is actively conducting and on the functional path, but its defect effect is masked by strong negative feedback, common-mode rejection, or operational amplifier saturation.
+           - "within_tolerance": Device is actively conducting and perturba branch currents, but the resulting numerical delta at the monitored output remains strictly inside nominal tolerance bounds.
+
+        3. Remediation Constraints:
+           - For completed simulations where defect is undetected, DO NOT suggest SPICE solver options tuning (e.g., gmin stepping, itl1, itl4, reltol, abstol, or transient timestep reduction).
+           - If a defect is "structurally_undetectable" due to an inactive mode, the remediation MUST propose modifying test stimuli to exercise that state (e.g., toggling power-down/disable pins).
+           - If "within_tolerance" or "potentially_undetectable", propose tighter limits, IDDQ / quiescent current monitoring, or probing internal bias nodes."""
+
+        user_content = f"""Diagnose the following injected defect run.
 
         --- CIRCUIT TOPOLOGY & TESTBENCH ---
-        Simulator's entry point file content:
+        Simulator entry point:
         {self._entry_point_content}
-            
-        Testbench file content:
+
+        Testbench netlist:
         {testbench_netlist}
 
         --- DEFECT METADATA ---
@@ -181,71 +215,31 @@ class Analyzer:
         --- DEFECTIVE SIMULATION LOG (Fault Injection Run) ---
         {defect_simulation}
 
-        --- DIAGNOSTIC INSTRUCTIONS ---
-        1. Execution Failures (Simulation Timeout, Convergence Failure, or Tool Crash):
-            Classify the root cause per IEEE Std 2427 Annex C guidelines:
-            - "simulator_issue": Numerical convergence issues (e.g., non-convergence at DC operating point, timestep too small, Gmin/ITL1/ITL4 limits exceeded).
-            - "computer_issue": CPU wall-clock timeout, out-of-memory (OOM), or execution killed by OS/resource limits.
-            - "test_issue": SPICE measurement failure (e.g., .MEAS evaluation error, missing triggers, uninitialized vectors).
+        --- DIAGNOSTIC WORKFLOW ---
+        1. Trace the affected device's terminal voltages during the .MEAS measurement window (check gate, drain, source, and control signals like disable/enable).
+        2. Determine if the instance is actively conducting or cut off / disabled.
+        3. Select the IEEE Std 2427-2025 category accordingly.
 
-        2. Completed Runs with Undetected Defect (Measurements Within Acceptance Tolerances):
-            - Provide a rigorous topological and physical explanation showing why the defect does not perturb the output metric beyond the defined thresholds.
-            - Classify into one of the following IEEE 2427 undetectable / test escape categories:
-                * "structurally_undetectable": Mechanically redundant branches, equipotential nodes, open dummy devices, inactive ESD/clamp structures in the current operational mode.
-                * "potentially_undetectable": Masked by strong negative feedback, common-mode rejection, or high-gain stage saturation.
-                * "within_tolerance": Defect alters operating point slightly, but the delta remains inside nominal design specification / test acceptance bands.
-
-        --- OUTPUT FORMAT ---
-        Respond EXCLUSIVELY with a valid JSON object. Do not include markdown code block backticks (```json), greetings, or extraneous commentary.
-
-        Structure:
+        --- JSON SCHEMA ---
         {{
             "defect_id": "{defect_id}",
             "diagnosis_type": "unknown_triage" | "undetected_analysis",
+            "circuit_state_analysis": "<Brief deduction: verify terminal voltages/currents during the .MEAS window and confirm if instance is conducting or cut off/inactive>",
             "category": "simulator_issue" | "computer_issue" | "test_issue" | "structurally_undetectable" | "potentially_undetectable" | "within_tolerance",
-            "technical_reason": "<Concise, behavior, breakdown circuit deviation, explanation node numerical of or precise solver technically the voltage/current>",
-            "suggested_remediation": "<Actionable .options, SPICE additional alternative e.g., modified next observation or pin step: stimulus test tighter tolerance, vector,>"
-        }}
+            "technical_reason": "<Concise physical breakdown explaining why simulation halted or why output metric remained within tolerance>",
+            "suggested_remediation": "<Actionable circuit or testbench remediation adhering to system prompt rules>"
+        }}"""
+
+        # Native ChatML template for Qwen models
+        triage_prompt = f"""<|im_start|>system
+        {system_content}<|im_end|>
+        <|im_start|>user
+        {user_content}<|im_end|>
+        <|im_start|>assistant
         """
 
-        """"
-        config = types.GenerateContentConfig(
-            response_mime_type="application/json",
-            temperature=0.1,
-            tools=None
-        )
-        """
+        print(triage_prompt)
 
-        # Handle model unavailability
-        max_retries = 5
-        base_delay = 3
-        llm_response = None
 
-        agent = getattr(self, "_ai_agent", None) or genai.Client(api_key=str(self._llm_api_key))
+        # TODO: Introduce an llm manager module to download and prepare llama.cpp engine and Qwen 2.5-Instruct 7B 4-K-M model
 
-        for attempt in range(max_retries):
-            try:
-                response = agent.interactions.create(
-                    model="gemini-3.8-flash",
-                    input=triage_prompt,
-                    #config=config
-                )
-                llm_response = response.text
-                break
-            except (errors.ServerError, errors.APIError) as e:
-                # Intercept 503 (Unavailable) or 429 (Rate limit)
-                if ("503" in str(e)) and attempt < max_retries - 1:
-                    sleep_time = base_delay * (2 ** attempt)
-                    print(f"[Analyzer::llm_triage] Attempt {attempt + 1}/{max_retries} failed: API temporarily unavailable. Retrying in {sleep_time}s...")
-                    time.sleep(sleep_time)
-                elif ("429" in str(e)) and attempt < max_retries - 1:
-                    print(f"[Analyzer::llm_triage] Rate limit exceeded: {e}\n")
-                    break
-                else:
-                    print(f"[Analyzer::llm_triage] An error occurred while asking the llm model: {e}\n")
-                    break
-
-        if llm_response:
-            print("[Analyzer::llm_triage] Diagnosis formulated\n")
-            print(llm_response, "\n\n")
-            # TODO: process the response in a proper way
