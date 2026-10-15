@@ -104,14 +104,14 @@ if __name__ == '__main__':
     print("\n")
 
     # Retrieving llm api key
-    llm_api_key = None
+    github_token = None
     try:
-        llm_api_key = manifest_data["llm_api_key"]
+        github_token = manifest_data["github_token"]
     except KeyError:
-        raise ValueError("[EDACURRY2427] Unable to get LLM API key from manifest")
-    if llm_api_key is None:
-        raise ValueError("[EDACURRY2427] Unable to get LLM API key from manifest")
-    print("[EDACURRY2427] LLM API key retrieved\n")
+        raise ValueError("[EDACURRY2427] Unable to get GitHub token from manifest")
+    if github_token is None:
+        raise ValueError("[EDACURRY2427] Unable to get GitHub token from manifest")
+    print("[EDACURRY2427] GitHub token retrieved\n")
 
     # Retrieving timeout
     timeout = None
@@ -260,7 +260,7 @@ if __name__ == '__main__':
 
     # Running analyzer
     print("[EDACURRY2427] Loading analyzer...")
-    analyzer = Analyzer(defect_universe, tolerance_lim, cmp_vars, simulation_results, llm_api_key, circuit_filename, entry_point_filename, ngspice_netlists_dir)
+    analyzer = Analyzer(defect_universe, tolerance_lim, cmp_vars, simulation_results, github_token, circuit_filename, entry_point_filename, ngspice_netlists_dir, output_dir)
     analyzer.analyze()
     print("[EDACURRY2427] Done\n")
 

@@ -21,9 +21,23 @@ class DefectType (StrEnum):
     PARAMETRIC = "parametric"
 
 
-class UndetectabilityReason (Enum):
-    pass
+class TechnicalReason (Enum):
+    SIMULATOR_ISSUE = "simulator_issue"
+    COMPUTER_ISSUE = "computer_issue"
+    TEST_ISSUE = "test_issue"
+    STRUCTURALLY_UNDETECTABLE = "structurally_undetectable"
+    POTENTIALLY_UNDETECTABLE = "potentially_undetectable"
+    WITHIN_TOLERANCE = "within_tolerance"
 
+    @classmethod
+    def from_str(cls, value_str: str):
+        try:
+            return cls(value_str)
+        except ValueError:
+            raise ValueError("Unable to identify a valid undetectability reason")
+
+
+"""
 class PotentiallyUndetectabilityReason (UndetectabilityReason):
     OPEN_IN_PARALLEL = "Open in one of N in parallel"
     SHORT_IN_SERIES = "Short in one of N in series"
@@ -53,7 +67,7 @@ class StructuralUndetectabilityReason (UndetectabilityReason):
             return cls(value_str)
         except ValueError:
             return cls.OTHER
-
+"""
 
 class DetectionStatus(StrEnum):
     UNDETECTED = "undetected"
@@ -78,13 +92,14 @@ class DefectRecord:
                                                                     # group of equivalent defects
     _merged: Optional[int]                                          # indicates the optional number of parallel elements
                                                                     # merged before injection
-    _undetectable: bool                                             # flag to verify if a defect is potentially
+    _undetectability_reson: Optional[TechnicalReason]               # to be specified in case of undetectability
                                                                     # undetectable. Default is None (pre-simulation)
-    _undetectability_reason: Optional[UndetectabilityReason]        # if undetectable = True a reason of undetectability
+    _technical_reason: Optional[str]                                # if undetectable must be specified
                                                                     # must be specified
     _0_weight_justification: Optional[str]                          # the reason behind a 0 weighed element must be
                                                                     # provided
     _detection_status: DetectionStatus                              # defect detection status. Default is unsimulated
+    _suggested_remediation: Optional[str]                           # suggestions to detect undetectability defects
 
 
 
@@ -112,7 +127,7 @@ class DefectRecord:
                 self._merged = merged
             else:
                 self._merged = None
-            self._undetectable = None
+            self._technical_reason = None
             self._undetectability_reason = None
             if weight == 0:
                 if zero_weight_justification:
@@ -122,36 +137,35 @@ class DefectRecord:
             else:
                 self._0_weight_justification = zero_weight_justification
             self._detection_status = DetectionStatus.UNSIMULATED
+            self._suggested_remediation = None
         except (Exception) as e:
             raise Exception(f"[DefectRecord] Initialization error: {e}\n")
 
 
-
-    def set_undetectable(self, undetectable):
-        self._undetectable = undetectable
-
-    def get_undetectable(self):
-        return self._undetectable
-
-
-    def set_undetectability_reason(self, undet_type, reason):
-        if undet_type == "PUR":
-            self._undetectability_reason = PotentiallyUndetectabilityReason.from_str(reason)
-        elif undet_type == "SUR":
-            self._undetectability_reason = StructuralUndetectabilityReason.from_str(reason)
-        else:
-            raise Exception(f"[DefectRecord] Unable to set the specified undetectability reason. {str(undet_type)} is not a valid type\n")
-
+    def set_technical_reason(self, reason : str):
+        self._technical_reason = reason
 
 
     def set_detection_status(self, status : DetectionStatus):
         self._detection_status = status
 
+
     def get_detection_status(self):
         return self._detection_status
 
 
+    def set_suggested_remediation(self, remediation : str):
+        self._suggested_remediation = remediation
+
+
+    def set_undetectability_reason(self, undetectability_reason : str):
+        self._undetectability_reason = TechnicalReason.from_str(undetectability_reason)
+
+
     def get_info(self):
+        undet_reason = None
+        if self._undetectability_reason:
+            undet_reason = self._undetectability_reason.value
         dr_dict = {
             "id": self._id,
             "component_category": self._component_category,
@@ -159,12 +173,13 @@ class DefectRecord:
             "instance_name": self._instance_name,
             "node_terminals": self._node_terminals,
             "weight": self._weight,
-            "collapsed": self._collapsed,
-            "merged": self._undetectable,
-            "undetectable": self._undetectable,
-            "undetectability_reason": self._undetectability_reason,
             "0_weight_justification": self._0_weight_justification,
-            "detection_status": self._detection_status
+            "collapsed": self._collapsed,
+            "merged": self._merged,
+            "detection_status": self._detection_status,
+            "undetectability_reason": undet_reason,
+            "technical_reason": self._technical_reason,
+            "suggested_remediation": self._suggested_remediation
         }
         return dr_dict
 

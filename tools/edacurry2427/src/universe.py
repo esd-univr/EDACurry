@@ -857,7 +857,7 @@ class DefectEngine:
 
     # Defect builder: generates a defect object from the defect metadata
     @classmethod
-    def defect_builder(cls, defect_data):
+    def defect_builder(cls, defect_data : dict):
         if not defect_data["No_2427_defect"] and defect_data["weight"] > 0:
             if defect_data["defect_type"] == DefectType.SHORT:
                 return ShortModel(
