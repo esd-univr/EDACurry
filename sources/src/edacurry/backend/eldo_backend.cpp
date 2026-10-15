@@ -6,7 +6,6 @@
 
 #include "edacurry/backend/eldo_backend.hpp"
 #include "edacurry/classes.hpp"
-
 #include <iostream>
 
 namespace edacurry::backend
@@ -106,8 +105,7 @@ int EldoBackend::visitControlScope(const std::shared_ptr<structure::ControlScope
     return 0;
 }
 
-int EldoBackend::visitControl(const std::shared_ptr<structure::Control> &e)
-{
+int EldoBackend::visitControl(const std::shared_ptr<structure::Control> &e) {
     if (e->getControlType() == ctrl_option) {
         ss << ".option";
     } else if (e->getControlType() == ctrl_save) {

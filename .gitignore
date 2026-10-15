@@ -95,3 +95,7 @@ tools/LCPToolkit/storage/system_manifest
 tools/LCPToolkit/storage/vector_db
 
 edacurry.cpython-38-darwin.so
+
+
+# tools venv
+tools/.venv
