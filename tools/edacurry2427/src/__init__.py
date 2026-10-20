@@ -25,3 +25,5 @@ from .campaign_director import CampaignDirector
 from .analyzer import Analyzer
 
 from .llm_manager import LlmManager
+
+from .coverage_report_builder import CoverageReportBuilder

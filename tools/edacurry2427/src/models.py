@@ -508,7 +508,7 @@ class ParametricModel(DefectModel):
                 else:
                     self._defective_value = min(val1, val2)
 
-            self._record = DefectRecord(self._defect_id, component_category, DefectType.OPEN, self._defect_instance, [], self._name, self._multiplier, self._weight, self._collapsed, self._merged, self._z_w_j)
+            self._record = DefectRecord(self._defect_id, component_category, DefectType.PARAMETRIC, self._defect_instance, [], self._name, self._multiplier, self._weight, self._collapsed, self._merged, self._z_w_j)
         except (Exception) as e:
             print(f"[ParametricModel] Initialization error [{defect_id} @{defect_instance} - {name}]: {e}\n")
 

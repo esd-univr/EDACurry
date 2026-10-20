@@ -42,11 +42,14 @@ class DefectEngine:
     _universe_details : List = []
 
     target_parameters = {
-        "resistor" : ["r", "value", "l", "w", "rhs"],
-        "capacitor" : ["c", "cap", "area", "tox", "thick"],
-        "inductor" : ["l"],
-        "diode" : ["is"],
-        "mosfet" : ["w", "l", "vth0", "tox", "thick"]
+        "resistor": ["r", "value", "l", "w", "rhs"],
+        "capacitor": ["c", "cap", "area", "tox", "thick"],
+        "inductor": ["l"],
+        "diode": ["is"],
+        "mosfet": ["w", "l", "vth0", "tox", "thick"],
+        "mesfet": ["vt0", "beta", "alpha", "lambda", "rd", "rs", "is"],
+        "jfet": ["vto", "vt0", "beta", "lambda", "rd", "rs", "is", "cgs", "cgd"],
+        "bjt": ["is", "bf", "vaf", "rb", "rc", "re", "cje", "cjc"]
     }
 
     def __init__(self, circuit: edacurry.Circuit, filename : Path | str, manifest_data: dict):
@@ -104,7 +107,7 @@ class DefectEngine:
                     no_2427_defect = False
                     z_w_j = None
                     if components[index].name in self._excluded_target["components"][0]:
-                        no_2427_defect = False
+                        no_2427_defect = True
                         z_w_j = f"Component {components[index].name} is marked as excluded from analysis by the manifest file"
 
                     # Defect generation
@@ -374,9 +377,12 @@ class DefectEngine:
                         if not no_2427_defect:
                             comp_master = signatures[index][0]
                             # Check if the component instance (throw the component master) have to be excluded in reference of the manifest
-                            if comp_master in self._excluded_target["content"]:
-                                short_weight = 0
-                                z_w_j = f"{comp_master} component is excluded by the analysis as indicated in the manifest file"
+                            excluded_contents = self._excluded_target["contents"]
+                            for excl_cont in excluded_contents:
+                                if comp_master == excl_cont["name"]:
+                                    short_weight = 0
+                                    z_w_j = f"{comp_master} component is excluded by the analysis as indicated in the manifest file"
+                                    break
 
                         if not no_2427_defect:
                             # Short
@@ -842,11 +848,814 @@ class DefectEngine:
                         }
                         defect_metadata.append(record)
 
+
+                    # MESFETS
+                    elif category == ComponentCategory.MESFET:
+                        # Get nodes
+                        nodes = signatures[index][1]
+
+                        # nodes order: D G S
+                        drain = nodes[0]
+                        gate = nodes[1]
+                        source = nodes[2]
+                        calculate_weight = True
+                        short_weight = 0
+
+                        # Find parameters
+                        parameters = signatures[index][2]
+                        m_param = None
+                        area_param = None
+                        w_param = None
+                        l_param = None
+
+                        for parameter in parameters:
+                            if parameter[0].lower() == "m":
+                                m_param = parameter
+                            if parameter[0].lower() == "area":
+                                area_param = parameter
+                            if parameter[0].lower() == "w":
+                                w_param = parameter
+                            if parameter[0].lower() == "l":
+                                l_param = parameter
+
+                        if m_param is None:
+                            m_param = ('M', 1)
+
+                        # Get component master, if component is allowed to be analysed
+                        if not no_2427_defect:
+                            comp_master = signatures[index][0]
+                            # Check if the component instance (through the component master) has to be excluded in reference of the manifest
+                            excluded_contents = self._excluded_target["contents"]
+                            for excl_cont in excluded_contents:
+                                if comp_master == excl_cont["name"]:
+                                    short_weight = 0
+                                    z_w_j = f"{comp_master} component is excluded by the analysis as indicated in the manifest file"
+                                    break
+
+                        # Components merged during optimization
+                        merged = None
+                        merged = m_param[1]
+
+                        if not no_2427_defect:
+
+                            # Short
+                            # All combinations of coupled-nodes for a 3-terminal MESFET: DG - DS - GS
+                            coupled_nodes = ((drain, gate), (drain, source), (gate, source))
+                            for couple in coupled_nodes:
+                                calculate_weight = True
+                                short_weight = 0
+                                z_w_j = None
+
+                                if calculate_weight and couple[0] == couple[1]:
+                                    short_weight = 0
+                                    z_w_j = "Short has a weight of 0 because terminals are nominally connected in the design"
+                                    calculate_weight = False
+
+                                if calculate_weight:
+                                    if w_param is not None and l_param is not None:
+                                        if couple[1] == gate or couple[0] == gate:
+                                            short_weight = float(w_param[1])
+                                        elif couple[0] == drain and couple[1] == source:
+                                            if float(l_param[1]) > 2e-6:
+                                                short_weight = 0
+                                                z_w_j = "Source-drain shorts are assigned a weight of 0 in this design for transistors with gates longer than 2 µm, since defects larger than 1.5 µm are not considered reasonably likely"
+                                            else:
+                                                short_weight = (float(w_param[1]) / float(l_param[1])) * 0.35
+                                    elif area_param is not None:
+                                        short_weight = math.sqrt(float(area_param[1]) / (1e-6 ** 2))
+                                    else:
+                                        # Default fallback value precised by the standard
+                                        short_weight = 1.0
+
+                                short_defect = {
+                                    "No_2427_defect": no_2427_defect,
+                                    "component_category": category.value,
+                                    "defect_type": DefectType.SHORT,
+                                    "open_gate": False,
+                                    # "circuit": self._circuit,
+                                    "defect_id": self._id_generator.generate_id(DefectType.SHORT),
+                                    "defect_instance": f"{content.name}.{components[index].name}",
+                                    "name": "short_model",
+                                    "multiplier": str(int(m_param[1])),
+                                    "weight": short_weight * int(m_param[1]),
+                                    "collapsed": None,
+                                    "merged": merged,
+                                    "z_w_j": z_w_j,
+                                    "n1": couple[0],
+                                    "n2": couple[1]
+                                }
+                                defect_metadata.append(short_defect)
+
+                            # Open
+                            # Inject an open on every terminal (Drain, Gate, Source) with uniform weight (MESFET has a Schottky junction gate, not an insulated oxide gate)
+                            weight = 1.0
+                            z_w_j = None
+
+                            # Drain
+                            drain_open_defect = {
+                                "No_2427_defect": no_2427_defect,
+                                "component_category": category.value,
+                                "defect_type": DefectType.OPEN,
+                                "open_gate": False,
+                                # "circuit": self._circuit,
+                                "defect_id": self._id_generator.generate_id(DefectType.OPEN),
+                                "defect_instance": f"{content.name}.{components[index].name}",
+                                "name": "open_model",
+                                "multiplier": str(int(m_param[1])),
+                                "weight": weight * int(m_param[1]),
+                                "collapsed": None,
+                                "merged": merged,
+                                "z_w_j": z_w_j,
+                                "n1": drain,
+                                "n2": drain
+                            }
+                            defect_metadata.append(drain_open_defect)
+
+                            # Gate
+                            gate_open_defect = {
+                                "No_2427_defect": no_2427_defect,
+                                "component_category": category.value,
+                                "defect_type": DefectType.OPEN,
+                                "open_gate": False,
+                                # "circuit": self._circuit,
+                                "defect_id": self._id_generator.generate_id(DefectType.OPEN),
+                                "defect_instance": f"{content.name}.{components[index].name}",
+                                "name": "open_model",
+                                "multiplier": str(int(m_param[1])),
+                                "weight": weight * int(m_param[1]),
+                                "collapsed": None,
+                                "merged": merged,
+                                "z_w_j": z_w_j,
+                                "n1": gate,
+                                "n2": gate
+                            }
+                            defect_metadata.append(gate_open_defect)
+
+                            # Source
+                            source_open_defect = {
+                                "No_2427_defect": no_2427_defect,
+                                "component_category": category.value,
+                                "defect_type": DefectType.OPEN,
+                                "open_gate": False,
+                                # "circuit": self._circuit,
+                                "defect_id": self._id_generator.generate_id(DefectType.OPEN),
+                                "defect_instance": f"{content.name}.{components[index].name}",
+                                "name": "open_model",
+                                "multiplier": str(int(m_param[1])),
+                                "weight": weight * int(m_param[1]),
+                                "collapsed": None,
+                                "merged": merged,
+                                "z_w_j": z_w_j,
+                                "n1": source,
+                                "n2": source
+                            }
+                            defect_metadata.append(source_open_defect)
+
+                            # Parametric
+                            suitable_params = []
+                            for parameter in parameters:
+                                if parameter[0].lower() in self.target_parameters["mesfet"]:
+                                    suitable_params.append(parameter)
+
+                            weight = 1.0
+                            calculate_weight = True
+
+                            for parameter in parameters:
+                                # Check if parameter is marked as excluded
+                                if len(self._excluded_target["parameters"]) > 0:
+                                    for excluded_param in self._excluded_target["parameters"]:
+                                        if excluded_param["name"] is not None and parameter[0].lower() == \
+                                                excluded_param["name"].lower():
+                                            calculate_weight = False
+                                            weight = 0
+                                            z_w_j = f"Parameter {parameter[0]} is excluded from analysis by the manifest file"
+                                            break
+
+                                # Check if parameter is a parasitic element
+                                if calculate_weight and parameter not in suitable_params:
+                                    weight = 0
+
+                                    if parameter[0].lower() != "m":
+                                        z_w_j = "Nominal value is below the specified threshold for design-intent elements and is assumed to be a parasitic element"
+                                    else:
+                                        z_w_j = "Multiplier parameter"
+
+                                # MIN
+                                if parameter[0].lower() != "m":
+                                    deviation_corner, pdk_corner_value_min = ComponentCategorizer.get_pdk_corner_value(category, "MIN", float(parameter[1]), None)
+                                else:
+                                    deviation_corner = None
+                                    pdk_corner_value_min = 0
+
+                                if pdk_corner_value_min is not None:
+                                    parametric_defect_min = {
+                                        "No_2427_defect": no_2427_defect,
+                                        "component_category": category.value,
+                                        "defect_type": DefectType.PARAMETRIC,
+                                        "open_gate": False,
+                                        # "circuit": self._circuit,
+                                        "defect_id": self._id_generator.generate_id(DefectType.PARAMETRIC),
+                                        "defect_instance": f"{content.name}.{components[index].name}",
+                                        "name": "MIN",
+                                        "multiplier": str(int(m_param[1])),
+                                        "weight": weight,
+                                        "collapsed": None,
+                                        "merged": merged,
+                                        "z_w_j": z_w_j,
+                                        "parameter_name": parameter[0],
+                                        "typical_value": float(parameter[1]),
+                                        "deviation_corner": deviation_corner,
+                                        "pdk_corner_value": pdk_corner_value_min
+                                    }
+                                    defect_metadata.append(parametric_defect_min)
+
+                                # MAX
+                                if parameter[0].lower() != "m":
+                                    deviation_corner, pdk_corner_value_max = ComponentCategorizer.get_pdk_corner_value(category, "MAX", float(parameter[1]), None)
+                                else:
+                                    deviation_corner = None
+                                    pdk_corner_value_max = 0
+
+                                if pdk_corner_value_max is not None:
+                                    parametric_defect_max = {
+                                        "No_2427_defect": no_2427_defect,
+                                        "component_category": category.value,
+                                        "defect_type": DefectType.PARAMETRIC,
+                                        # "circuit": self._circuit,
+                                        "open_gate": False,
+                                        "defect_id": self._id_generator.generate_id(DefectType.PARAMETRIC),
+                                        "defect_instance": f"{content.name}.{components[index].name}",
+                                        "name": "MAX",
+                                        "multiplier": str(int(m_param[1])),
+                                        "weight": weight,
+                                        "collapsed": None,
+                                        "merged": merged,
+                                        "z_w_j": z_w_j,
+                                        "parameter_name": parameter[0],
+                                        "typical_value": float(parameter[1]),
+                                        "deviation_corner": deviation_corner,
+                                        "pdk_corner_value": pdk_corner_value_max
+                                    }
+
+                                    defect_metadata.append(parametric_defect_max)
+
+                        else:
+                            record = {
+                                "No_2427_defect": no_2427_defect,
+                                "component_category": category.value,
+                                "defect_instance": f"{content.name}.{components[index].name}",
+                                "z_w_j": z_w_j
+                            }
+                            defect_metadata.append(record)
+
+                    # BJTS
+                    elif category == ComponentCategory.BJT:
+                        # Get nodes
+                        nodes = signatures[index][1]
+
+                        # nodes order: C B E [S]
+                        collector = nodes[0]
+                        base = nodes[1]
+                        emitter = nodes[2]
+                        substrate = nodes[3] if len(nodes) > 3 else None
+                        calculate_weight = True
+                        short_weight = 0
+
+                        # Find parameters
+                        parameters = signatures[index][2]
+                        m_param = None
+                        area_param = None
+
+                        for parameter in parameters:
+                            if parameter[0].lower() == "m":
+                                m_param = parameter
+                            if parameter[0].lower() == "area":
+                                area_param = parameter
+
+                        if m_param is None:
+                            m_param = ('M', 1)
+
+                        # Get component master, if component is allowed to be analysed
+                        if not no_2427_defect:
+                            comp_master = signatures[index][0]
+
+                            # Check if the component instance (through the component master) has to be excluded in reference of the manifest
+                            excluded_contents = self._excluded_target["contents"]
+                            for excl_cont in excluded_contents:
+                                if comp_master == excl_cont["name"]:
+                                    short_weight = 0
+                                    z_w_j = f"{comp_master} component is excluded by the analysis as indicated in the manifest file"
+                                    break
+
+                        # Components merged during optimization
+                        merged = None
+                        merged = m_param[1]
+
+                        if not no_2427_defect:
+                            # Short
+                            # All combinations of coupled-nodes must be considered (3 shorts for 3-terminal BJT, 6 shorts if substrate is present)
+                            if substrate is not None:
+                                coupled_nodes = (
+                                    (collector, base), (collector, emitter), (collector, substrate),
+                                    (base, emitter), (base, substrate), (emitter, substrate)
+                                )
+                            else:
+                                coupled_nodes = ((collector, base), (collector, emitter), (base, emitter))
+
+                            for couple in coupled_nodes:
+                                calculate_weight = True
+                                short_weight = 0
+                                z_w_j = None
+
+                                if calculate_weight and couple[0] == couple[1]:
+                                    short_weight = 0
+                                    z_w_j = "Short has a weight of 0 because terminals are nominally connected in the design"
+                                    calculate_weight = False
+
+                                if calculate_weight:
+                                    if substrate is not None and couple[1] == substrate:
+                                        # Substrate short has uniform weight
+                                        short_weight = 1.0
+                                    elif area_param is not None:
+                                        short_weight = math.sqrt(float(area_param[1]) / (1e-6 ** 2))
+                                    else:
+                                        # Default fallback value precised by the standard
+                                        short_weight = 1.0
+
+                                short_defect = {
+                                    "No_2427_defect": no_2427_defect,
+                                    "component_category": category.value,
+                                    "defect_type": DefectType.SHORT,
+                                    "open_gate": False,
+                                    # "circuit": self._circuit,
+                                    "defect_id": self._id_generator.generate_id(DefectType.SHORT),
+                                    "defect_instance": f"{content.name}.{components[index].name}",
+                                    "name": "short_model",
+                                    "multiplier": str(int(m_param[1])),
+                                    "weight": short_weight * int(m_param[1]),
+                                    "collapsed": None,
+                                    "merged": merged,
+                                    "z_w_j": z_w_j,
+                                    "n1": couple[0],
+                                    "n2": couple[1]
+                                }
+                                defect_metadata.append(short_defect)
+
+                            # Open
+                            # Inject an open on every terminal. If area parameter is present, weight scales inversely with area, otherwise uniform weight (1.0)
+                            if area_param is not None:
+                                open_weight = (1e-6 ** 2) / float(area_param[1])
+                            else:
+                                open_weight = 1.0
+
+                            z_w_j = None
+
+                            # Collector
+                            collector_open_defect = {
+                                "No_2427_defect": no_2427_defect,
+                                "component_category": category.value,
+                                "defect_type": DefectType.OPEN,
+                                "open_gate": False,
+                                # "circuit": self._circuit,
+                                "defect_id": self._id_generator.generate_id(DefectType.OPEN),
+                                "defect_instance": f"{content.name}.{components[index].name}",
+                                "name": "open_model",
+                                "multiplier": str(int(m_param[1])),
+                                "weight": open_weight * int(m_param[1]),
+                                "collapsed": None,
+                                "merged": merged,
+                                "z_w_j": z_w_j,
+                                "n1": collector,
+                                "n2": collector
+                            }
+                            defect_metadata.append(collector_open_defect)
+
+                            # Base
+                            base_open_defect = {
+                                "No_2427_defect": no_2427_defect,
+                                "component_category": category.value,
+                                "defect_type": DefectType.OPEN,
+                                "open_gate": False,
+                                # "circuit": self._circuit,
+                                "defect_id": self._id_generator.generate_id(DefectType.OPEN),
+                                "defect_instance": f"{content.name}.{components[index].name}",
+                                "name": "open_model",
+                                "multiplier": str(int(m_param[1])),
+                                "weight": open_weight * int(m_param[1]),
+                                "collapsed": None,
+                                "merged": merged,
+                                "z_w_j": z_w_j,
+                                "n1": base,
+                                "n2": base
+                            }
+                            defect_metadata.append(base_open_defect)
+
+                            # Emitter
+                            emitter_open_defect = {
+                                "No_2427_defect": no_2427_defect,
+                                "component_category": category.value,
+                                "defect_type": DefectType.OPEN,
+                                "open_gate": False,
+                                # "circuit": self._circuit,
+                                "defect_id": self._id_generator.generate_id(DefectType.OPEN),
+                                "defect_instance": f"{content.name}.{components[index].name}",
+                                "name": "open_model",
+                                "multiplier": str(int(m_param[1])),
+                                "weight": open_weight * int(m_param[1]),
+                                "collapsed": None,
+                                "merged": merged,
+                                "z_w_j": z_w_j,
+                                "n1": emitter,
+                                "n2": emitter
+                            }
+                            defect_metadata.append(emitter_open_defect)
+
+                            # Substrate (if present in the 4-terminal BJT signature)
+                            if substrate is not None:
+                                sub_weight = 0.2
+                                z_w_j = None
+
+                                if not self._manifest_data["include_bulk_opens"]:
+                                    sub_weight = 0
+                                    z_w_j = "Since transistors share a common substrate, opens in the substrate connection are deemed reasonably unlikely and assigned a weight of 0, as indicated in the manifest file"
+
+                                substrate_open_defect = {
+                                    "No_2427_defect": no_2427_defect,
+                                    "component_category": category.value,
+                                    "defect_type": DefectType.OPEN,
+                                    "open_gate": False,
+                                    # "circuit": self._circuit,
+                                    "defect_id": self._id_generator.generate_id(DefectType.OPEN),
+                                    "defect_instance": f"{content.name}.{components[index].name}",
+                                    "name": "open_model",
+                                    "multiplier": str(int(m_param[1])),
+                                    "weight": sub_weight,                       # Substrate is a shared element, so its weight has not to be multiplied by M
+                                    "collapsed": None,
+                                    "merged": merged,
+                                    "z_w_j": z_w_j,
+                                    "n1": substrate,
+                                    "n2": substrate
+                                }
+                                defect_metadata.append(substrate_open_defect)
+
+                            # Parametric
+                            suitable_params = []
+                            for parameter in parameters:
+                                if parameter[0].lower() in self.target_parameters["bjt"]:
+                                    suitable_params.append(parameter)
+
+                            weight = 1.0
+                            calculate_weight = True
+
+                            for parameter in parameters:
+                                # Check if parameter is marked as excluded
+                                if len(self._excluded_target["parameters"]) > 0:
+                                    for excluded_param in self._excluded_target["parameters"]:
+                                        if excluded_param["name"] is not None and parameter[0].lower() == excluded_param["name"].lower():
+                                            calculate_weight = False
+                                            weight = 0
+                                            z_w_j = f"Parameter {parameter[0]} is excluded from analysis by the manifest file"
+                                            break
+
+                                # Check if parameter is a parasitic element
+                                if calculate_weight and parameter not in suitable_params:
+                                    weight = 0
+                                    if parameter[0].lower() != "m":
+                                        z_w_j = "Nominal value is below the specified threshold for design-intent elements and is assumed to be a parasitic element"
+                                    else:
+                                        z_w_j = "Multiplier parameter"
+
+                                # MIN
+                                if parameter[0].lower() != "m":
+                                    deviation_corner, pdk_corner_value_min = ComponentCategorizer.get_pdk_corner_value(category, "MIN", float(parameter[1]), None)
+                                else:
+                                    deviation_corner = None
+                                    pdk_corner_value_min = 0
+
+                                if pdk_corner_value_min is not None:
+                                    parametric_defect_min = {
+                                        "No_2427_defect": no_2427_defect,
+                                        "component_category": category.value,
+                                        "defect_type": DefectType.PARAMETRIC,
+                                        "open_gate": False,
+                                        # "circuit": self._circuit,
+                                        "defect_id": self._id_generator.generate_id(DefectType.PARAMETRIC),
+                                        "defect_instance": f"{content.name}.{components[index].name}",
+                                        "name": "MIN",
+                                        "multiplier": str(int(m_param[1])),
+                                        "weight": weight,
+                                        "collapsed": None,
+                                        "merged": merged,
+                                        "z_w_j": z_w_j,
+                                        "parameter_name": parameter[0],
+                                        "typical_value": float(parameter[1]),
+                                        "deviation_corner": deviation_corner,
+                                        "pdk_corner_value": pdk_corner_value_min
+                                    }
+                                    defect_metadata.append(parametric_defect_min)
+
+                                # MAX
+                                if parameter[0].lower() != "m":
+                                    deviation_corner, pdk_corner_value_max = ComponentCategorizer.get_pdk_corner_value(
+                                        category, "MAX", float(parameter[1]), None)
+                                else:
+                                    deviation_corner = None
+                                    pdk_corner_value_max = 0
+
+                                if pdk_corner_value_max is not None:
+                                    parametric_defect_max = {
+                                        "No_2427_defect": no_2427_defect,
+                                        "component_category": category.value,
+                                        "defect_type": DefectType.PARAMETRIC,
+                                        # "circuit": self._circuit,
+                                        "open_gate": False,
+                                        "defect_id": self._id_generator.generate_id(DefectType.PARAMETRIC),
+                                        "defect_instance": f"{content.name}.{components[index].name}",
+                                        "name": "MAX",
+                                        "multiplier": str(int(m_param[1])),
+                                        "weight": weight,
+                                        "collapsed": None,
+                                        "merged": merged,
+                                        "z_w_j": z_w_j,
+                                        "parameter_name": parameter[0],
+                                        "typical_value": float(parameter[1]),
+                                        "deviation_corner": deviation_corner,
+                                        "pdk_corner_value": pdk_corner_value_max
+                                    }
+                                    defect_metadata.append(parametric_defect_max)
+
+                        else:
+                            record = {
+                                "No_2427_defect": no_2427_defect,
+                                "component_category": category.value,
+                                "defect_instance": f"{content.name}.{components[index].name}",
+                                "z_w_j": z_w_j
+                            }
+
+                            defect_metadata.append(record)
+
+                    # JFETS
+                    elif category == ComponentCategory.JFET:
+                        # Get nodes
+                        nodes = signatures[index][1]
+
+                        # nodes order: D G S
+                        drain = nodes[0]
+                        gate = nodes[1]
+                        source = nodes[2]
+
+                        calculate_weight = True
+                        short_weight = 0
+
+                        # Find parameters
+                        parameters = signatures[index][2]
+                        m_param = None
+                        area_param = None
+                        w_param = None
+                        l_param = None
+
+                        for parameter in parameters:
+                            if parameter[0].lower() == "m":
+                                m_param = parameter
+                            if parameter[0].lower() == "area":
+                                area_param = parameter
+                            if parameter[0].lower() == "w":
+                                w_param = parameter
+                            if parameter[0].lower() == "l":
+                                l_param = parameter
+
+                        if m_param is None:
+                            m_param = ('M', 1)
+
+                        # Get component master, if component is allowed to be analysed
+                        if not no_2427_defect:
+                            comp_master = signatures[index][0]
+
+                            # Check if the component instance (through the component master) has to be excluded in reference of the manifest
+                            excluded_contents = self._excluded_target["contents"]
+                            for excl_cont in excluded_contents:
+                                if comp_master == excl_cont["name"]:
+                                    short_weight = 0
+                                    z_w_j = f"{comp_master} component is excluded by the analysis as indicated in the manifest file"
+                                    break
+
+                        # Components merged during optimization
+                        merged = None
+                        merged = m_param[1]
+
+                        if not no_2427_defect:
+                            # Short
+                            # All combinations of coupled-nodes for a 3-terminal JFET: DG - DS - GS
+                            coupled_nodes = ((drain, gate), (drain, source), (gate, source))
+
+                            for couple in coupled_nodes:
+                                calculate_weight = True
+                                short_weight = 0
+                                z_w_j = None
+
+                                if calculate_weight and couple[0] == couple[1]:
+                                    short_weight = 0
+                                    z_w_j = "Short has a weight of 0 because terminals are nominally connected in the design"
+                                    calculate_weight = False
+
+                                if calculate_weight:
+                                    if w_param is not None and l_param is not None:
+                                        if couple[1] == gate or couple[0] == gate:
+                                            short_weight = float(w_param[1])
+                                        elif couple[0] == drain and couple[1] == source:
+                                            if float(l_param[1]) > 2e-6:
+                                                short_weight = 0
+                                                z_w_j = "Source-drain shorts are assigned a weight of 0 in this design for transistors with gates longer than 2 µm, since defects larger than 1.5 µm are not considered reasonably likely"
+                                            else:
+                                                short_weight = (float(w_param[1]) / float(l_param[1])) * 0.35
+                                    elif area_param is not None:
+                                        short_weight = math.sqrt(float(area_param[1]) / (1e-6 ** 2))
+                                    else:
+                                        # Default fallback value precised by the standard
+                                        short_weight = 1.0
+
+                                short_defect = {
+                                    "No_2427_defect": no_2427_defect,
+                                    "component_category": category.value,
+                                    "defect_type": DefectType.SHORT,
+                                    "open_gate": False,
+                                    # "circuit": self._circuit,
+                                    "defect_id": self._id_generator.generate_id(DefectType.SHORT),
+                                    "defect_instance": f"{content.name}.{components[index].name}",
+                                    "name": "short_model",
+                                    "multiplier": str(int(m_param[1])),
+                                    "weight": short_weight * int(m_param[1]),
+                                    "collapsed": None,
+                                    "merged": merged,
+                                    "z_w_j": z_w_j,
+                                    "n1": couple[0],
+                                    "n2": couple[1]
+                                }
+                                defect_metadata.append(short_defect)
+
+                            # Open
+                            # Inject an open on every terminal (Drain, Gate, Source) with uniform weight (JFET has a PN-junction gate, not an insulated oxide gate)
+                            weight = 1.0
+                            z_w_j = None
+
+                            # Drain
+                            drain_open_defect = {
+                                "No_2427_defect": no_2427_defect,
+                                "component_category": category.value,
+                                "defect_type": DefectType.OPEN,
+                                "open_gate": False,
+                                # "circuit": self._circuit,
+                                "defect_id": self._id_generator.generate_id(DefectType.OPEN),
+                                "defect_instance": f"{content.name}.{components[index].name}",
+                                "name": "open_model",
+                                "multiplier": str(int(m_param[1])),
+                                "weight": weight * int(m_param[1]),
+                                "collapsed": None,
+                                "merged": merged,
+                                "z_w_j": z_w_j,
+                                "n1": drain,
+                                "n2": drain
+                            }
+                            defect_metadata.append(drain_open_defect)
+
+                            # Gate
+                            gate_open_defect = {
+                                "No_2427_defect": no_2427_defect,
+                                "component_category": category.value,
+                                "defect_type": DefectType.OPEN,
+                                "open_gate": False,
+                                # "circuit": self._circuit,
+                                "defect_id": self._id_generator.generate_id(DefectType.OPEN),
+                                "defect_instance": f"{content.name}.{components[index].name}",
+                                "name": "open_model",
+                                "multiplier": str(int(m_param[1])),
+                                "weight": weight * int(m_param[1]),
+                                "collapsed": None,
+                                "merged": merged,
+                                "z_w_j": z_w_j,
+                                "n1": gate,
+                                "n2": gate
+                            }
+                            defect_metadata.append(gate_open_defect)
+
+                            # Source
+                            source_open_defect = {
+                                "No_2427_defect": no_2427_defect,
+                                "component_category": category.value,
+                                "defect_type": DefectType.OPEN,
+                                "open_gate": False,
+                                # "circuit": self._circuit,
+                                "defect_id": self._id_generator.generate_id(DefectType.OPEN),
+                                "defect_instance": f"{content.name}.{components[index].name}",
+                                "name": "open_model",
+                                "multiplier": str(int(m_param[1])),
+                                "weight": weight * int(m_param[1]),
+                                "collapsed": None,
+                                "merged": merged,
+                                "z_w_j": z_w_j,
+                                "n1": source,
+                                "n2": source
+                            }
+                            defect_metadata.append(source_open_defect)
+
+                            # Parametric
+                            suitable_params = []
+                            for parameter in parameters:
+                                if parameter[0].lower() in self.target_parameters["jfet"]:
+                                    suitable_params.append(parameter)
+
+                            weight = 1.0
+                            calculate_weight = True
+
+                            for parameter in parameters:
+                                # Check if parameter is marked as excluded
+                                if len(self._excluded_target["parameters"]) > 0:
+                                    for excluded_param in self._excluded_target["parameters"]:
+                                        if excluded_param["name"] is not None and parameter[0].lower() == excluded_param["name"].lower():
+                                            calculate_weight = False
+                                            weight = 0
+                                            z_w_j = f"Parameter {parameter[0]} is excluded from analysis by the manifest file"
+                                            break
+
+                                # Check if parameter is a parasitic element
+                                if calculate_weight and parameter not in suitable_params:
+                                    weight = 0
+                                    if parameter[0].lower() != "m":
+                                        z_w_j = "Nominal value is below the specified threshold for design-intent elements and is assumed to be a parasitic element"
+                                    else:
+                                        z_w_j = "Multiplier parameter"
+
+                                # MIN
+                                if parameter[0].lower() != "m":
+                                    deviation_corner, pdk_corner_value_min = ComponentCategorizer.get_pdk_corner_value(
+                                        category, "MIN", float(parameter[1]), None)
+                                else:
+                                    deviation_corner = None
+                                    pdk_corner_value_min = 0
+
+                                if pdk_corner_value_min is not None:
+                                    parametric_defect_min = {
+                                        "No_2427_defect": no_2427_defect,
+                                        "component_category": category.value,
+                                        "defect_type": DefectType.PARAMETRIC,
+                                        "open_gate": False,
+                                        # "circuit": self._circuit,
+                                        "defect_id": self._id_generator.generate_id(DefectType.PARAMETRIC),
+                                        "defect_instance": f"{content.name}.{components[index].name}",
+                                        "name": "MIN",
+                                        "multiplier": str(int(m_param[1])),
+                                        "weight": weight,
+                                        "collapsed": None,
+                                        "merged": merged,
+                                        "z_w_j": z_w_j,
+                                        "parameter_name": parameter[0],
+                                        "typical_value": float(parameter[1]),
+                                        "deviation_corner": deviation_corner,
+                                        "pdk_corner_value": pdk_corner_value_min
+                                    }
+                                    defect_metadata.append(parametric_defect_min)
+
+                                # MAX
+                                if parameter[0].lower() != "m":
+                                    deviation_corner, pdk_corner_value_max = ComponentCategorizer.get_pdk_corner_value(
+                                        category, "MAX", float(parameter[1]), None)
+                                else:
+                                    deviation_corner = None
+                                    pdk_corner_value_max = 0
+
+                                if pdk_corner_value_max is not None:
+                                    parametric_defect_max = {
+                                        "No_2427_defect": no_2427_defect,
+                                        "component_category": category.value,
+                                        "defect_type": DefectType.PARAMETRIC,
+                                        # "circuit": self._circuit,
+                                        "open_gate": False,
+                                        "defect_id": self._id_generator.generate_id(DefectType.PARAMETRIC),
+                                        "defect_instance": f"{content.name}.{components[index].name}",
+                                        "name": "MAX",
+                                        "multiplier": str(int(m_param[1])),
+                                        "weight": weight,
+                                        "collapsed": None,
+                                        "merged": merged,
+                                        "z_w_j": z_w_j,
+                                        "parameter_name": parameter[0],
+                                        "typical_value": float(parameter[1]),
+                                        "deviation_corner": deviation_corner,
+                                        "pdk_corner_value": pdk_corner_value_max
+                                    }
+                                    defect_metadata.append(parametric_defect_max)
+
+                        else:
+                            record = {
+                                "No_2427_defect": no_2427_defect,
+                                "component_category": category.value,
+                                "defect_instance": f"{content.name}.{components[index].name}",
+                                "z_w_j": z_w_j
+                            }
+                            defect_metadata.append(record)
+
                     else:
                         print(f"[DefectEngine::process_defect] Category {category.value} is still under development. Component {components[index].name} has been excluded from defect injection")
-
-
-
 
                     index += 1
                 defect_universe_raw[content.name] = defect_metadata

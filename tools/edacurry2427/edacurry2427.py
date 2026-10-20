@@ -15,7 +15,7 @@ import edacurry
 import argparse
 
 # Import modules
-from src import Optimizer, DefectEngine, DependencyManager, CampaignDirector, Analyzer
+from src import Optimizer, DefectEngine, DependencyManager, CampaignDirector, Analyzer, CoverageReportBuilder
 
 
 # Cleaning temporary dirs
@@ -124,12 +124,12 @@ if __name__ == '__main__':
     print(f"[EDACURRY2427] Simulation timeout set to {timeout} seconds\n")
 
 
-    # Acess DUT directory inside the worskpace dir
+    # Access DUT directory inside the workspace dir
     print("[EDACURRY2427] Retrieving DUT data...")
     workspace_dir = Path(__file__).parent.resolve()/"workspace"
-    avilable_duts = os.listdir(workspace_dir)
+    available_duts = os.listdir(workspace_dir)
     dut_dir = None
-    for _dut in avilable_duts:
+    for _dut in available_duts:
         if _dut == dut:
             dut_dir = Path(_dut)
             break
@@ -141,7 +141,7 @@ if __name__ == '__main__':
     print("[EDACURRY2427] Creating temporary directory for logs produced by divergent simulations...")
     tmp_log_dir = content_dir/"tmp_logs"
     os.makedirs(tmp_log_dir, exist_ok=True)
-    print("[EDACURRY2427] Logs directory created")
+    print("[EDACURRY2427] Logs directory successfully created")
 
     content = os.listdir(content_dir)
     entry_point_filename = None
@@ -274,6 +274,18 @@ if __name__ == '__main__':
     with open(defect_coverage_output, "w") as f:
         json.dump(defect_coverage_details, f, indent=4)
     print("[EDACURRY2427] Done\n")
+
+
+    # Generating final defect coverage report
+    coverage_report_builder = CoverageReportBuilder(manifest_data, defect_universe)
+    coverage_report_file = output_dir/"coverage_report.txt"
+    print(f"[EDACURRY2427] Writing final coverage report into {coverage_report_file}...")
+    try:
+        with open(coverage_report_file, "w") as f:
+            f.write(coverage_report_builder.build_coverage_report())
+            print("[EDACURRY2427] Done\n")
+    except Exception as e:
+        print(f"[EDACURRY2427] An error occurred while writing the final coverage report: {e}\n")
 
     choice = input("[EDACURRY2427] Do you like to remove all temporary files? [Y/N] ")
     stop = 0

@@ -36,13 +36,13 @@ class TechnicalReason (Enum):
         except ValueError:
             raise ValueError("Unable to identify a valid undetectability reason")
 
-
 """
-class PotentiallyUndetectabilityReason (UndetectabilityReason):
+class PotentiallyUndetectabilityReason (StrEnum):
+    # IEEE Std 2427-2025 Rule 3.4d
     OPEN_IN_PARALLEL = "Open in one of N in parallel"
     SHORT_IN_SERIES = "Short in one of N in series"
-    REDUNDANCY = "Defect in circuit that is redundant to improve yeld"
     TEST_ACCESS = "Detection is prevented by impact of test access"
+    REDUNDANCY = "Defect in circuitry that is redundant to improve yield"
     OTHER = "Other"
 
     @classmethod
@@ -53,11 +53,12 @@ class PotentiallyUndetectabilityReason (UndetectabilityReason):
             return cls.OTHER
 
 
-class StructuralUndetectabilityReason (UndetectabilityReason):
+class StructuralUndetectabilityReason (StrEnum):
+    # IEEE Std 2427-2025 Rule 3.4e
+    REDUNDANCY = "Defect in circuitry that is redundant to improve yield"
     UNUSED_OUTPUT = "Open to an unused output"
     TIE_INPUT_SHORT = "Short across a resistor that ties an input to a rail"
-    REDUNDANCY = "Defect in circuit that is redundant to improve yeld"
-    EQUAL_POTENTIAL_SHORT = "Short between two nodes that are logically prevented from having different voltages"
+    EQUAL_POTENTIAL_SHORT = "Short between two nodes that are logically prevented from having differing voltages"
     DISALLOWED_STIMULUS = "Could only be detected by a stimulus that is not allowed"
     OTHER = "Other"
 
@@ -68,6 +69,7 @@ class StructuralUndetectabilityReason (UndetectabilityReason):
         except ValueError:
             return cls.OTHER
 """
+
 
 class DetectionStatus(StrEnum):
     UNDETECTED = "undetected"
@@ -92,16 +94,13 @@ class DefectRecord:
                                                                     # group of equivalent defects
     _merged: Optional[int]                                          # indicates the optional number of parallel elements
                                                                     # merged before injection
-    _undetectability_reson: Optional[TechnicalReason]               # to be specified in case of undetectability
-                                                                    # undetectable. Default is None (pre-simulation)
+    _undetectability_reason: Optional[TechnicalReason]              # to be specified in case of undetectability
+                                                                    # Default is None (pre-simulation)
     _technical_reason: Optional[str]                                # if undetectable must be specified
-                                                                    # must be specified
-    _0_weight_justification: Optional[str]                          # the reason behind a 0 weighed element must be
-                                                                    # provided
-    _detection_status: DetectionStatus                              # defect detection status. Default is unsimulated
-    _suggested_remediation: Optional[str]                           # suggestions to detect undetectability defects
-
-
+    _0_weight_justification: Optional[str]                          # the reason behind a 0 weighted element must be
+                                                                    # provided (Rule 3.1m)
+    _detection_status: DetectionStatus                              # defect detection status. Default is unsimulated (Rule 3.3f)
+    _suggested_remediation: Optional[str]                           # suggestions to detect undetectable defects
 
 
     def __init__ (self, id, component_category, type, instance_name, node_terminals, model_name, multiplier, weight, collapsed,
@@ -117,7 +116,6 @@ class DefectRecord:
                 self._multiplier = multiplier
             else:
                 self._multiplier = None
-            self._weight = weight
             self._weight = weight
             if collapsed:
                 self._collapsed = collapsed
@@ -162,6 +160,14 @@ class DefectRecord:
         self._undetectability_reason = TechnicalReason.from_str(undetectability_reason)
 
 
+    def get_type(self) -> DefectType:
+        return self._type
+
+
+    def get_weight(self) -> float:
+        return self._weight
+
+
     def get_info(self):
         undet_reason = None
         if self._undetectability_reason:
@@ -172,6 +178,8 @@ class DefectRecord:
             "type": self._type,
             "instance_name": self._instance_name,
             "node_terminals": self._node_terminals,
+            "model_name": self._model_name,
+            "multiplier": self._multiplier,
             "weight": self._weight,
             "0_weight_justification": self._0_weight_justification,
             "collapsed": self._collapsed,
@@ -199,27 +207,30 @@ class SpiceScaleFactors(Enum):
 
     @classmethod
     def from_prefix(cls, unit):
-        if unit and unit.lower() == "t":
-            return cls.T.value
-        elif unit and  unit.lower() == "g":
-            return cls.G.value
-        elif unit and unit.lower() == "meg":
+        if not unit:
+            return None
+        u = unit.lower()
+        if u.startswith("meg"):
             return cls.MEG.value
-        elif unit and unit.lower() == "k":
-            return cls.K.value
-        elif unit and unit.lower() == "mil":
+        elif u.startswith("mil"):
             return cls.MIL.value
-        elif unit and unit.lower() == "m":
+        elif u[0] == "t":
+            return cls.T.value
+        elif u[0] == "g":
+            return cls.G.value
+        elif u[0] == "k":
+            return cls.K.value
+        elif u[0] == "m":
             return cls.M.value
-        elif unit and unit.lower() == "u":
+        elif u[0] == "u":
             return cls.U.value
-        elif unit and unit.lower() == "n":
+        elif u[0] == "n":
             return cls.N.value
-        elif unit and unit.lower() == "p":
+        elif u[0] == "p":
             return cls.P.value
-        elif unit and unit.lower() == "f":
+        elif u[0] == "f":
             return cls.F.value
-        elif unit and unit.lower() == "a":
+        elif u[0] == "a":
             return cls.A.value
         else:
             return None
@@ -237,42 +248,41 @@ class ParamValueAnalyzer:
             - String: string
             - ValueList: values, delimiter
             - ValuePair: first, second
-
         """
-        if param:
+        if param is not None:
             if type(param) == edacurry.Identifier:
                 value = param.name
                 # A numeric value can be parsed by EDACurry as an identifier, so it's possible to have a value like 400n
                 # Verify the presence of a unit
-
-                pattern_capture = r"^(\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)([a-zA-Z]+)$"
+                pattern_capture = r"^([+-]?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)([a-zA-Z]+)$"
                 data = re.match(pattern_capture, value)
                 unit = None
 
                 if data:
                     value, unit = data.groups()
 
-                # Remove unit from value
-                if unit is not None:
-                    value = value.replace(unit, "")
-
                 # Cast to float if numeric
                 try:
                     value = float(value)
                 except ValueError:
-                    pass
+                    return value
 
                 unit_value = SpiceScaleFactors.from_prefix(unit)
-                if unit_value:
+                if unit_value is not None:
                     value *= unit_value
 
                 return value
 
             elif type(param) == edacurry.Int or type(param) == edacurry.Double:
                 return param.value
+            elif hasattr(param, "value") and hasattr(param, "unit"):
+                val = float(param.value)
+                unit_value = SpiceScaleFactors.from_prefix(param.unit)
+                if unit_value is not None:
+                    val *= unit_value
+                return val
 
-        else:
-            return None
+        return None
 
 
 class Optimizer:
@@ -296,8 +306,26 @@ class Optimizer:
             self._ok_to_optimize = self._manifest_file["perform_optimization"]
         except KeyError:
             print("[Optimizer] Initialization error: missing 'perform_optimization' parameter in the manifest file. False assumed as default\n")
-            self._ok_to_optimize["merge"] = False
-            self._ok_to_optimize["collapse"] = False
+            self._ok_to_optimize = {
+                "merge": False,
+                "collapse": False
+            }
+
+
+    def _is_really_a_param(self, param_tuple : tuple, comp_name : str):
+        comp_category = ComponentCategory.from_string(comp_name, True)[0].value
+        target_parameters = {
+            "resistor": ["r", "value", "l", "w", "rhs"],
+            "capacitor": ["c", "cap", "area", "tox", "thick"],
+            "inductor": ["l"],
+            "diode": ["is"],
+            "mosfet": ["w", "l", "vth0", "tox", "thick"],
+            "mesfet": ["vt0", "beta", "alpha", "lambda", "rd", "rs", "is"],
+            "jfet": ["vto", "vt0", "beta", "lambda", "rd", "rs", "is", "cgs", "cgd"],
+            "bjt": ["is", "bf", "vaf", "rb", "rc", "re", "cje", "cjc"]
+        }
+        return param_tuple[0].lower() in target_parameters[comp_category]
+
 
     def get_structure(self):
 
@@ -305,7 +333,7 @@ class Optimizer:
 
         for cont in self._circuit.content:
             # Analyze only the design under test
-            if cont.name in self._manifest_file["dut"]:
+            if hasattr(cont, "name") and cont.name in self._manifest_file["dut"]:
 
                 signatures = []
                 components = []
@@ -323,7 +351,11 @@ class Optimizer:
                     parameters = []
                     for parameter in component.parameters:
                         # Collect parameters based on their type
-                        parameters.append((ParamValueAnalyzer.get_param_info(parameter.left), ParamValueAnalyzer.get_param_info(parameter.right)))
+                        #parameters.append((ParamValueAnalyzer.get_param_info(parameter.left), ParamValueAnalyzer.get_param_info(parameter.right)))
+                        extracted_param = ((ParamValueAnalyzer.get_param_info(parameter.left),ParamValueAnalyzer.get_param_info(parameter.right)))
+                        # Check if param ia really a param for the given component
+                        if self._is_really_a_param(extracted_param, str(component.name)):
+                            parameters.append(extracted_param)
 
                     parameters = tuple(parameters)
                     signatures.append((comp_master, nodes, parameters))
@@ -337,9 +369,9 @@ class Optimizer:
 
         print("[Optimizer::optimize_merge] Optimizing circuit...")
 
-        if not self._ok_to_optimize["merge"]:
+        if not self._ok_to_optimize.get("merge", False):
             print("[Optimizer::optimize_merge] No optimization operation has been required. Nothing to do\n")
-            return
+            return self._circuit
 
         structure = self.get_structure()
         has_been_optimized = False
@@ -359,10 +391,9 @@ class Optimizer:
                 if subckt is None:
                     raise ValueError(f"[Optimizer::optimize_merge] Unable to find subckt {subckt_name}\n")
 
-                # Find equivalent components that can be merged
+                # Find equivalent parallel components that can be merged (IEEE 2427 Permission 3.1x & Rule 3.1l)
                 i = 0
                 while i < len(components):
-                    # Avoid duplicates
                     if signatures[i] in equivalent_components:
                         i += 1
                         continue
@@ -386,14 +417,15 @@ class Optimizer:
                         while i < len(equivalent_components[signature]):
                             subckt.content.remove(equivalent_components[signature][i])
                             i += 1
-                        # Adjust M parameter to indicates how many components are merged
+                        # Adjust M parameter to indicate how many components are merged (Rule 3.1l)
                         parameters = equivalent_components[signature][0].parameters
-                        # Check the presence of M parameter
                         found_M = False
                         for parameter in parameters:
                             if parameter.type == edacurry.ParameterType.param_assign:
                                 if parameter.left.name.lower() == 'm':
-                                    parameter.right = edacurry.Double(eq_comp)
+                                    existing_m = ParamValueAnalyzer.get_param_info(parameter.right)
+                                    base_m = int(existing_m) if existing_m is not None else 1
+                                    parameter.right = edacurry.Double(base_m * eq_comp)
                                     found_M = True
                         if not found_M:
                             parameters.append(edacurry.Parameter(edacurry.Identifier("M"), edacurry.Double(eq_comp), edacurry.ParameterType.param_assign))
@@ -406,73 +438,74 @@ class Optimizer:
             # Save the optimized netlist file
             optimized_dir = Path(__file__).resolve().parent.parent/"optimized netlists"
             Path(optimized_dir).mkdir(parents=True, exist_ok=True)
-            optimized_filename = self._circuit_filename.split("/")[-1]
+            optimized_filename = str(self._circuit_filename).split("/")[-1]
             optimized_filename = f"{optimized_dir}/optimized_{optimized_filename}"
             with open(optimized_filename, "w") as f:
                 f.write(edacurry.write_eldo(self._circuit))
 
             print(f"[Optimizer::optimize_merge] Circuit has been optimized and the netlist file has been saved in {optimized_dir}\n")
-
         else:
             print(f"[Optimizer::optimize_merge] Nothing to do")
 
+        return self._circuit
 
-    # Analyses the data inside the universe details and collapse the collapsable defects
-    def optimize_collapse(self, universe_details : List):
+
+    # Analyses the data inside the universe details and collapses equivalent defects (IEEE 2427 Rec. 3.1t & Rule 3.5a)
+    def optimize_collapse(self, universe_details : dict):
         print("[Optimizer::optimize_collapse] Collapsing equivalent defects...")
         # Check if optimization is requested
-        if not self._ok_to_optimize["collapse"]:
+        if not self._ok_to_optimize.get("collapse", False):
             print("[Optimizer::optimize_collapse] No optimization operation has been required. Nothing to do\n")
-            return
+            return universe_details
+
+        dipole_categories = {
+            ComponentCategory.RESISTOR.value,
+            ComponentCategory.INDUCTOR.value,
+            ComponentCategory.CAPACITOR.value,
+            ComponentCategory.DIODE.value
+        }
 
         for content in universe_details:
+            defects_list = universe_details[content]
+            defects_n = len(defects_list)
             defects_index = 0
-            defects_n = len(universe_details[content])
 
             while defects_index < defects_n:
-                instance_name = universe_details[content][defects_index]["defect_instance"]
-                first_instance_index = None
-                cumulative_weight = 0
-                collapsed = 1
+                current_defect = defects_list[defects_index]
 
+                # Skip excluded records that have no 'defect_instance' or 'defect_type'
+                if current_defect.get("No_2427_defect", False):
+                    defects_index += 1
+                    continue
+
+                instance_name = current_defect["defect_instance"]
+                open_indices = []
+                cumulative_weight = 0.0
                 z_w_j = "Defect has been collapsed"
 
-                while universe_details[content][defects_index]["defect_instance"] == instance_name:
+                # Group all defects belonging to the same component instance
+                while defects_index < defects_n and not defects_list[defects_index].get("No_2427_defect", False) and defects_list[defects_index]["defect_instance"] == instance_name:
+                    d = defects_list[defects_index]
 
-                    # Collapsing opens
-                    if (universe_details[content][defects_index]["No_2427_defect"] == False and
-                        (universe_details[content][defects_index]["component_category"] == ComponentCategory.RESISTOR.value or universe_details[content][defects_index]["component_category"] == ComponentCategory.INDUCTOR.value or
-                        universe_details[content][defects_index]["component_category"] == ComponentCategory.CAPACITOR.value or universe_details[content][defects_index]["component_category"] == ComponentCategory.DIODE.value) and
-                        universe_details[content][defects_index]["defect_type"] == DefectType.OPEN):
+                    # Collapsing opens on two-terminal dipoles (Recommendation 3.1t & Rule 3.5a)
+                    if d["component_category"] in dipole_categories and d["defect_type"] == DefectType.OPEN:
+                        open_indices.append(defects_index)
+                        cumulative_weight += d["weight"]
 
-                        if first_instance_index is None:
-                            first_instance_index = defects_index
-                        if collapsed == 1:
-                            collapsed += 1
-                        cumulative_weight += universe_details[content][defects_index]["weight"]
+                    defects_index += 1
 
-                    if defects_index < defects_n - 1:
-                        defects_index += 1
-                    else:
-                        break
+                # Apply weight summation to the first open defect and zero-out the collapsed equivalents
+                if len(open_indices) > 1 and cumulative_weight > 0:
+                    first_open_idx = open_indices[0]
+                    defects_list[first_open_idx]["weight"] = cumulative_weight
+                    defects_list[first_open_idx]["collapsed"] = len(open_indices)
 
-                if cumulative_weight > 0:
-                    universe_details[content][first_instance_index]["weight"] = cumulative_weight
-                    universe_details[content][first_instance_index]["collapsed"] = collapsed
-
-                    starting_point = first_instance_index + 1
-                    while starting_point < defects_index:
-                        universe_details[content][starting_point]["weight"] = 0
-                        universe_details[content][starting_point]["z_w_j"] = z_w_j
-                        starting_point += 1
-
-                defects_index += 1
+                    for collapsed_idx in open_indices[1:]:
+                        defects_list[collapsed_idx]["weight"] = 0
+                        defects_list[collapsed_idx]["z_w_j"] = z_w_j
 
         print("[Optimizer::optimize_collapse] Done")
         return universe_details
-
-
-
 
 
 class ComponentCategory(Enum):
@@ -602,8 +635,16 @@ class ComponentCategory(Enum):
         if dev_dir is None or (dev_dir != "MIN" and dev_dir != "MAX"):
             raise ValueError(f"[ComponentCategory::get_corner_value] {dev_dir} is not a valid deviation direction. Only 'MIN' and 'MAX' are admitted\n")
 
-        if category == ComponentCategory.RESISTOR or category == ComponentCategory.CAPACITOR or category == ComponentCategory.INDUCTOR or category == ComponentCategory.DIODE:
-
+        # IEEE Std 2427-2025 Annex E (Table E.3): standard ±25% process corner assumption for general principal parameters
+        if category in (
+            ComponentCategory.RESISTOR,
+            ComponentCategory.CAPACITOR,
+            ComponentCategory.INDUCTOR,
+            ComponentCategory.DIODE,
+            ComponentCategory.BJT,
+            ComponentCategory.MESFET,
+            ComponentCategory.JFET
+        ):
             deviation_corner = "±25%"
             if dev_dir == "MIN":
                 return (deviation_corner, typical_value * 0.75)
@@ -611,24 +652,24 @@ class ComponentCategory(Enum):
                 return (deviation_corner, typical_value * 1.25)
 
         elif category == ComponentCategory.MOSFET:
-
             w_param = None
             l_param = None
             tox_param = None
             vth0_param = None
 
-            for param in params:
-                if param is not None:
-                    if param[0].lower() == "w":
-                        w_param = param
-                    elif param[0].lower() == "l":
-                        l_param = param
-                    elif param[0].lower() == "tox":
-                        tox_param = param
-                    elif param[0].lower() == "vth0":
-                        vth0_param = param
+            if params is not None:
+                for param in params:
+                    if param is not None:
+                        if param[0].lower() == "w":
+                            w_param = param
+                        elif param[0].lower() == "l":
+                            l_param = param
+                        elif param[0].lower() == "tox" or param[0].lower() == "thick":
+                            tox_param = param
+                        elif param[0].lower() == "vth0":
+                            vth0_param = param
 
-            # Different according to the parameter
+            # Different according to the parameter (IEEE Std 2427-2025 Table E.3)
             if w_param is None and l_param is None and tox_param is None and vth0_param is None:
                 raise ValueError("[ComponentCategory::get_corner_value] Missing param values for MOSFET\n")
             if w_param is not None and l_param is not None:
@@ -650,7 +691,7 @@ class ComponentCategory(Enum):
                 elif dev_dir == "MAX":
                     return (deviation_corner, typical_value * 1.10)
             else:
-                print(f"[ComponentCategory::get_corner_value] Support for parameter {param} is still under development\n")
+                print(f"[ComponentCategory::get_corner_value] Support for parameter is still under development\n")
                 return (None, None)
 
         else:
@@ -671,3 +712,26 @@ class ComponentCategorizer:
     def get_pdk_corner_value(cls, category : ComponentCategory, dev_dir : str, typical_value : float, params : List[str]):
         return ComponentCategory.get_corner_value(category, dev_dir, typical_value, params)
 
+    @classmethod
+    def calculate_defective_param_value(cls, typical_value: float, pdk_corner_value: float, dev_dir: str, df_pdk: float = 2.0) -> float:
+        """
+        Calculates the defective parameter value according to IEEE Std 2427-2025 Rules 3.2d, 3.2e and Recommendation 3.2q.
+        - Rule 3.2d (Increase in magnitude / MAX):
+          defective_value = typical_value + (pdk_corner_value - typical_value) * DF_PDK
+        - Rule 3.2e (Decrease in magnitude / MIN):
+          defective_value = max(typical_value - (typical_value - pdk_corner_value) * DF_PDK, pdk_corner_value / DF_PDK)
+        """
+        if dev_dir == "MAX":
+            return typical_value + (pdk_corner_value - typical_value) * df_pdk
+        elif dev_dir == "MIN":
+            if typical_value >= 0:
+                val1 = typical_value - (typical_value - pdk_corner_value) * df_pdk
+                val2 = pdk_corner_value / df_pdk
+                return max(val1, val2)
+            else:
+                # Preserve negative sign for negative parameters (Rule 3.2c Note 4 / Rule 3.2d Example 2)
+                val1 = typical_value - (typical_value - pdk_corner_value) * df_pdk
+                val2 = pdk_corner_value / df_pdk
+                return min(val1, val2)
+        else:
+            raise ValueError(f"[ComponentCategorizer::calculate_defective_param_value] Invalid deviation direction '{dev_dir}'")
