@@ -41,3 +41,12 @@ EDACurry has been tested on large-scale netlists to assess its scalability. The 
 
 **Summary:**
 The analysis demonstrates that EDACurry can efficiently handle very large netlists, with linear scaling in parsing and writing operations for both Eldo and Spectre formats. This makes the tool suitable for industrial-scale analog design workflows.
+
+## Third-Party Material
+
+The bandgap DUT shipped with the `edacurry2427` tool
+(`tools/edacurry2427/workspace/bandgap/`) is derived from the
+[adsbenchmark](https://github.com/Infineon/adsbenchmark) project by Infineon
+Technologies AG, used under the MIT License and adapted for ngspice. See
+[`tools/edacurry2427/workspace/bandgap/README.md`](tools/edacurry2427/workspace/bandgap/README.md)
+for provenance and the full list of modifications.
